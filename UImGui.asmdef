@@ -1,0 +1,29 @@
+{
+    "name": "UImGui",
+    "rootNamespace": "",
+    "references": [
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:ade3d29ceff033c419baa91387fb70d3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "Select...",
+            "expression": "10.0.0",
+            "define": "HAaaaaa"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "10.0.0",
+            "define": "HAS_URP"
+        }
+    ],
+    "noEngineReferences": false
+}
