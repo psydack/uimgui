@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using NumericsConverter;
 using UnityEngine;
 
 namespace UImGui
@@ -37,7 +38,7 @@ namespace UImGui
 
 		[Tooltip("[TEST] For retina display or other situations where window coordinates are different from framebuffer coordinates. " +
 			"This generally ends up in ImDrawData::FramebufferScale. (default=1, 1)")]
-		public System.Numerics.Vector2 DisplayFramebufferScale;
+		public Vector2 DisplayFramebufferScale;
 
 		[Tooltip("Request ImGui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). " +
 			"Cannot be easily renamed to 'io.ConfigXXX' because this is frequently used by backend implementations. " +
@@ -82,7 +83,7 @@ namespace UImGui
 			io.FontGlobalScale = FontGlobalScale;
 			io.FontAllowUserScaling = FontAllowUserScaling;
 
-			io.DisplayFramebufferScale = DisplayFramebufferScale;
+			io.DisplayFramebufferScale = DisplayFramebufferScale.ToSystem();
 			io.MouseDrawCursor = MouseDrawCursor;
 
 			io.ConfigInputTextCursorBlink = TextCursorBlink;
@@ -104,6 +105,9 @@ namespace UImGui
 
 			FontGlobalScale = io.FontGlobalScale;
 			FontAllowUserScaling = io.FontAllowUserScaling;
+
+			DisplayFramebufferScale = io.DisplayFramebufferScale.ToUnity();
+			MouseDrawCursor = io.MouseDrawCursor;
 
 			TextCursorBlink = io.ConfigInputTextCursorBlink;
 			ResizeFromEdges = io.ConfigWindowsResizeFromEdges;
