@@ -15,13 +15,8 @@
     "defineConstraints": [],
     "versionDefines": [
         {
-            "name": "Select...",
-            "expression": "10.0.0",
-            "define": "HAaaaaa"
-        },
-        {
             "name": "com.unity.render-pipelines.universal",
-            "expression": "10.0.0",
+            "expression": "10",
             "define": "HAS_URP"
         }
     ],
