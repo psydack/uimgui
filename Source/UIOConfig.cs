@@ -6,7 +6,6 @@ namespace UImGui
 {
 	/// <summary>
 	/// TODO: Write more.
-	/// TODO: Make default button or make struct with default on editor (not the SetDefault() already here).
 	/// </summary>
 	[System.Serializable]
 	internal struct IOConfig
@@ -58,8 +57,8 @@ namespace UImGui
 		public float ConfigMemoryCompactTimer;
 
 		// TODO: Use this!
-		// Store your own data for retrieval by callbacks.
-		//void* UserData;
+		// [Tooltip("Store your own data for retrieval by callbacks.")
+		// public void* UserData;
 
 		public void SetDefaults()
 		{

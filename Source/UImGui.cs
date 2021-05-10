@@ -1,4 +1,5 @@
 using ImGuiNET;
+using UImGui.Assets;
 using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
@@ -34,9 +35,10 @@ namespace UImGui
 		//[SerializeField] private FontAtlasConfigAsset _fontAtlasConfiguration = null;
 		//[SerializeField] private IniSettingsAsset _iniSettings = null;  // null: uses default imgui.ini file
 
-		//[Header("Customization")]
+		[Header("Customization")]
 		//[SerializeField] private ShaderResourcesAsset _shaders = null;
-		//[SerializeField] private StyleAsset _style = null;
+		[SerializeField]
+		private StyleAsset _style = null;
 		//[SerializeField] private CursorShapesAsset _cursorShapes = null;
 		//private static readonly ProfilerMarker s_prepareFramePerfMarker = new ProfilerMarker("DearImGui.PrepareFrame");
 		//private static readonly ProfilerMarker s_layoutPerfMarker = new ProfilerMarker("DearImGui.Layout");
@@ -84,7 +86,7 @@ namespace UImGui
 			ImGuiIOPtr io = ImGui.GetIO();
 
 			_initialConfiguration.ApplyTo(io);
-			//_style?.ApplyTo(ImGui.GetStyle());
+			_style?.ApplyTo(ImGui.GetStyle());
 
 			//_context.textures.BuildFontAtlas(io, _fontAtlasConfiguration);
 			//_context.textures.Initialize(io);
