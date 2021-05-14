@@ -9,10 +9,10 @@ Using cimgui 1.82
 - description about this repo
 
 ## Thanks to  
-Original repo https://github.com/realgamessoftware/dear-imgui-unity
-All my coworkers who encourage me to try to do this =')
+Original repo https://github.com/realgamessoftware/dear-imgui-unity  
+All my coworkers who encourage me to try to do this =')  
 
 ## Using 
-https://www.conventionalcommits.org/en/v1.0.0/
-https://semver.org/
-https://github.com/yeyushengfan258/Lyra-Cursors
+https://www.conventionalcommits.org/en/v1.0.0/  
+https://semver.org/  
+https://github.com/yeyushengfan258/Lyra-Cursors  
