@@ -10,14 +10,16 @@ namespace UImGui
 	// TODO: Check Multithread run.
 	public class UImGui : MonoBehaviour
 	{
+		// TODO: Implement.
+		public event System.Action Layout;  // Layout event for *this* ImGui instance.
+		[SerializeField]
+		private bool _doGlobalLayout = true; // Do global/default Layout event too.
+
 		private Context _context;
 		private IImGuiRenderer _renderer;
 		private IImGuiPlatform _platform;
 		private CommandBuffer _renderCommandBuffer;
 		private bool _usingURP;
-
-		//public event System.Action Layout;  // Layout event for *this* ImGui instance
-		//[SerializeField] private bool _doGlobalLayout = true; // do global/default Layout event too
 
 		[SerializeField]
 		private Camera _camera = null;
@@ -91,7 +93,7 @@ namespace UImGui
 			void Fail(string reason)
 			{
 				enabled = false;
-				throw new System.Exception($"Failed to start: {reason}");
+				throw new System.Exception($"Failed to start: {reason}.");
 			}
 
 			if (_camera == null)
@@ -105,7 +107,7 @@ namespace UImGui
 				Fail(nameof(_renderFeature));
 			}
 
-			_renderCommandBuffer = RenderUtils.GetCommandBuffer("UImGui");
+			_renderCommandBuffer = RenderUtils.GetCommandBuffer(Constants.UImGuiCommandBuffer);
 
 			if (_usingURP)
 			{
@@ -123,8 +125,8 @@ namespace UImGui
 			_initialConfiguration.ApplyTo(io);
 			_style?.ApplyTo(ImGui.GetStyle());
 
-			//_context.textures.BuildFontAtlas(io, _fontAtlasConfiguration);
-			//_context.textures.Initialize(io);
+			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration);
+			_context.TextureManager.Initialize(io);
 
 			//SetPlatform(Platform.Create(_platformType, _cursorShapes, _iniSettings), io);
 			if (_platform == null)
@@ -170,8 +172,8 @@ namespace UImGui
 
 		private void Reset()
 		{
-			//_camera = Camera.main;
-			//_initialConfiguration.SetDefaults();
+			_camera = Camera.main;
+			_initialConfiguration.SetDefaults();
 		}
 
 		private void Update()
