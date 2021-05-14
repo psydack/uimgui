@@ -8,7 +8,7 @@ namespace UImGui
 	/// TODO: Write more.
 	/// </summary>
 	[System.Serializable]
-	internal struct IOConfig
+	internal struct UIOConfig
 	{
 		// TODO: Test all flags.
 		[Tooltip("For more info look the imgui.h:1380(~). (default=NavEnableKeyboard | DockingEnable)")]
