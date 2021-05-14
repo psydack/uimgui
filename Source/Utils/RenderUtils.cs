@@ -1,13 +1,13 @@
 ﻿using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace UImGui.Renderer
+namespace UImGui
 {
-	internal static partial class RenderUtils
+	internal static class RenderUtils
 	{
 		public static bool IsUsingURP()
 		{
-			var currentRP = GraphicsSettings.currentRenderPipeline;
+			RenderPipelineAsset currentRP = GraphicsSettings.currentRenderPipeline;
 #if HAS_URP
 			return currentRP is UniversalRenderPipelineAsset;
 #else
