@@ -1,12 +1,13 @@
 ﻿using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	[Serializable]
 	internal class ShaderData
 	{
-		public ShaderData Mesh;
-		public ShaderData Procedural;
+		public Shader Mesh;
+		public Shader Procedural;
 
 		public ShaderData Clone()
 		{
