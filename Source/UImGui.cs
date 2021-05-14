@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 
 namespace UImGui
 {
-
+	// TODO: Check Multithread run.
 	public class UImGui : MonoBehaviour
 	{
 		private Context _context;
@@ -23,26 +23,58 @@ namespace UImGui
 		private Camera _camera = null;
 
 		[SerializeField]
-		private RenderUImGui _renderFeature = null;
+		private RenderImGui _renderFeature = null;
 
-		//[SerializeField] private RenderUtils.RenderType _rendererType = RenderUtils.RenderType.Mesh;
-		//[SerializeField] private Platform.Type _platformType = Platform.Type.InputManager;
+		[SerializeField]
+		private RenderType _rendererType = RenderType.Mesh;
+
+		[SerializeField]
+		private InputType _platformType = InputType.InputManager;
+
+		[Tooltip("Null value uses default imgui.ini file.")]
+		[SerializeField]
+		private IniSettingsAsset _iniSettings = null;
 
 		[Header("Configuration")]
 
 		[SerializeField]
-		private IOConfig _initialConfiguration = default;
-		//[SerializeField] private FontAtlasConfigAsset _fontAtlasConfiguration = null;
-		//[SerializeField] private IniSettingsAsset _iniSettings = null;  // null: uses default imgui.ini file
+		private UIOConfig _initialConfiguration = new UIOConfig
+		{
+			ImGuiConfig = ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.NavEnableKeyboard,
+
+			DoubleClickTime = 0.30f,
+			DoubleClickMaxDist = 6.0f,
+
+			DragThreshold = 6.0f,
+
+			KeyRepeatDelay = 0.250f,
+			KeyRepeatRate = 0.050f,
+
+			FontGlobalScale = 1.0f,
+			FontAllowUserScaling = false,
+
+			DisplayFramebufferScale = Vector2.one,
+
+			MouseDrawCursor = false,
+			TextCursorBlink = false,
+
+			ResizeFromEdges = true,
+			MoveFromTitleOnly = true,
+			ConfigMemoryCompactTimer = 1f,
+		};
+
+		[SerializeField]
+		private FontAtlasConfigAsset _fontAtlasConfiguration = null;
 
 		[Header("Customization")]
-		//[SerializeField] private ShaderResourcesAsset _shaders = null;
+		[SerializeField]
+		private ShaderResourcesAsset _shaders = null;
+
 		[SerializeField]
 		private StyleAsset _style = null;
-		//[SerializeField] private CursorShapesAsset _cursorShapes = null;
-		//private static readonly ProfilerMarker s_prepareFramePerfMarker = new ProfilerMarker("DearImGui.PrepareFrame");
-		//private static readonly ProfilerMarker s_layoutPerfMarker = new ProfilerMarker("DearImGui.Layout");
-		//private static readonly ProfilerMarker s_drawListPerfMarker = new ProfilerMarker("DearImGui.RenderDrawLists");
+
+		[SerializeField]
+		private CursorShapesAsset _cursorShapes = null;
 
 		private void Awake()
 		{
@@ -56,18 +88,21 @@ namespace UImGui
 
 		private void OnEnable()
 		{
-			_usingURP = RenderUtils.IsUsingURP();
+			void Fail(string reason)
+			{
+				enabled = false;
+				throw new System.Exception($"Failed to start: {reason}");
+			}
 
 			if (_camera == null)
 			{
 				Fail(nameof(_camera));
-				return;
 			}
 
+			_usingURP = RenderUtils.IsUsingURP();
 			if (_renderFeature == null && _usingURP)
 			{
 				Fail(nameof(_renderFeature));
-				return;
 			}
 
 			_renderCommandBuffer = RenderUtils.GetCommandBuffer("UImGui");
@@ -92,14 +127,15 @@ namespace UImGui
 			//_context.textures.Initialize(io);
 
 			//SetPlatform(Platform.Create(_platformType, _cursorShapes, _iniSettings), io);
-			//SetRenderer(RenderUtils.Create(_rendererType, _shaders, _context.textures), io);
-			//if (_platform == null) Fail(nameof(_platform));
-			//if (_renderer == null) Fail(nameof(_renderer));
-
-			void Fail(string reason)
+			if (_platform == null)
 			{
-				enabled = false;
-				throw new System.Exception($"Failed to start: {reason}");
+				Fail(nameof(_platform));
+			}
+
+			//SetRenderer(RenderUtils.Create(_rendererType, _shaders, _context.textures), io);
+			if (_renderer == null)
+			{
+				Fail(nameof(_renderer));
 			}
 		}
 
