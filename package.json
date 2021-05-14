@@ -1,11 +1,12 @@
 {
   "name": "com.psydack.uimgui",
   "displayName": "UImGui",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A Unity wrapper for ImGui",
   "unity": "2020.3",
   "dependencies": {
-    "com.kuraiandras.numericsconverter": "https://github.com/KuraiAndras/NumericsConverter.git?path=/NumericsConverter/Assets/NumericsConverter"
+    "com.kuraiandras.numericsconverter": "https://github.com/KuraiAndras/NumericsConverter.git?path=/NumericsConverter/Assets/NumericsConverter",
+    "com.unity.collections": "0.15.0"
   },
   "keywords": [
     "dear",
