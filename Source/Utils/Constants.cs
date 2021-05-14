@@ -4,6 +4,8 @@ namespace UImGui
 {
 	public static class Constants
 	{
+		public static readonly string UImGuiCommandBuffer = "UImGui";
+
 		public static readonly ProfilerMarker PrepareFrameMarker = new ProfilerMarker("DearImGui.PrepareFrame");
 		public static readonly ProfilerMarker LayoutfMarker = new ProfilerMarker("DearImGui.Layout");
 		public static readonly ProfilerMarker DrawListMarker = new ProfilerMarker("DearImGui.RenderDrawLists");
