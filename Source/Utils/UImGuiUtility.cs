@@ -10,7 +10,8 @@ namespace UImGui
 		{
 			return new Context
 			{
-				Value = ImGui.CreateContext()
+				Value = ImGui.CreateContext(),
+				TextureManager = default
 			};
 		}
 
