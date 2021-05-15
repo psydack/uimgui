@@ -22,19 +22,19 @@ MonoBehaviour:
     Texture: {fileID: 2800000, guid: d9ff5b29300294c44ac79493603d05ed, type: 3}
     Hotspot: {x: 4, y: 5}
   ResizeNS:
-    Texture: {fileID: 0}
+    Texture: {fileID: 2800000, guid: da8356d1c05635e48ad129c02d0eef7a, type: 3}
     Hotspot: {x: 11, y: 11}
   ResizeEW:
-    Texture: {fileID: 0}
+    Texture: {fileID: 2800000, guid: 213ffa0cd9eaf0a4598c0a9b88941654, type: 3}
     Hotspot: {x: 11, y: 11}
   ResizeNESW:
-    Texture: {fileID: 0}
+    Texture: {fileID: 2800000, guid: d25ac6e6100dff6419b1b76cbe5ff6d8, type: 3}
     Hotspot: {x: 11, y: 11}
   ResizeNWSE:
-    Texture: {fileID: 2800000, guid: d9ff5b29300294c44ac79493603d05ed, type: 3}
+    Texture: {fileID: 2800000, guid: 46ebc3c81f73e6349af01e3a3b7f98b2, type: 3}
     Hotspot: {x: 11, y: 11}
   Hand:
-    Texture: {fileID: 0}
+    Texture: {fileID: 2800000, guid: 1442eecb729e756448f553d9276eccb1, type: 3}
     Hotspot: {x: 9, y: 5}
   NotAllowed:
     Texture: {fileID: 2800000, guid: 847cddc5c27dbf749b64ae39b9d98121, type: 3}
