@@ -129,7 +129,8 @@ namespace UImGui
 			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration);
 			_context.TextureManager.Initialize(io);
 
-			SetPlatform(PlatformUtility.Create(_platformType, _cursorShapes, _iniSettings), io);
+			IPlatform platform = PlatformUtility.Create(_platformType, _cursorShapes, _iniSettings);
+			SetPlatform(platform, io);
 			if (_platform == null)
 			{
 				Fail(nameof(_platform));
@@ -144,31 +145,38 @@ namespace UImGui
 
 		private void OnDisable()
 		{
-			//ImGuiUn.SetUnityContext(_context);
-			//ImGuiIOPtr io = ImGui.GetIO();
+			UImGuiUtility.SetCurrentContext(_context);
+			ImGuiIOPtr io = ImGui.GetIO();
 
-			//SetRenderer(null, io);
-			//SetPlatform(null, io);
+			SetRenderer(null, io);
+			SetPlatform(null, io);
 
-			//ImGuiUn.SetUnityContext(null);
+			UImGuiUtility.SetCurrentContext(null);
 
-			//_context.textures.Shutdown();
-			//_context.textures.DestroyFontAtlas(io);
+			_context.TextureManager.Shutdown();
+			_context.TextureManager.DestroyFontAtlas(io);
 
-			//if (_usingURP)
-			//{
-			//	if (_renderFeature != null)
-			//		_renderFeature.commandBuffer = null;
-			//}
-			//else
-			//{
-			//	if (_camera != null)
-			//		_camera.RemoveCommandBuffer(CameraEvent.AfterEverything, _cmd);
-			//}
+			if (_usingURP)
+			{
+				if (_renderFeature != null)
+				{
+					_renderFeature.CommandBuffer = null;
+				}
+			}
+			else
+			{
+				if (_camera != null)
+				{
+					_camera.RemoveCommandBuffer(CameraEvent.AfterEverything, _renderCommandBuffer);
+				}
+			}
 
-			//if (_cmd != null)
-			//	RenderUtils.ReleaseCommandBuffer(_cmd);
-			//_cmd = null;
+			if (_renderCommandBuffer != null)
+			{
+				RenderUtils.ReleaseCommandBuffer(_renderCommandBuffer);
+			}
+
+			_renderCommandBuffer = null;
 		}
 
 		private void Reset()
