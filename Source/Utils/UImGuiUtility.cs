@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using System;
 
 namespace UImGui
 {
@@ -11,7 +12,7 @@ namespace UImGui
 			return new Context
 			{
 				Value = ImGui.CreateContext(),
-				TextureManager = default
+				TextureManager = new Texture.TextureManager()
 			};
 		}
 
@@ -23,7 +24,7 @@ namespace UImGui
 		internal static void SetCurrentContext(Context context)
 		{
 			Context = context;
-			ImGui.SetCurrentContext(context.Value);
+			ImGui.SetCurrentContext(context?.Value ?? IntPtr.Zero);
 		}
 	}
 }
