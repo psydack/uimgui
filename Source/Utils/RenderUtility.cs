@@ -1,10 +1,29 @@
-﻿using UnityEngine.Rendering;
+﻿using UImGui.Assets;
+using UImGui.Renderer;
+using UImGui.Texture;
+using UnityEngine.Assertions;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace UImGui
 {
-	internal static class RenderUtils
+	internal static class RenderUtility
 	{
+		public static IRenderer Create(RenderType type, ShaderResourcesAsset shaders, TextureManager textures)
+		{
+			Assert.IsNotNull(shaders, "Shaders not assigned.");
+
+			switch (type)
+			{
+				case RenderType.Mesh:
+				//return new ImGuiRendererMesh(shaders, textures);
+				case RenderType.Procedural:
+				//return new ImGuiRendererProcedural(shaders, textures);
+				default:
+					return null;
+			}
+		}
+
 		public static bool IsUsingURP()
 		{
 			RenderPipelineAsset currentRP = GraphicsSettings.currentRenderPipeline;
