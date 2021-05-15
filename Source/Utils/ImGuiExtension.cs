@@ -55,5 +55,28 @@ namespace UImGui
 				_managedAllocations.Add((IntPtr)nativeName);
 			}
 		}
+
+		public static void SetBackendRendererName(this ImGuiIOPtr io, string name)
+		{
+			if (io.NativePtr->BackendRendererName != (byte*)0)
+			{
+				if (_managedAllocations.Contains((IntPtr)io.NativePtr->BackendRendererName))
+				{
+					Marshal.FreeHGlobal((IntPtr)io.NativePtr->BackendRendererName);
+					io.NativePtr->BackendRendererName = (byte*)0;
+				}
+			}
+			if (name != null)
+			{
+				int byteCount = Encoding.UTF8.GetByteCount(name);
+				byte* nativeName = (byte*)Marshal.AllocHGlobal(byteCount + 1);
+				int offset = Utils.GetUtf8(name, nativeName, byteCount);
+
+				nativeName[offset] = 0;
+
+				io.NativePtr->BackendRendererName = nativeName;
+				_managedAllocations.Add((IntPtr)nativeName);
+			}
+		}
 	}
 }
