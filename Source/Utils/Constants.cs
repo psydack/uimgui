@@ -10,7 +10,7 @@ namespace UImGui
 
 		// TODO: Test all profile markers.
 		internal static readonly ProfilerMarker PrepareFrameMarker = new ProfilerMarker("DearImGui.PrepareFrame");
-		internal static readonly ProfilerMarker LayoutfMarker = new ProfilerMarker("DearImGui.Layout");
+		internal static readonly ProfilerMarker LayoutMarker = new ProfilerMarker("DearImGui.Layout");
 		internal static readonly ProfilerMarker DrawListMarker = new ProfilerMarker("DearImGui.RenderDrawLists");
 
 		internal static readonly ProfilerMarker UpdateMeshMarker = new ProfilerMarker("DearImGui.RendererMesh.UpdateMesh");

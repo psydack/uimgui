@@ -190,7 +190,7 @@ namespace UImGui
 			ImGui.NewFrame();
 			Constants.PrepareFrameMarker.End();
 
-			Constants.LayoutfMarker.Begin(this);
+			Constants.LayoutMarker.Begin(this);
 			try
 			{
 				if (_doGlobalLayout)
@@ -203,7 +203,7 @@ namespace UImGui
 			finally
 			{
 				ImGui.Render();
-				Constants.LayoutfMarker.End();
+				Constants.LayoutMarker.End();
 			}
 
 			Constants.DrawListMarker.Begin(this);
