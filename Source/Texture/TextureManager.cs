@@ -32,6 +32,7 @@ namespace UImGui.Texture
 				filterMode = FilterMode.Point
 			};
 
+			// TODO: Remove collections and make native array manually.
 			NativeArray<byte> srcData = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<byte>(pixels, width * height * bytesPerPixel, Allocator.None);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 			NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref srcData, AtomicSafetyHandle.GetTempMemoryHandle());
