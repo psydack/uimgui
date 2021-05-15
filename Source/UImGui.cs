@@ -102,13 +102,13 @@ namespace UImGui
 				Fail(nameof(_camera));
 			}
 
-			_usingURP = RenderUtils.IsUsingURP();
+			_usingURP = RenderUtility.IsUsingURP();
 			if (_renderFeature == null && _usingURP)
 			{
 				Fail(nameof(_renderFeature));
 			}
 
-			_renderCommandBuffer = RenderUtils.GetCommandBuffer(Constants.UImGuiCommandBuffer);
+			_renderCommandBuffer = RenderUtility.GetCommandBuffer(Constants.UImGuiCommandBuffer);
 
 			if (_usingURP)
 			{
@@ -136,7 +136,7 @@ namespace UImGui
 				Fail(nameof(_platform));
 			}
 
-			//SetRenderer(RenderUtils.Create(_rendererType, _shaders, _context.textures), io);
+			SetRenderer(RenderUtility.Create(_rendererType, _shaders, _context.TextureManager), io);
 			if (_renderer == null)
 			{
 				Fail(nameof(_renderer));
@@ -173,7 +173,7 @@ namespace UImGui
 
 			if (_renderCommandBuffer != null)
 			{
-				RenderUtils.ReleaseCommandBuffer(_renderCommandBuffer);
+				RenderUtility.ReleaseCommandBuffer(_renderCommandBuffer);
 			}
 
 			_renderCommandBuffer = null;
