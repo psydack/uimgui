@@ -16,8 +16,8 @@ namespace UImGui
 		private bool _doGlobalLayout = true; // Do global/default Layout event too.
 
 		private Context _context;
-		private IImGuiRenderer _renderer;
-		private IImGuiPlatform _platform;
+		private IRenderer _renderer;
+		private IPlatform _platform;
 		private CommandBuffer _renderCommandBuffer;
 		private bool _usingURP;
 
@@ -206,14 +206,14 @@ namespace UImGui
 			//s_drawListPerfMarker.End();
 		}
 
-		private void SetRenderer(IImGuiRenderer renderer, ImGuiIOPtr io)
+		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)
 		{
 			_renderer?.Shutdown(io);
 			_renderer = renderer;
 			_renderer?.Initialize(io);
 		}
 
-		private void SetPlatform(IImGuiPlatform platform, ImGuiIOPtr io)
+		private void SetPlatform(IPlatform platform, ImGuiIOPtr io)
 		{
 			_platform?.Shutdown(io);
 			_platform = platform;

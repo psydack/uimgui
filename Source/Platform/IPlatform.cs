@@ -6,7 +6,7 @@ namespace UImGui.Platform
 	/// <summary>
 	/// Platform bindings for ImGui in Unity in charge of: mouse/keyboard/gamepad inputs, cursor shape, timing, windowing.
 	/// </summary>
-	internal interface IImGuiPlatform
+	internal interface IPlatform
 	{
 		/// <summary>
 		/// 
