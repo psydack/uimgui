@@ -179,40 +179,43 @@ namespace UImGui
 			_renderCommandBuffer = null;
 		}
 
+		private void Update()
+		{
+			UImGuiUtility.SetCurrentContext(_context);
+			ImGuiIOPtr io = ImGui.GetIO();
+
+			Constants.PrepareFrameMarker.Begin(this);
+			_context.TextureManager.PrepareFrame(io);
+			_platform.PrepareFrame(io, _camera.pixelRect);
+			ImGui.NewFrame();
+			Constants.PrepareFrameMarker.End();
+
+			Constants.LayoutfMarker.Begin(this);
+			try
+			{
+				if (_doGlobalLayout)
+				{
+					UImGuiUtility.DoLayout();
+				}
+
+				Layout?.Invoke();
+			}
+			finally
+			{
+				ImGui.Render();
+				Constants.LayoutfMarker.End();
+			}
+
+			Constants.DrawListMarker.Begin(this);
+			_renderCommandBuffer.Clear();
+			_renderer.RenderDrawLists(_renderCommandBuffer, ImGui.GetDrawData());
+			Constants.DrawListMarker.End();
+		}
+
 		private void Reset()
 		{
 			_camera = Camera.main;
 			_initialConfiguration.SetDefaults();
-		}
-
-		private void Update()
-		{
-			//ImGuiUn.SetUnityContext(_context);
-			//ImGuiIOPtr io = ImGui.GetIO();
-
-			//s_prepareFramePerfMarker.Begin(this);
-			//_context.textures.PrepareFrame(io);
-			//_platform.PrepareFrame(io, _camera.pixelRect);
-			//ImGui.NewFrame();
-			//s_prepareFramePerfMarker.End();
-
-			//s_layoutPerfMarker.Begin(this);
-			//try
-			//{
-			//	if (_doGlobalLayout)
-			//		ImGuiUn.DoLayout();   // ImGuiUn.Layout: global handlers
-			//	Layout?.Invoke();     // this.Layout: handlers specific to this instance
-			//}
-			//finally
-			//{
-			//	ImGui.Render();
-			//	s_layoutPerfMarker.End();
-			//}
-
-			//s_drawListPerfMarker.Begin(this);
-			//_cmd.Clear();
-			//_renderer.RenderDrawLists(_cmd, ImGui.GetDrawData());
-			//s_drawListPerfMarker.End();
 		}
 
 		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)

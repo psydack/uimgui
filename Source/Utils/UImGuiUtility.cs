@@ -5,6 +5,9 @@ namespace UImGui
 {
 	internal static class UImGuiUtility
 	{
+		public static event Action Layout; // Global/default Layout event, each DearImGui instance also has a private one.
+		internal static void DoLayout() => Layout?.Invoke();
+
 		internal static Context Context;
 
 		internal static Context CreateContext()
