@@ -11,8 +11,8 @@ namespace UImGui.Assets
 		[Serializable]
 		internal struct CursorShape
 		{
-			public Texture2D texture;
-			public Vector2 hotspot;
+			public Texture2D Texture;
+			public Vector2 Hotspot;
 		}
 
 		[Tooltip("Default.")]
