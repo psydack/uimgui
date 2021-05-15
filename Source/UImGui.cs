@@ -10,11 +10,6 @@ namespace UImGui
 	// TODO: Check Multithread run.
 	public class UImGui : MonoBehaviour
 	{
-		// TODO: Implement.
-		public event System.Action Layout;  // Layout event for *this* ImGui instance.
-		[SerializeField]
-		private bool _doGlobalLayout = true; // Do global/default Layout event too.
-
 		private Context _context;
 		private IRenderer _renderer;
 		private IPlatform _platform;
@@ -78,6 +73,12 @@ namespace UImGui
 		[SerializeField]
 		private CursorShapesAsset _cursorShapes = null;
 
+		[SerializeField]
+		private bool _doGlobalLayout = true; // Do global/default Layout event too.
+
+		// TODO: Implement.
+		public event System.Action Layout;  // Layout event for *this* ImGui instance.
+
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
@@ -128,7 +129,7 @@ namespace UImGui
 			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration);
 			_context.TextureManager.Initialize(io);
 
-			//SetPlatform(Platform.Create(_platformType, _cursorShapes, _iniSettings), io);
+			SetPlatform(PlatformUtility.Create(_platformType, _cursorShapes, _iniSettings), io);
 			if (_platform == null)
 			{
 				Fail(nameof(_platform));
@@ -217,7 +218,7 @@ namespace UImGui
 		{
 			_platform?.Shutdown(io);
 			_platform = platform;
-			_platform?.Initialize(io);
+			_platform?.Initialize(io, _initialConfiguration);
 		}
 	}
 }
