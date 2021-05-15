@@ -89,17 +89,17 @@ namespace UImGui.Renderer
 			// Avoid rendering when minimized.
 			if (fbOSize.X <= 0f || fbOSize.Y <= 0f || drawData.TotalVtxCount == 0) return;
 
-			Constants.UpdateMeshPerfMarker.Begin();
+			Constants.UpdateMeshMarker.Begin();
 			UpdateMesh(drawData);
-			Constants.UpdateMeshPerfMarker.End();
+			Constants.UpdateMeshMarker.End();
 
-			commandBuffer.BeginSample(Constants.ExecuteDrawComandsPerfMarker);
-			Constants.CreateDrawComandsPerfMarker.Begin();
+			commandBuffer.BeginSample(Constants.ExecuteDrawCommandsMarker);
+			Constants.CreateDrawCommandsMarker.Begin();
 
 			CreateDrawCommands(commandBuffer, drawData, fbOSize.ToUnity());
 
-			Constants.CreateDrawComandsPerfMarker.End();
-			commandBuffer.EndSample(Constants.ExecuteDrawComandsPerfMarker);
+			Constants.CreateDrawCommandsMarker.End();
+			commandBuffer.EndSample(Constants.ExecuteDrawCommandsMarker);
 		}
 
 		private void UpdateMesh(ImDrawDataPtr drawData)
