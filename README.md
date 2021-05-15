@@ -10,6 +10,8 @@ Using cimgui 1.82
 - procedural renderer
 - remove collections
 - more samples
+- input system
+- editor drawers
 
 ## Thanks to  
 Original repo https://github.com/realgamessoftware/dear-imgui-unity  
