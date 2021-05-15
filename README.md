@@ -7,6 +7,9 @@ Using cimgui 1.82
 
 - a cool list of what left to do and improvements with table if possible
 - description about this repo
+- procedural renderer
+- remove collections
+- more samples
 
 ## Thanks to  
 Original repo https://github.com/realgamessoftware/dear-imgui-unity  
