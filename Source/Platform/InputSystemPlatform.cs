@@ -121,7 +121,7 @@ namespace UImGui.Platform
 			io.NavInputs[(int)ImGuiNavInput.LStickDown] = gamepad.leftStick.down.ReadValue();
 		}
 
-		private void SetupKeyboard(ImGuiIOPtr io, Keyboard kb)
+		private void SetupKeyboard(ImGuiIOPtr io, Keyboard keyboard)
 		{
 			if (_keyboard != null)
 			{
@@ -133,17 +133,17 @@ namespace UImGui.Platform
 				_keyboard.onTextInput -= _textInput.Add;
 			}
 
-			_keyboard = kb;
+			_keyboard = keyboard;
 
 			// Map and store new keys by assigning io.KeyMap and setting value of array.
 			_mainKeys = new int[] {
 				// Letter keys mapped by display name to avoid being layout agnostic (used as shortcuts).
-				io.KeyMap[(int)ImGuiKey.A] = (int)((KeyControl)kb["#(a)"]).keyCode, // For text edit CTRL+A: select all.
-				io.KeyMap[(int)ImGuiKey.C] = (int)((KeyControl)kb["#(c)"]).keyCode, // For text edit CTRL+C: copy.
-				io.KeyMap[(int)ImGuiKey.V] = (int)((KeyControl)kb["#(v)"]).keyCode, // For text edit CTRL+V: paste.
-				io.KeyMap[(int)ImGuiKey.X] = (int)((KeyControl)kb["#(x)"]).keyCode, // For text edit CTRL+X: cut.
-				io.KeyMap[(int)ImGuiKey.Y] = (int)((KeyControl)kb["#(y)"]).keyCode, // For text edit CTRL+Y: redo.
-				io.KeyMap[(int)ImGuiKey.Z] = (int)((KeyControl)kb["#(z)"]).keyCode, // For text edit CTRL+Z: undo.
+				io.KeyMap[(int)ImGuiKey.A] = (int)((KeyControl)keyboard["#(a)"]).keyCode, // For text edit CTRL+A: select all.
+				io.KeyMap[(int)ImGuiKey.C] = (int)((KeyControl)keyboard["#(c)"]).keyCode, // For text edit CTRL+C: copy.
+				io.KeyMap[(int)ImGuiKey.V] = (int)((KeyControl)keyboard["#(v)"]).keyCode, // For text edit CTRL+V: paste.
+				io.KeyMap[(int)ImGuiKey.X] = (int)((KeyControl)keyboard["#(x)"]).keyCode, // For text edit CTRL+X: cut.
+				io.KeyMap[(int)ImGuiKey.Y] = (int)((KeyControl)keyboard["#(y)"]).keyCode, // For text edit CTRL+Y: redo.
+				io.KeyMap[(int)ImGuiKey.Z] = (int)((KeyControl)keyboard["#(z)"]).keyCode, // For text edit CTRL+Z: undo.
 
 				io.KeyMap[(int)ImGuiKey.Tab] = (int)Key.Tab,
 
