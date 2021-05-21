@@ -5,16 +5,30 @@ namespace UImGui.Platform
 {
 	internal static class PlatformUtility
 	{
+		public static bool IsAvailable(InputType type)
+		{
+			switch (type)
+			{
+				case InputType.InputManager:
+					return true;
+#if HAS_INPUTSYSTEM
+				case InputType.InputSystem:
+					return true;
+#endif
+				default:
+					return false;
+			}
+		}
+
 		internal static IPlatform Create(InputType type, CursorShapesAsset cursors, IniSettingsAsset iniSettings)
 		{
 			switch (type)
 			{
 				case InputType.InputManager:
 					return new InputManagerPlatform(cursors, iniSettings);
-				// TODO: Implement InputSystemPlatform.
 #if HAS_INPUTSYSTEM
-				//case InputType.InputSystem:
-				//	return new InputSystemPlatform(cursors, iniSettings);
+				case InputType.InputSystem:
+					return new InputSystemPlatform(cursors, iniSettings);
 #endif
 				default:
 					Debug.LogError($"[DearImGui] {type} platform not available.");
