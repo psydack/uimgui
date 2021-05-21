@@ -201,8 +201,8 @@ namespace UImGui.Renderer
 
 					if (prevTextureId != drawCmd.TextureId)
 					{
-						int textureId = (int)(prevTextureId = drawCmd.TextureId);
-						Assert.IsTrue(_textureManager.TryGetTexture(textureId, out UnityEngine.Texture texture));
+						prevTextureId = drawCmd.TextureId;
+						Assert.IsTrue(_textureManager.TryGetTexture((int)prevTextureId, out UnityEngine.Texture texture));
 						_materialProperties.SetTexture(_textureID, texture);
 					}
 
