@@ -16,6 +16,9 @@ namespace UImGui
 		internal static readonly ProfilerMarker UpdateMeshMarker = new ProfilerMarker("DearImGui.RendererMesh.UpdateMesh");
 		internal static readonly ProfilerMarker CreateDrawCommandsMarker = new ProfilerMarker("DearImGui.RendererMesh.CreateDrawCommands");
 
+		internal static readonly ProfilerMarker UpdateBuffersMarker = new ProfilerMarker("DearImGui.RendererProcedural.UpdateBuffers");
+		internal static readonly ProfilerMarker CreateDrawComandsMarker = new ProfilerMarker("DearImGui.RendererProcedural.CreateDrawCommands");
+
 		internal static readonly string ExecuteDrawCommandsMarker = "DearImGui.ExecuteDrawCommands";
 	}
 }

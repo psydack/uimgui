@@ -18,7 +18,7 @@ namespace UImGui
 				case RenderType.Mesh:
 					return new RendererMesh(shaders, textures);
 				case RenderType.Procedural:
-				//return new ImGuiRendererProcedural(shaders, textures);
+					return new RendererProcedural(shaders, textures);
 				default:
 					return null;
 			}
