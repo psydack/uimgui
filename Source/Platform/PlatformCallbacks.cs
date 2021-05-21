@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using AOT;
+using ImGuiNET;
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -41,8 +42,39 @@ namespace UImGui.Platform
 		private static GetClipboardTextCallback _getClipboardText;
 		private static SetClipboardTextCallback _setClipboardText;
 
-		// TODO: Implement (check) this.
+		[MonoPInvokeCallback(typeof(GetClipboardTextCallback))]
+		public static unsafe string GetClipboardTextCallback(void* user_data)
+		{
+			return GUIUtility.systemCopyBuffer;
+		}
+
+		[MonoPInvokeCallback(typeof(SetClipboardTextCallback))]
+		public static unsafe void SetClipboardTextCallback(void* user_data, byte* text)
+		{
+			GUIUtility.systemCopyBuffer = Utils.StringFromPtr(text);
+		}
+
+		[MonoPInvokeCallback(typeof(ImeSetInputScreenPosCallback))]
+		public static unsafe void ImeSetInputScreenPosCallback(int x, int y)
+		{
+			Input.compositionCursorPos = new Vector2(x, y);
+		}
+
+		// TODO: IMGUI_FEATURE_CUSTOM_ASSERT.
 #if IMGUI_FEATURE_CUSTOM_ASSERT
+		//[MonoPInvokeCallback(typeof(LogAssertCallback))]
+		//public unsafe static void LogAssertCallback(byte* condition, byte* file, int line)
+		//{
+		//	Debug.LogError($"[DearImGui] Assertion failed: '{Util.StringFromPtr(condition)}', file '{Util.StringFromPtr(file)}', line: {line}.");
+		//}
+
+		//[MonoPInvokeCallback(typeof(DebugBreakCallback))]
+		//public unsafe static void DebugBreakCallback()
+		//{
+		//	System.Diagnostics.Debugger.Break();
+		//}
+
+		// TODO: Implement (check) this.
 		//private static LogAssertCallback _logAssert;
 		//private static DebugBreakCallback _debugBreak;
 #endif
