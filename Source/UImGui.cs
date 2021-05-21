@@ -79,6 +79,12 @@ namespace UImGui
 		// TODO: Implement.
 		public event System.Action Layout;  // Layout event for *this* ImGui instance.
 
+		public void Reload()
+		{
+			OnDisable();
+			OnEnable();
+		}
+
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
