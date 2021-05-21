@@ -235,7 +235,7 @@ namespace UImGui
 		{
 			_platform?.Shutdown(io);
 			_platform = platform;
-			_platform?.Initialize(io, _initialConfiguration);
+			_platform?.Initialize(io, _initialConfiguration, "Unity " + _platformType.ToString());
 		}
 	}
 }

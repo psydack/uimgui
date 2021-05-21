@@ -13,7 +13,7 @@ namespace UImGui.Platform
 		/// </summary>
 		/// <param name="io"></param>
 		/// <returns></returns>
-		bool Initialize(ImGuiIOPtr io, UIOConfig config);
+		bool Initialize(ImGuiIOPtr io, UIOConfig config, string platformName);
 
 		/// <summary>
 		/// 
