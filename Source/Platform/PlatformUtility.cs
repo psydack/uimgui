@@ -5,10 +5,12 @@ namespace UImGui.Platform
 {
 	internal static class PlatformUtility
 	{
+#if UNITY_EDITOR
 		public static bool IsAvailable(InputType type)
 		{
 			switch (type)
 			{
+				// TODO: Fix when using only new input system and you choose InputType throws error. 
 				case InputType.InputManager:
 					return true;
 #if HAS_INPUTSYSTEM
@@ -19,6 +21,7 @@ namespace UImGui.Platform
 					return false;
 			}
 		}
+#endif
 
 		internal static IPlatform Create(InputType type, CursorShapesAsset cursors, IniSettingsAsset iniSettings)
 		{
