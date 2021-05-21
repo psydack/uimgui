@@ -24,3 +24,4 @@ All my coworkers who encourage me to try to do this =')
 https://www.conventionalcommits.org/en/v1.0.0/  
 https://semver.org/  
 https://github.com/yeyushengfan258/Lyra-Cursors  
+https://github.com/lob/generate-changelog  
