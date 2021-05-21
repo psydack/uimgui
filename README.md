@@ -8,10 +8,13 @@ Using cimgui 1.82
 - a cool list of what left to do and improvements with table if possible
 - description about this repo
 - procedural renderer
-- remove collections
-- more samples
-- input system
+- remove COLLECTIONS package
+- more samples 
+- make themes
 - editor drawers
+- when using fxaa on rendering the text turns to blurred 
+- make unit tests
+- IMGUI_FEATURE_FREETYPE
 
 ## Thanks to  
 Original repo https://github.com/realgamessoftware/dear-imgui-unity  
