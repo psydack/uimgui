@@ -76,7 +76,6 @@ namespace UImGui
 		[SerializeField]
 		private bool _doGlobalLayout = true; // Do global/default Layout event too.
 
-		// TODO: Implement.
 		public event System.Action Layout;  // Layout event for *this* ImGui instance.
 
 		public void Reload()
