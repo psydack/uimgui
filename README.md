@@ -22,7 +22,7 @@ To update (using ImGui.Net.dll) easier and often.
 
 | Feature                   |         RG         |      UImGui        | 
 | -----------------         | ------------------ | ------------------ |
-| IL2CPP                    | :heavy_check_mark: | :heavy_check_mark: |
+| IL2CPP                    | :x:                | :heavy_check_mark: |
 | Docking                   | :x:                | :heavy_check_mark: |
 | Unity Input Manager       | :heavy_check_mark: | :heavy_check_mark: |
 | Unity Input System        | :heavy_check_mark: | :heavy_check_mark: |
@@ -40,11 +40,129 @@ Usage
 - Add `UImGui` component to the scene and
 - (Optional) Set `Platform Type` to `Input System` if you're using the new [input system](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html) the `SampleDemoWindow` object on the scene the following properties:
 - If you're using **URP** check [Using URP](https://github.com/psydack/uimgui#using-urp) section, for **HDRP** [Using HDRP](https://github.com/psydack/uimgui#using-hdrp) section, for **built in** check [Using Built in](https://github.com/psydack/uimgui#using-hdrp) section.
-- You're ready.
+- You're ready. Look **Samples** section for more usage samples.
 
-Sample
+Samples
 -------
 It has a demo scene called `UImGuiDemoScene` inside `UImGui/Sample` folder.
+
+You can subscribe to global layout or for a specific `UImGui` context:
+If choose to use global, don't to forget to set ``Do Global Layout`` to ``true`` on ``UImGui`` instance.
+
+```cs
+using ImGuiNET;
+using UImGui;
+using UnityEngine;
+
+public class UsingCurrentUImGui : MonoBehaviour
+{
+	[SerializeField]
+	private UImGui.UImGui _uImGui;
+  
+	private void OnEnable()
+	{
+		_uImGui.Layout += OnLayout;
+		// UImGuiUtility.Layout += OnLayout; // Use this for global layout.
+	}
+
+	private void OnDisable()
+	{
+		_uImGui.Layout -= OnLayout;
+		// UImGuiUtility.Layout -= OnLayout; // Use this for global layout.
+	}
+
+	private void OnLayout()
+	{
+            // Your code goes here.
+	}
+}
+```
+
+The following codes goes on your `Layout` event, like this:  
+
+```cs
+using ImGuiNET;
+using UnityEngine;
+
+public class UsingCurrentUImGui : MonoBehaviour
+{
+	// Or you can use global layout. Look commented lines.
+	[SerializeField]
+	private UImGui.UImGui _uImGui;
+
+	[SerializeField]
+	private float _sliderFloatValue = 1;
+
+	private byte[] _inputText = new byte[100];
+
+	private void OnEnable()
+	{
+		_uImGui.Layout += OnLayout;
+		// UImGuiUtility.Layout += OnLayout; // Use this for global layout.
+	}
+
+	private void OnDisable()
+	{
+		_uImGui.Layout -= OnLayout;
+		// UImGuiUtility.Layout -= OnLayout; // Use this for global layout.
+	}
+
+	private void OnLayout()
+	{
+		ImGui.Text($"Hello, world {123}");
+		if (ImGui.Button("Save"))
+		{
+			Debug.Log("Save");
+		}
+
+		ImGui.InputText("string", _inputText, (uint)(sizeof(byte) * _inputText.Length));
+		ImGui.SliderFloat("float", ref _sliderFloatValue, 0.0f, 1.0f);
+	}
+}
+```
+![image](https://user-images.githubusercontent.com/961971/119239324-b54bf880-bb1e-11eb-87e3-0ecbfaafde27.png)
+
+```cs
+[SerializeField]
+private System.Numerics.Vector4 _myColor;
+private bool _isOpen;
+
+private void OnLayout()
+{
+	// Create a window called "My First Tool", with a menu bar.
+	ImGui.Begin("My First Tool", ref _isOpen, ImGuiWindowFlags.MenuBar);
+	if (ImGui.BeginMenuBar())
+	{
+		if (ImGui.BeginMenu("File"))
+		{
+			if (ImGui.MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+			if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+			if (ImGui.MenuItem("Close", "Ctrl+W")) { _isOpen = false; }
+			ImGui.EndMenu();
+		}
+		ImGui.EndMenuBar();
+	}
+
+	// Edit a color (stored as ~4 floats)
+	ImGui.ColorEdit4("Color", ref _myColor);
+
+	// Plot some values
+	float[] my_values = new float[] { 0.2f, 0.1f, 1.0f, 0.5f, 0.9f, 2.2f };
+	ImGui.PlotLines("Frame Times", ref my_values[0], my_values.Length);
+
+
+	// Display contents in a scrolling region
+	ImGui.TextColored(new System.Numerics.Vector4(1, 1, 0, 1), "Important Stuff");
+	ImGui.BeginChild("Scrolling");
+	for (int n = 0; n < 50; n++)
+		ImGui.Text($"{n}: Some text");
+	ImGui.EndChild();
+	ImGui.End();
+}
+```
+![image](https://user-images.githubusercontent.com/961971/119239823-f42f7d80-bb21-11eb-9f65-9fe03d8b2887.png)
+
+(See this online sample)[https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html]. 
 
 Using URP
 -------
@@ -76,5 +194,4 @@ https://github.com/lob/generate-changelog
 
 License
 -------
-
 Dear ImGui is licensed under the MIT License, see [LICENSE.txt](https://github.com/ocornut/imgui/blob/master/LICENSE.txt) for more information.
