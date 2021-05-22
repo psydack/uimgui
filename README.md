@@ -36,7 +36,7 @@ To update (using ImGui.Net.dll) easier and often.
 
 Usage
 -------
-- [Add package](https://docs.unity3d.com/Manual/upm-ui-giturl.html) from git URL: https://github.com/psydack/uimguit;
+- [Add package](https://docs.unity3d.com/Manual/upm-ui-giturl.html) from git URL: https://github.com/psydack/uimguit
 - Add `UImGui` component to the scene and
 - (Optional) Set `Platform Type` to `Input System` if you're using the new [input system](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html) the `SampleDemoWindow` object on the scene the following properties:
 - If you're using **URP** check [Using URP](https://github.com/psydack/uimgui#using-urp) section, for **HDRP** [Using HDRP](https://github.com/psydack/uimgui#using-hdrp) section, for **built in** check [Using Built in](https://github.com/psydack/uimgui#using-hdrp) section.
@@ -62,7 +62,7 @@ Known issues
 -------
 
 ### Crispy / weird look
-![crispy](https://user-images.githubusercontent.com/961971/119237759-e6bfc680-bb14-11eb-8118-b91babee6242.png)
+![crispy](https://user-images.githubusercontent.com/961971/119237759-e6bfc680-bb14-11eb-8118-b91babee6242.png)  
 **Solution** You should change your anti-aliasing from `FXAA` to `None` or `SMAA` or disable post processing. To do this, check your camera.
 
 Credits
