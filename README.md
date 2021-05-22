@@ -16,7 +16,7 @@ This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-im
 
 ## Motivation
 
-To update (using ImGui.Net.dll) more easy and frequently.
+To update (using ImGui.Net.dll) easier and often.
 
 ## Features
 
@@ -33,56 +33,43 @@ To update (using ImGui.Net.dll) more easy and frequently.
 | Renderer Mesh             | :heavy_check_mark: | :heavy_check_mark: |
 | Renderer Procedural       |          ~         | :heavy_check_mark: |
 | FreeType                  | :heavy_check_mark: | :x:                |
-| Renderer Procedural       | :heavy_check_mark: | :x:                |
 
 Usage
 -------
-- [Add package](https://docs.unity3d.com/Manual/upm-ui-giturl.html) from git URL: https://github.com/psydack/uimguit .
-- Add a `UImGui` component to one of the objects in the scene.
-- When using the Universal Render Pipeline, add a `Render Im Gui Feature` render feature to the renderer asset. Assign it to the `render feature` field of the DearImGui component.
-- Subscribe to the `UImGuiUtility.Layout` event and use ImGui functions.
-- Example script:  
-  ```cs
-  using UnityEngine;
-  using ImGuiNET;
+- [Add package](https://docs.unity3d.com/Manual/upm-ui-giturl.html) from git URL: https://github.com/psydack/uimguit;
+- Add `UImGui` component to the scene and
+- (Optional) Set `Platform Type` to `Input System` if you're using the new [input system](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html) the `SampleDemoWindow` object on the scene the following properties:
+- If you're using **URP** check [Using URP](https://github.com/psydack/uimgui#using-urp) section, for **HDRP** [Using HDRP](https://github.com/psydack/uimgui#using-hdrp) section, for **built in** check [Using Built in](https://github.com/psydack/uimgui#using-hdrp) section.
+- You're ready.
 
-  public class DearImGuiDemo : MonoBehaviour
-  {
-      void OnEnable()
-      {
-          ImGuiUn.Layout += OnLayout;
-      }
-
-      void OnDisable()
-      {
-          ImGuiUn.Layout -= OnLayout;
-      }
-
-      void OnLayout()
-      {
-          ImGui.ShowDemoWindow();
-      }
-  }
-  ```
+Sample
+-------
+It has a demo scene called `UImGuiDemoScene` inside `UImGui/Sample` folder.
 
 Using URP
 -------
+- Add a `Render Im Gui Feature` render feature to the renderer asset. Assign it to the `render feature` field of the DearImGui component.
 
 Using HDRP
 -------
+You can't yet. 
 
 Using Built in
 -------
+No special sets.
 
+Known issues
+-------
 
+### Crispy / weird look
+![crispy](https://user-images.githubusercontent.com/961971/119237759-e6bfc680-bb14-11eb-8118-b91babee6242.png)
+**Solution** You should change your anti-aliasing from `FXAA` to `None` or `SMAA` or disable post processing. To do this, check your camera.
 
 Credits
 -------
-
 Original repo https://github.com/realgamessoftware/dear-imgui-unity  
 Thanks to @lacrc and @airtonmotoki for encouraging me.
-
-https://www.conventionalcommits.org/en/v1.0.0/  
+https://www.conventionalcommits.org/en/v1.0.0/
 https://semver.org/  
 https://github.com/yeyushengfan258/Lyra-Cursors  
 https://github.com/lob/generate-changelog  
