@@ -186,9 +186,9 @@ Known issues
 Credits
 -------
 Original repo https://github.com/realgamessoftware/dear-imgui-unity  
-Thanks to @lacrc and @airtonmotoki for encouraging me.
-https://www.conventionalcommits.org/en/v1.0.0/
-https://semver.org/  
+Thanks to @lacrc and @airtonmotoki for encouraging me.  
+https://www.conventionalcommits.org/en/v1.0.0/  
+https://semver.org/   
 https://github.com/yeyushengfan258/Lyra-Cursors  
 https://github.com/lob/generate-changelog  
 
