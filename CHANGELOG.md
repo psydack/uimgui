@@ -1,3 +1,31 @@
+#### 1.1.0 (2021-05-25)
+
+##### Documentation Changes
+
+*  add image sample code ([57855e65](https://github.com/psydack/uimgui/commit/57855e653dea46bf5928488db69fece0ec2ea77b))
+*  break line ([646ed2e0](https://github.com/psydack/uimgui/commit/646ed2e001774ed513a20471e51a84e470cd7456))
+*  add more examples ([66a8c31d](https://github.com/psydack/uimgui/commit/66a8c31dd16fbb83c5d717dfd4d93e5c03d13b75))
+*  small format fixed ([e67e3fa3](https://github.com/psydack/uimgui/commit/e67e3fa30e468857f8fe4cc2524b2535083de373))
+*  add more information ([9f03d733](https://github.com/psydack/uimgui/commit/9f03d7330caad0d53c26a91149194bf079f8d038))
+*  format with style ;) ([23812c74](https://github.com/psydack/uimgui/commit/23812c7457c3ac6f6631f19aff5fcf09f24fd34f))
+
+##### New Features
+
+*  add demo scene ([ac78363b](https://github.com/psydack/uimgui/commit/ac78363b12447d7b0eab6dc3d59fffba43427a0f))
+
+##### Bug Fixes
+
+*  showing image ([3a5e810f](https://github.com/psydack/uimgui/commit/3a5e810fe77f6cb56ac32cc64d936dfa343f3755))
+
+##### Other Changes
+
+* //github.com/psydack/uimgui ([f354d208](https://github.com/psydack/uimgui/commit/f354d2084cf445bc065039f7dd90e63be45f210e))
+
+##### Refactors
+
+*  add static get id for texture ([13d6f2eb](https://github.com/psydack/uimgui/commit/13d6f2ebb4173e208a382640183be85ecfe0a3bd))
+*  remove comment. ([ecab2940](https://github.com/psydack/uimgui/commit/ecab2940a12664e3112520e7009c517b3c095660))
+
 #### 0.1.1 (2021-05-21)
 
 ##### Build System / Dependencies
