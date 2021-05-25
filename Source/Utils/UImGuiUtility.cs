@@ -1,5 +1,8 @@
 ﻿using ImGuiNET;
 using System;
+using UImGui.Texture;
+using UnityEngine;
+using UTexture = UnityEngine.Texture;
 
 namespace UImGui
 {
@@ -8,6 +11,9 @@ namespace UImGui
 		public static event Action Layout; // Global/default Layout event, each DearImGui instance also has a private one.
 		internal static void DoLayout() => Layout?.Invoke();
 
+		public static IntPtr GetTextureId(UTexture texture) => Context?.TextureManager.GetTextureId(texture) ?? IntPtr.Zero;
+		internal static SpriteInfo GetSpriteInfo(Sprite sprite) => Context?.TextureManager.GetSpriteInfo(sprite) ?? null;
+
 		internal static Context Context;
 
 		internal static Context CreateContext()
@@ -15,7 +21,7 @@ namespace UImGui
 			return new Context
 			{
 				Value = ImGui.CreateContext(),
-				TextureManager = new Texture.TextureManager()
+				TextureManager = new TextureManager()
 			};
 		}
 
