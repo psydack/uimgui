@@ -14,10 +14,9 @@ namespace UImGui.Texture
 	internal class TextureManager
 	{
 		private Texture2D _atlasTexture;
-		private int _currentTextureId;
 
-		private readonly Dictionary<int, UTexture> _textures = new Dictionary<int, UTexture>();
-		private readonly Dictionary<UTexture, int> _textureIds = new Dictionary<UTexture, int>();
+		private readonly Dictionary<IntPtr, UTexture> _textures = new Dictionary<IntPtr, UTexture>();
+		private readonly Dictionary<UTexture, IntPtr> _textureIds = new Dictionary<UTexture, IntPtr>();
 		private readonly Dictionary<Sprite, SpriteInfo> _spriteData = new Dictionary<Sprite, SpriteInfo>();
 
 		private readonly HashSet<IntPtr> _allocatedGlyphRangeArrays = new HashSet<IntPtr>(); // TODO: Check if yet IntPtr has boxing when comparing equality (see original version)
@@ -50,7 +49,6 @@ namespace UImGui.Texture
 
 		public void Shutdown()
 		{
-			_currentTextureId = 0;
 			_textures.Clear();
 			_textureIds.Clear();
 			_spriteData.Clear();
@@ -64,23 +62,18 @@ namespace UImGui.Texture
 
 		public void PrepareFrame(ImGuiIOPtr io)
 		{
-			_currentTextureId = 0;
-
-			_textures.Clear();
-			_textureIds.Clear();
-
-			int id = RegisterTexture(_atlasTexture);
-			io.Fonts.SetTexID((IntPtr)id);
+			IntPtr id = RegisterTexture(_atlasTexture);
+			io.Fonts.SetTexID(id);
 		}
 
-		public bool TryGetTexture(int id, out UTexture texture)
+		public bool TryGetTexture(IntPtr id, out UTexture texture)
 		{
 			return _textures.TryGetValue(id, out texture);
 		}
 
-		public int GetTextureId(UTexture texture)
+		public IntPtr GetTextureId(UTexture texture)
 		{
-			return _textureIds.TryGetValue(texture, out int id) ? id : RegisterTexture(texture);
+			return _textureIds.TryGetValue(texture, out IntPtr id) ? id : RegisterTexture(texture);
 		}
 
 		public SpriteInfo GetSpriteInfo(Sprite sprite)
@@ -99,12 +92,13 @@ namespace UImGui.Texture
 			return spriteInfo;
 		}
 
-		private int RegisterTexture(UTexture texture)
+		private IntPtr RegisterTexture(UTexture texture)
 		{
-			_textures[++_currentTextureId] = texture;
-			_textureIds[texture] = _currentTextureId;
+			IntPtr id = texture.GetNativeTexturePtr();
+			_textures[id] = texture;
+			_textureIds[texture] = id;
 
-			return _currentTextureId;
+			return id;
 		}
 
 		public void BuildFontAtlas(ImGuiIOPtr io, in FontAtlasConfigAsset settings)
