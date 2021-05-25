@@ -1,9 +1,11 @@
 # UImGui
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/ocornut/imgui?style=flat-square)  
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/psydack/uimgui?style=flat-square)  
 <sub>([ImGui library](https://github.com/ocornut/imgui) is available under a free and permissive license, but needs financial support to sustain its continued improvements. In addition to maintenance and stability there are many desirable features yet to be added. If your company is using Dear ImGui, please consider reaching out.)</sub>
 
 UImGui (Unity ImGui) is an UPM package for the immediate mode GUI library using [ImGui.NET](https://github.com/mellinoe/ImGui.NET).
 This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-imgui-unity) project. 
+
+**Using ImGui.NET 1.82**
 
 ----
 
