@@ -162,7 +162,46 @@ private void OnLayout()
 ```
 ![image](https://user-images.githubusercontent.com/961971/119239823-f42f7d80-bb21-11eb-9f65-9fe03d8b2887.png)
 
-(See this online sample)[https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html]. 
+
+Image Sample
+
+```cs
+using ImGuiNET;
+using UImGui;
+using UnityEngine;
+
+public class UsingCurrentUImGui : MonoBehaviour
+{
+	[SerializeField]
+	private Texture _sampleTexture;
+
+	private void OnEnable()
+	{
+		UImGuiUtility.Layout += OnLayout;
+	}
+
+	private void OnDisable()
+	{
+		UImGuiUtility.Layout -= OnLayout;
+	}
+
+	private void OnLayout()
+	{
+		if (ImGui.Begin("Image Sample"))
+		{
+			System.IntPtr id = UImGuiUtility.GetTextureId(_sampleTexture);
+			System.Numerics.Vector2 size = new System.Numerics.Vector2(_sampleTexture.width, _sampleTexture.height)
+			ImGui.Image(id, size);
+
+			ImGui.End();
+		}
+	}
+}
+```
+![image](https://user-images.githubusercontent.com/961971/119574206-b9308280-bd8b-11eb-9df2-8bc07cf57140.png)  
+  
+  
+[See more](https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html).  
 
 Using URP
 -------
