@@ -1,3 +1,30 @@
+#### 2.0.0 (2021-05-26)
+
+##### Documentation Changes
+
+*  add steps for HDRP ([02962e94](https://github.com/psydack/uimgui/commit/02962e94f1a32b1b28892ac58de3743fecf57a30))
+*  update tag to match current repo ([6c48f040](https://github.com/psydack/uimgui/commit/6c48f0406f17c1165b9cd249985401c3b8e44b34))
+*  add image on comparison table ([9ba25435](https://github.com/psydack/uimgui/commit/9ba25435d8dfba65cb567d0fc41f77cf00c392e2))
+
+##### New Features
+
+*  add hd support ([38294715](https://github.com/psydack/uimgui/commit/382947152625f5faa6fe95e469ef53ff6ec5ca20))
+*  add custom hd pass ([f60a2214](https://github.com/psydack/uimgui/commit/f60a22146e7b26654957736a1e6164d2c5b8fd74))
+*  add helper method for hdrp ([15937c4f](https://github.com/psydack/uimgui/commit/15937c4fe3694e72a99e6336ab14ec82d625a838))
+*  prepare shader for hdrp ([b1d8ff7a](https://github.com/psydack/uimgui/commit/b1d8ff7affdfb2b2b8912a2636f7308c82231aa8))
+
+##### Bug Fixes
+
+*  remove numerics.dll ([455377e6](https://github.com/psydack/uimgui/commit/455377e6ddb979ec41d4b49f328ee5896a0f846d))
+
+##### Other Changes
+
+*  embbed numericsconverter with net compability ([d2706f55](https://github.com/psydack/uimgui/commit/d2706f555578c8f79349d156453cbe38998b034b))
+
+##### Refactors
+
+*  namespace outside directive ([0b516046](https://github.com/psydack/uimgui/commit/0b516046671f3524748054d5502519f27820f8c8))
+
 #### 1.1.0 (2021-05-25)
 
 ##### Documentation Changes
