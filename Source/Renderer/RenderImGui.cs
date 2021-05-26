@@ -1,12 +1,11 @@
 ﻿using UnityEngine.Rendering;
-
 #if HAS_URP
 using UnityEngine.Rendering.Universal;
 #endif
 
-#if HAS_URP
 namespace UImGui.Renderer
 {
+#if HAS_URP
 	public class RenderImGui : ScriptableRendererFeature
 	{
 		private class CommandBufferPass : ScriptableRenderPass
@@ -43,13 +42,10 @@ namespace UImGui.Renderer
 			renderer.EnqueuePass(_commandBufferPass);
 		}
 	}
-}
 #else
-namespace UImGui.Renderer
-{
-	public class RenderImGuiFeature : UnityEngine.ScriptableObject
+	public class RenderImGui : UnityEngine.ScriptableObject
 	{
 		public CommandBuffer CommandBuffer;
 	}
-}
 #endif
+}
