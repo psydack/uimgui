@@ -31,11 +31,11 @@ To update (using ImGui.Net.dll) easier and often.
 | Docking                   | :x:                | :heavy_check_mark: |
 | RenderPipeline Built in   | :heavy_check_mark: | :heavy_check_mark: |
 | RenderPipeline URP        | :x:                | :heavy_check_mark: |
-| RenderPipeline HDRP       | :x:                | :x:                |
+| RenderPipeline HDRP       | :x:                | :heavy_check_mark: |
 | Renderer Mesh             | :heavy_check_mark: | :heavy_check_mark: |
 | Renderer Procedural       |          ~         | :heavy_check_mark: |
 | FreeType                  | :heavy_check_mark: | :x:                |
-| Image / Texture           | :x: 		 | :heavy_check_mark: |
+| Image / Texture           | :x: 		         | :heavy_check_mark: |
 
 Usage
 -------
@@ -208,11 +208,14 @@ public class UsingCurrentUImGui : MonoBehaviour
 
 Using URP
 -------
-- Add a `Render Im Gui Feature` render feature to the renderer asset. Assign it to the `render feature` field of the DearImGui component.
+- Add a `Render Im Gui Feature` render feature to the renderer asset. 
+- Assign it to the `render feature` field of the DearImGui component.
 
 Using HDRP
 -------
-You can't yet. 
+- When using the ``High Definition Render Pipeline``, add a custom render pass and select "DearImGuiPass" injected after post processing.
+- Assign it to the `render feature` field of the DearImGui component.
+- See **Known issues HDRP** for more info.
 
 Using Built in
 -------
@@ -224,6 +227,10 @@ Known issues
 ### Crispy / weird look
 ![crispy](https://user-images.githubusercontent.com/961971/119237759-e6bfc680-bb14-11eb-8118-b91babee6242.png)  
 **Solution** You should change your anti-aliasing from `FXAA` to `None` or `SMAA` or disable post processing. To do this, check your camera.
+
+### HDRP
+- Alpha blending is incorrect when using HDRP. Still need to investigate why, it seems like the closer to 50% alpha you get the more opaque an object appears.
+- Procedural rendering is not yet supported on HDRP.
 
 Credits
 -------
