@@ -4,6 +4,8 @@ using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if HAS_HDRP
+#endif
 
 namespace UImGui
 {
@@ -14,7 +16,6 @@ namespace UImGui
 		private IRenderer _renderer;
 		private IPlatform _platform;
 		private CommandBuffer _renderCommandBuffer;
-		private bool _usingURP;
 
 		[SerializeField]
 		private Camera _camera = null;
@@ -76,6 +77,8 @@ namespace UImGui
 		[SerializeField]
 		private bool _doGlobalLayout = true; // Do global/default Layout event too.
 
+		public CommandBuffer CommandBuffer => _renderCommandBuffer;
+
 		public event System.Action Layout;  // Layout event for *this* ImGui instance.
 
 		public void Reload()
@@ -107,19 +110,18 @@ namespace UImGui
 				Fail(nameof(_camera));
 			}
 
-			_usingURP = RenderUtility.IsUsingURP();
-			if (_renderFeature == null && _usingURP)
+			if (_renderFeature == null && RenderUtility.IsUsingURP())
 			{
 				Fail(nameof(_renderFeature));
 			}
 
 			_renderCommandBuffer = RenderUtility.GetCommandBuffer(Constants.UImGuiCommandBuffer);
 
-			if (_usingURP)
+			if (RenderUtility.IsUsingURP())
 			{
 				_renderFeature.CommandBuffer = _renderCommandBuffer;
 			}
-			else
+			else if (!RenderUtility.IsUsingHDRP())
 			{
 				_camera.AddCommandBuffer(CameraEvent.AfterEverything, _renderCommandBuffer);
 			}
@@ -161,7 +163,7 @@ namespace UImGui
 			_context.TextureManager.Shutdown();
 			_context.TextureManager.DestroyFontAtlas(io);
 
-			if (_usingURP)
+			if (RenderUtility.IsUsingURP())
 			{
 				if (_renderFeature != null)
 				{
