@@ -1,16 +1,15 @@
 ﻿using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace UImGui
 {
 	public static class ConversionHelper
 	{
-		public static Color ToColor(this System.Numerics.Vector4 v4)
+		public static UnityEngine.Color ToColor(this System.Numerics.Vector4 v4)
 		{
-			return new Color(v4.X, v4.Y, v4.Z, v4.W);
+			return new UnityEngine.Color(v4.X, v4.Y, v4.Z, v4.W);
 		}
 
-		public static System.Numerics.Vector4 ToSystem(this Color c)
+		public static System.Numerics.Vector4 ToSystem(this UnityEngine.Color c)
 		{
 			return new System.Numerics.Vector4(c.r, c.g, c.b, c.a);
 		}
@@ -23,11 +22,12 @@ namespace UImGui
 
 			[FieldOffset(0)]
 			public UnityEngine.Vector4 Color;
-
+#if NET_STANDARD_2_0
 			[FieldOffset(0)]
 			public System.Numerics.Vector<float> SVector;
+#endif
 		}
-
+#if NET_STANDARD_2_0
 		public static System.Numerics.Vector<float> ToSystemGeneric(this UnityEngine.Vector4 vector)
 		{
 			ColorVectorUnion vectorUnionF = default;
@@ -41,5 +41,6 @@ namespace UImGui
 			vectorUnionF.Color = vector;
 			return vectorUnionF.SVector;
 		}
+#endif
 	}
 }

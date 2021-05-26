@@ -1,0 +1,16 @@
+{
+    "name": "com.kuraiandras.numericsconverter",
+    "displayName": "Numerics Converter",
+    "description": "Conversion methods between Unity vectory types and System.Numerics.Vector",
+    "version": "2.0.0",
+    "unity": "2019.1",
+    "author": {
+        "name": "Kurai András",
+        "email": "k.andras9642@gmail.com",
+        "url": "https://github.com/KuraiAndras/NumericsConverter"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/KuraiAndras/NumericsConverter.git"
+    }
+}

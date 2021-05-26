@@ -5,8 +5,7 @@
   "description": "A Unity wrapper for ImGui",
   "unity": "2020.3",
   "dependencies": {
-    "com.kuraiandras.numericsconverter": "https://github.com/KuraiAndras/NumericsConverter.git?path=/NumericsConverter/Assets/NumericsConverter",
-    "com.unity.collections": "0.15.0"
+    "com.unity.collections": "0.15.0-preview.21"
   },
   "keywords": [
     "dear",
