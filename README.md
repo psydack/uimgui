@@ -5,7 +5,7 @@
 UImGui (Unity ImGui) is an UPM package for the immediate mode GUI library using [ImGui.NET](https://github.com/mellinoe/ImGui.NET).
 This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-imgui-unity) project. 
 
-**Using ImGui.NET 1.82**
+**Using ImGui.NET 1.84 WIP**
 
 ----
 
