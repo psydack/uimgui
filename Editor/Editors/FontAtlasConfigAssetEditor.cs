@@ -10,19 +10,16 @@ namespace UImGui.Editor
 	{
 		private static class Styles
 		{
-			public static GUIContent rasterizer = new GUIContent("Rasterizer", "Build font atlases using a different rasterizer.");
 			public static GUIContent rasterizerFlags = new GUIContent("Rasterizer Flags", "Settings for custom font rasterizer. Forces flags on all fonts.");
 			public static GUIContent fonts = new GUIContent("Fonts", "Fonts to pack into the atlas texture.");
 		}
 
-		private SerializedProperty _rasterizer;
 		private SerializedProperty _rasterizerFlags;
 		private SerializedProperty _fonts;
 		private ReorderableList _fontsList;
 
 		private void OnEnable()
 		{
-			_rasterizer = serializedObject.FindProperty(nameof(FontAtlasConfigAsset.Rasterizer));
 			_rasterizerFlags = serializedObject.FindProperty(nameof(FontAtlasConfigAsset.RasterizerFlags));
 			_fonts = serializedObject.FindProperty(nameof(FontAtlasConfigAsset.Fonts));
 
@@ -58,7 +55,6 @@ namespace UImGui.Editor
 		{
 			serializedObject.Update();
 
-			EditorGUILayout.PropertyField(_rasterizer, Styles.rasterizer);
 			DrawRasterizerFlagsProperty();
 			_fontsList.DoLayoutList();
 
@@ -67,23 +63,14 @@ namespace UImGui.Editor
 
 		private void DrawRasterizerFlagsProperty()
 		{
-#if IMGUI_ENABLE_FREETYPE
-			//if (_rasterizer.intValue == (int)FontRasterizerType.FreeType)
-			//{
-			//	EditorGUI.BeginChangeCheck();
-			//	ImFreetype.RasterizerFlags value = (ImFreetype.RasterizerFlags)EditorGUILayout.EnumFlagsField(Styles.rasterizerFlags, (ImFreetype.RasterizerFlags)_rasterizerFlags.intValue);
-			//	if (EditorGUI.EndChangeCheck())
-			//	{
-			//		_rasterizerFlags.intValue = (int)value;
-			//	}
-			//}
-			//else
-			//{
-			EditorGUILayout.PropertyField(_rasterizerFlags, Styles.rasterizerFlags);
-			//}
-#else
-			EditorGUILayout.PropertyField(_rasterizerFlags, Styles.rasterizerFlags);
-#endif
+			EditorGUI.BeginChangeCheck();
+			ImFreetype.BuilderFlags value = (ImFreetype.BuilderFlags)EditorGUILayout.EnumFlagsField(
+				Styles.rasterizerFlags,
+				(ImFreetype.BuilderFlags)_rasterizerFlags.intValue);
+			if (EditorGUI.EndChangeCheck())
+			{
+				_rasterizerFlags.intValue = (int)value;
+			}
 		}
 	}
 }
