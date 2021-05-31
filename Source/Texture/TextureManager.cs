@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -120,9 +120,10 @@ namespace UImGui.Texture
 				return;
 			}
 
-			// Ddd fonts from config asset.
-			foreach (FontDefinition fontDefinition in settings.Fonts)
+			// Add fonts from config asset.
+			for (int fontIndex = 0; fontIndex < settings.Fonts.Length; fontIndex++)
 			{
+				FontDefinition fontDefinition = settings.Fonts[fontIndex];
 				string fontPath = System.IO.Path.Combine(Application.streamingAssetsPath, fontDefinition.Path);
 				if (!System.IO.File.Exists(fontPath))
 				{
