@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using NumericsConverter;
 using System.Collections.Generic;
 using UnityEngine;
@@ -65,14 +65,11 @@ namespace UImGui
 		[Tooltip("User-provided list of Unicode range (2 value per range, values are inclusive).")]
 		public Range[] CustomGlyphRanges;
 
-		public void SetDefaults()
+		public unsafe void SetDefaults()
 		{
-			unsafe
-			{
-				ImFontConfig* imFontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
-				SetFrom(imFontConfig);
-				ImGuiNative.ImFontConfig_destroy(imFontConfig);
-			}
+			ImFontConfig* imFontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+			SetFrom(imFontConfig);
+			ImGuiNative.ImFontConfig_destroy(imFontConfig);
 		}
 
 		public void ApplyTo(ImFontConfigPtr im)
