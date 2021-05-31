@@ -5,11 +5,12 @@ namespace UImGui
 	[System.Serializable]
 	internal struct FontDefinition
 	{
-		[Tooltip("Path relative to Application.streamingAssetsPath")]
+		[SerializeField]
+		private Object _fontAsset;
+
+		[Tooltip("Path relative to Application.streamingAssetsPath.")]
 		public string Path;
 		public FontConfig Config;
 
-		[SerializeField]
-		private Object _fontAsset;
 	}
 }
