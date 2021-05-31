@@ -1,3 +1,37 @@
+#### 2.1.0 (2021-05-31)
+
+##### Build System / Dependencies
+
+*  bump version ([18c2bd0b](https://github.com/psydack/uimgui/commit/18c2bd0b24d49f44f9f448e31190dcc9df8506b8))
+
+##### Documentation Changes
+
+*  add todo for ttf file. ([0c885762](https://github.com/psydack/uimgui/commit/0c8857620ec2a43fe6656d576041321f06e9dbf8))
+
+##### New Features
+
+*  add imfreetype ([a7fff76f](https://github.com/psydack/uimgui/commit/a7fff76f12b23e8a959d83b603b541baf8b5c207))
+*  add drawer for font definition ([46daa58c](https://github.com/psydack/uimgui/commit/46daa58c1d60cad1b8f422aaea77cda9a8d1c8a1))
+
+##### Bug Fixes
+
+*  enable dock as default ([e5ad8d6f](https://github.com/psydack/uimgui/commit/e5ad8d6f0089e47570cad5de2cd11c6c07ea07c0))
+*  rebuild with dock ([11526648](https://github.com/psydack/uimgui/commit/11526648ab33f1342236d0c0d20002d0e066959c))
+*  remove rasterizer flags ([61c8fcdf](https://github.com/psydack/uimgui/commit/61c8fcdfacc747a99e91fee03134f65f10d66ee7))
+*  add freetype.meta ([14f981ea](https://github.com/psydack/uimgui/commit/14f981ea632db903076e443333de522f60da358e))
+*  remove dock flags =( ([01a19343](https://github.com/psydack/uimgui/commit/01a19343cca055d705173a1c260d2a0eb34d5bc0))
+*  glyphs range null ([3cef0dba](https://github.com/psydack/uimgui/commit/3cef0dbab4181f916c2aea516909878e567c0866))
+
+##### Refactors
+
+*  remove rasterizer type ([4684b82d](https://github.com/psydack/uimgui/commit/4684b82d96c317f0c3eba0b1495d538f735dbfab))
+*  use only build for freetype ([fe8ce2e5](https://github.com/psydack/uimgui/commit/fe8ce2e56aa959e596361fad307c69e15583a3d0))
+*  remove type ([0bb7a6c4](https://github.com/psydack/uimgui/commit/0bb7a6c43e5a06699dec62df798e96728b9c6fe1))
+*  reorder props ([471c5bd9](https://github.com/psydack/uimgui/commit/471c5bd951c4cd85e09dd27e0af83a9a210e98f2))
+*  name index variable correctly ([7bf696d2](https://github.com/psydack/uimgui/commit/7bf696d2a3cd8189736a26c6c699c602f526931d))
+*  make foreach into for ([ac61fa86](https://github.com/psydack/uimgui/commit/ac61fa86452fa60f43000aaafce3122afb620e60))
+*  unsafe method instead a block ([6717845e](https://github.com/psydack/uimgui/commit/6717845e34a0e833988d2e23c5f14a2c73717121))
+
 #### 2.0.0 (2021-05-26)
 
 ##### Documentation Changes
