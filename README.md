@@ -4,6 +4,7 @@
 
 UImGui (Unity ImGui) is an UPM package for the immediate mode GUI library using [ImGui.NET](https://github.com/mellinoe/ImGui.NET).
 This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-imgui-unity) project. 
+This project use [FreeType](https://github.com/ocornut/imgui/tree/master/misc/freetype) as default renderer.
 
 **Using ImGui.NET 1.84 WIP**
 
@@ -25,6 +26,9 @@ To update (using ImGui.Net.dll) easier and often.
 | Feature                   |         RG         |      UImGui        | 
 | -----------------         | ------------------ | ------------------ |
 | IL2CPP                    | :x:                | :heavy_check_mark: |
+| Windows                   | :heavy_check_mark: | :heavy_check_mark: |
+| Linux                     | :heavy_check_mark: | :x: 		      |
+| MacOS                     | :heavy_check_mark: | :x: 		      |
 | Docking                   | :x:                | :heavy_check_mark: |
 | Unity Input Manager       | :heavy_check_mark: | :heavy_check_mark: |
 | Unity Input System        | :heavy_check_mark: | :heavy_check_mark: |
