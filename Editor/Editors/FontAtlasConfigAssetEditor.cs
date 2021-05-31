@@ -28,23 +28,21 @@ namespace UImGui.Editor
 
 			_fontsList = new ReorderableList(serializedObject, _fonts, true, true, true, true)
 			{
-				elementHeightCallback = (i) => EditorGUI.GetPropertyHeight(_fontsList.serializedProperty.GetArrayElementAtIndex(i)) + EditorGUIUtility.standardVerticalSpacing,
+				elementHeightCallback = (index) => EditorGUI.GetPropertyHeight(_fontsList.serializedProperty.GetArrayElementAtIndex(index)) + EditorGUIUtility.standardVerticalSpacing,
 				drawHeaderCallback = (Rect rect) => EditorGUI.LabelField(rect, Styles.fonts),
-				drawElementCallback = (Rect rect, int i, bool isActive, bool isFocused) =>
+				drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
 				{
-					if (i % 2 != 0)
+					if (index % 2 != 0)
 					{
-						EditorGUI.DrawRect(new Rect(rect.x - 19f, rect.y, rect.width + 23f, rect.height), new Color(0, 0, 0, 0.1f));
+						EditorGUI.DrawRect(new Rect(rect.x - 19f, rect.y, rect.width + 23f, rect.height), new Color(0, 0, 0, .1f));
 					}
 
-					EditorGUI.PropertyField(rect, _fontsList.serializedProperty.GetArrayElementAtIndex(i));
+					EditorGUI.PropertyField(rect, _fontsList.serializedProperty.GetArrayElementAtIndex(index), true);
 				},
 				onAddCallback = (li) =>
 				{
 					int index = li.index >= 0 && li.index < li.count ? li.index : li.count;
 					li.serializedProperty.InsertArrayElementAtIndex(index);
-					// TODO: Check if need this hack.
-					// HACK to get default values for the new font config.
 					serializedObject.ApplyModifiedProperties();
 					if (serializedObject.targetObject is FontAtlasConfigAsset atlas)
 					{
@@ -69,18 +67,19 @@ namespace UImGui.Editor
 
 		private void DrawRasterizerFlagsProperty()
 		{
-			// TODO: Implement this and test.
-#if IMGUI_FEATURE_FREETYPE
+#if IMGUI_ENABLE_FREETYPE
 			//if (_rasterizer.intValue == (int)FontRasterizerType.FreeType)
 			//{
 			//	EditorGUI.BeginChangeCheck();
-			//	var value = (ImFreetype.RasterizerFlags)EditorGUILayout.EnumFlagsField(Styles.rasterizerFlags, (ImFreetype.RasterizerFlags)_rasterizerFlags.intValue);
+			//	ImFreetype.RasterizerFlags value = (ImFreetype.RasterizerFlags)EditorGUILayout.EnumFlagsField(Styles.rasterizerFlags, (ImFreetype.RasterizerFlags)_rasterizerFlags.intValue);
 			//	if (EditorGUI.EndChangeCheck())
+			//	{
 			//		_rasterizerFlags.intValue = (int)value;
+			//	}
 			//}
 			//else
 			//{
-			//	EditorGUILayout.PropertyField(_rasterizerFlags, Styles.rasterizerFlags);
+			EditorGUILayout.PropertyField(_rasterizerFlags, Styles.rasterizerFlags);
 			//}
 #else
 			EditorGUILayout.PropertyField(_rasterizerFlags, Styles.rasterizerFlags);
