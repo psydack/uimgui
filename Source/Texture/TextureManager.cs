@@ -120,9 +120,10 @@ namespace UImGui.Texture
 				return;
 			}
 
-			// Ddd fonts from config asset.
-			foreach (FontDefinition fontDefinition in settings.Fonts)
+			// Add fonts from config asset.
+			for (int fontIndex = 0; fontIndex < settings.Fonts.Length; fontIndex++)
 			{
+				FontDefinition fontDefinition = settings.Fonts[fontIndex];
 				string fontPath = System.IO.Path.Combine(Application.streamingAssetsPath, fontDefinition.Path);
 				if (!System.IO.File.Exists(fontPath))
 				{
@@ -138,6 +139,7 @@ namespace UImGui.Texture
 					fontDefinition.Config.ApplyTo(fontConfigPtr);
 					fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
 
+					// TODO: Add check if is TTF File.
 					io.Fonts.AddFontFromFileTTF(fontPath, fontDefinition.Config.SizeInPixels, fontConfigPtr);
 				}
 			}
@@ -147,22 +149,7 @@ namespace UImGui.Texture
 				io.Fonts.AddFontDefault();
 			}
 
-			switch (settings.Rasterizer)
-			{
-				case FontRasterizerType.StbTrueType:
-					io.Fonts.Build();
-					break;
-				// TODO: Test FreeType.
-#if IMGUI_FEATURE_FREETYPE
-				//case FontRasterizerType.FreeType:
-				//	ImFreetype.BuildFontAtlas(io.Fonts, (ImFreetype.RasterizerFlags)settings.RasterizerFlags);
-				//	break;
-#endif
-				default:
-					Debug.LogWarning($"{settings.Rasterizer:G} rasterizer not available, using {default(FontRasterizerType):G}. Please report it.");
-					io.Fonts.Build();
-					break;
-			}
+			io.Fonts.Build();
 		}
 
 		public unsafe void DestroyFontAtlas(ImGuiIOPtr io)

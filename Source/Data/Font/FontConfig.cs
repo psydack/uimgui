@@ -65,14 +65,11 @@ namespace UImGui
 		[Tooltip("User-provided list of Unicode range (2 value per range, values are inclusive).")]
 		public Range[] CustomGlyphRanges;
 
-		public void SetDefaults()
+		public unsafe void SetDefaults()
 		{
-			unsafe
-			{
-				ImFontConfig* imFontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
-				SetFrom(imFontConfig);
-				ImGuiNative.ImFontConfig_destroy(imFontConfig);
-			}
+			ImFontConfig* imFontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+			SetFrom(imFontConfig);
+			ImGuiNative.ImFontConfig_destroy(imFontConfig);
 		}
 
 		public void ApplyTo(ImFontConfigPtr im)
@@ -120,7 +117,7 @@ namespace UImGui
 		public unsafe List<ushort> BuildRanges()
 		{
 			ImFontAtlas* atlas = null;
-			List<ushort> ranges = default;
+			List<ushort> ranges = new List<ushort>();
 
 			void AddRangePtr(ushort* r)
 			{

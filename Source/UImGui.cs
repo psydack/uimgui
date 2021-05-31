@@ -38,7 +38,7 @@ namespace UImGui
 		[SerializeField]
 		private UIOConfig _initialConfiguration = new UIOConfig
 		{
-			ImGuiConfig = ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.NavEnableKeyboard,
+			ImGuiConfig = ImGuiConfigFlags.NavEnableKeyboard | ImGuiConfigFlags.DockingEnable,
 
 			DoubleClickTime = 0.30f,
 			DoubleClickMaxDist = 6.0f,
