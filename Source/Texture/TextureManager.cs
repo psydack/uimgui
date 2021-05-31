@@ -62,8 +62,8 @@ namespace UImGui.Texture
 
 		public void PrepareFrame(ImGuiIOPtr io)
 		{
-				IntPtr id = RegisterTexture(_atlasTexture);
-				io.Fonts.SetTexID(id);
+			IntPtr id = RegisterTexture(_atlasTexture);
+			io.Fonts.SetTexID(id);
 		}
 
 		public bool TryGetTexture(IntPtr id, out UTexture texture)
@@ -149,19 +149,7 @@ namespace UImGui.Texture
 				io.Fonts.AddFontDefault();
 			}
 
-			switch (settings.Rasterizer)
-			{
-				case FontRasterizerType.StbTrueType:
-					io.Fonts.Build();
-					break;
-				//case FontRasterizerType.FreeType:
-				//	ImFreetype.BuildFontAtlas(io.Fonts, (ImFreetype.RasterizerFlags)settings.RasterizerFlags);
-				//	break;
-				default:
-					Debug.LogWarning($"{settings.Rasterizer:G} rasterizer not available, using {default(FontRasterizerType):G}. Please report it.");
-					io.Fonts.Build();
-					break;
-			}
+			io.Fonts.Build();
 		}
 
 		public unsafe void DestroyFontAtlas(ImGuiIOPtr io)
