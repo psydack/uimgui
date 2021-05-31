@@ -6,7 +6,7 @@ using UTexture = UnityEngine.Texture;
 
 namespace UImGui
 {
-	internal static class UImGuiUtility
+	public static class UImGuiUtility
 	{
 		public static event Action Layout; // Global/default Layout event, each DearImGui instance also has a private one.
 		internal static void DoLayout() => Layout?.Invoke();
