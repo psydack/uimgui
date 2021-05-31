@@ -34,8 +34,8 @@ To update (using ImGui.Net.dll) easier and often.
 | RenderPipeline HDRP       | :x:                | :heavy_check_mark: |
 | Renderer Mesh             | :heavy_check_mark: | :heavy_check_mark: |
 | Renderer Procedural       |          ~         | :heavy_check_mark: |
-| FreeType                  | :heavy_check_mark: | :x:                |
-| Image / Texture           | :x: 		         | :heavy_check_mark: |
+| FreeType                  | :heavy_check_mark: | :heavy_check_mark: |
+| Image / Texture           | :x: 		 | :heavy_check_mark: |
 
 Usage
 -------
