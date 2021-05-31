@@ -1,4 +1,4 @@
-using ImGuiNET;
+﻿using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -62,8 +62,8 @@ namespace UImGui.Texture
 
 		public void PrepareFrame(ImGuiIOPtr io)
 		{
-			IntPtr id = RegisterTexture(_atlasTexture);
-			io.Fonts.SetTexID(id);
+				IntPtr id = RegisterTexture(_atlasTexture);
+				io.Fonts.SetTexID(id);
 		}
 
 		public bool TryGetTexture(IntPtr id, out UTexture texture)
@@ -139,6 +139,7 @@ namespace UImGui.Texture
 					fontDefinition.Config.ApplyTo(fontConfigPtr);
 					fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
 
+					// TODO: Add check if is TTF File.
 					io.Fonts.AddFontFromFileTTF(fontPath, fontDefinition.Config.SizeInPixels, fontConfigPtr);
 				}
 			}
@@ -153,12 +154,9 @@ namespace UImGui.Texture
 				case FontRasterizerType.StbTrueType:
 					io.Fonts.Build();
 					break;
-				// TODO: Test FreeType.
-#if IMGUI_FEATURE_FREETYPE
 				//case FontRasterizerType.FreeType:
 				//	ImFreetype.BuildFontAtlas(io.Fonts, (ImFreetype.RasterizerFlags)settings.RasterizerFlags);
 				//	break;
-#endif
 				default:
 					Debug.LogWarning($"{settings.Rasterizer:G} rasterizer not available, using {default(FontRasterizerType):G}. Please report it.");
 					io.Fonts.Build();
