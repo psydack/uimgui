@@ -228,13 +228,6 @@ No special sets.
 Known issues
 -------
 
-### Crispy / weird look
-![crispy](https://user-images.githubusercontent.com/961971/119237759-e6bfc680-bb14-11eb-8118-b91babee6242.png)  
-**Solution** You should change your anti-aliasing from `FXAA` to `None` or `SMAA` or disable post processing. To do this, check your camera.
-
-### HDRP
-- Alpha blending is incorrect when using HDRP. Still need to investigate why, it seems like the closer to 50% alpha you get the more opaque an object appears.
-- Procedural rendering is not yet supported on HDRP.
 
 Credits
 -------
