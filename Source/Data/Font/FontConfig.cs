@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using NumericsConverter;
 using System.Collections.Generic;
 using UnityEngine;
@@ -120,7 +120,7 @@ namespace UImGui
 		public unsafe List<ushort> BuildRanges()
 		{
 			ImFontAtlas* atlas = null;
-			List<ushort> ranges = default;
+			List<ushort> ranges = new List<ushort>();
 
 			void AddRangePtr(ushort* r)
 			{
