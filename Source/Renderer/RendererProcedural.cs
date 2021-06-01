@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
 using NumericsConverter;
+using System;
+using System.Runtime.InteropServices;
 using UImGui.Assets;
 using UImGui.Texture;
 using Unity.Collections;
@@ -8,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 using NVector4 = System.Numerics.Vector4;
+using Object = UnityEngine.Object;
 
 // TODO: switch from using ComputeBuffer to GraphicsBuffer
 // starting from 2020.1 API that takes ComputeBuffer can also take GraphicsBuffer
@@ -22,6 +25,8 @@ namespace UImGui.Renderer
 	/// <remarks>Requires shader model 4.5 level hardware.</remarks>
 	internal sealed class RendererProcedural : IRenderer
 	{
+		public delegate void UserDrawCallback(ImDrawListPtr parent_list, ImDrawCmdPtr cmd);
+
 		private readonly Shader _shader;
 		private readonly int _textureID;
 		private readonly int _verticesID;
@@ -187,7 +192,7 @@ namespace UImGui.Renderer
 
 		private void CreateDrawCommands(CommandBuffer cmd, ImDrawDataPtr drawData, Vector2 fbSize)
 		{
-			System.IntPtr prevTextureId = System.IntPtr.Zero;
+			IntPtr prevTextureId = IntPtr.Zero;
 			NVector4 clipOffst = new NVector4(drawData.DisplayPos.X, drawData.DisplayPos.Y,
 				drawData.DisplayPos.X, drawData.DisplayPos.Y);
 			Vector4 clipScale = new Vector4(drawData.FramebufferScale.X, drawData.FramebufferScale.Y,
@@ -202,36 +207,42 @@ namespace UImGui.Renderer
 
 			int vtxOf = 0;
 			int argOf = 0;
-			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
+			for (int commandListIndex = 0, nMax = drawData.CmdListsCount; commandListIndex < nMax; ++commandListIndex)
 			{
-				ImDrawListPtr drawList = drawData.CmdListsRange[n];
+				ImDrawListPtr drawList = drawData.CmdListsRange[commandListIndex];
 				for (int commandIndex = 0, iMax = drawList.CmdBuffer.Size; commandIndex < iMax; ++commandIndex, argOf += 5 * 4)
 				{
 					ImDrawCmdPtr drawCmd = drawList.CmdBuffer[commandIndex];
-					// TODO: User callback in drawCmd.UserCallback & drawCmd.UserCallbackData.
-
-					// Project scissor rectangle into framebuffer space and skip if fully outside.
-					Vector4 clipSize = (drawCmd.ClipRect - clipOffst).ToUnity();
-					Vector4 clip = Vector4.Scale(clipSize, clipScale);
-
-					if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;
-
-					if (prevTextureId != drawCmd.TextureId)
+					if (drawCmd.UserCallback != IntPtr.Zero)
 					{
-						prevTextureId = drawCmd.TextureId;
-
-						bool hasTexture = _textureManager.TryGetTexture(prevTextureId, out UnityEngine.Texture texture);
-						Assert.IsTrue(hasTexture, $"Texture {prevTextureId} does not exist. Try to use UImGuiUtility.GetTextureID().");
-
-						_materialProperties.SetTexture(_textureID, texture);
+						UserDrawCallback userDrawCallback = Marshal.GetDelegateForFunctionPointer<UserDrawCallback>(drawCmd.UserCallback);
+						userDrawCallback(drawList, drawCmd);
 					}
+					else
+					{
+						// Project scissor rectangle into framebuffer space and skip if fully outside.
+						Vector4 clipSize = (drawCmd.ClipRect - clipOffst).ToUnity();
+						Vector4 clip = Vector4.Scale(clipSize, clipScale);
 
-					// Base vertex location not automatically added to SV_VertexID.
-					_materialProperties.SetInt(_baseVertexID, vtxOf + (int)drawCmd.VtxOffset);
+						if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;
 
-					cmd.EnableScissorRect(new Rect(clip.x, fbSize.y - clip.w, clip.z - clip.x, clip.w - clip.y)); // Invert y.
-					cmd.DrawProceduralIndirect(_indexBuffer, Matrix4x4.identity, _material, -1,
-						MeshTopology.Triangles, _argumentsBuffer, argOf, _materialProperties);
+						if (prevTextureId != drawCmd.TextureId)
+						{
+							prevTextureId = drawCmd.TextureId;
+
+							bool hasTexture = _textureManager.TryGetTexture(prevTextureId, out UnityEngine.Texture texture);
+							Assert.IsTrue(hasTexture, $"Texture {prevTextureId} does not exist. Try to use UImGuiUtility.GetTextureID().");
+
+							_materialProperties.SetTexture(_textureID, texture);
+						}
+
+						// Base vertex location not automatically added to SV_VertexID.
+						_materialProperties.SetInt(_baseVertexID, vtxOf + (int)drawCmd.VtxOffset);
+
+						cmd.EnableScissorRect(new Rect(clip.x, fbSize.y - clip.w, clip.z - clip.x, clip.w - clip.y)); // Invert y.
+						cmd.DrawProceduralIndirect(_indexBuffer, Matrix4x4.identity, _material, -1,
+							MeshTopology.Triangles, _argumentsBuffer, argOf, _materialProperties);
+					}
 				}
 				vtxOf += drawList.VtxBuffer.Size;
 			}
