@@ -25,8 +25,6 @@ namespace UImGui.Renderer
 	/// <remarks>Requires shader model 4.5 level hardware.</remarks>
 	internal sealed class RendererProcedural : IRenderer
 	{
-		public delegate void UserDrawCallback(ImDrawListPtr parent_list, ImDrawCmdPtr cmd);
-
 		private readonly Shader _shader;
 		private readonly int _textureID;
 		private readonly int _verticesID;

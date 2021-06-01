@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using NumericsConverter;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UImGui.Assets;
 using UImGui.Texture;
 using Unity.Collections;
@@ -10,6 +12,7 @@ using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 using NVector2 = System.Numerics.Vector2;
 using NVector4 = System.Numerics.Vector4;
+using Object = UnityEngine.Object;
 
 namespace UImGui.Renderer
 {
@@ -113,7 +116,6 @@ namespace UImGui.Renderer
 
 			if (_prevSubMeshCount != subMeshCount)
 			{
-				// TODO: Check why need to clear before changing.
 				// Occasionally crashes when changing subMeshCount without clearing first.
 				_mesh.Clear(true);
 				_mesh.subMeshCount = _prevSubMeshCount = subMeshCount;
@@ -191,26 +193,32 @@ namespace UImGui.Renderer
 				for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i, ++subOf)
 				{
 					ImDrawCmdPtr drawCmd = drawList.CmdBuffer[i];
-					// TODO: user callback in drawCmd.UserCallback & drawCmd.UserCallbackData.
-
-					// Project scissor rectangle into framebuffer space and skip if fully outside.
-					Vector4 clipSize = (drawCmd.ClipRect - clipOffset).ToUnity();
-					Vector4 clip = Vector4.Scale(clipSize, clipScale);
-
-					if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;
-
-					if (prevTextureId != drawCmd.TextureId)
+					if (drawCmd.UserCallback != IntPtr.Zero)
 					{
-						prevTextureId = drawCmd.TextureId;
-
-						bool hasTexture = _textureManager.TryGetTexture(prevTextureId, out UnityEngine.Texture texture);
-						Assert.IsTrue(hasTexture, $"Texture {prevTextureId} does not exist. Try to use UImGuiUtility.GetTextureID().");
-
-						_materialProperties.SetTexture(_textureID, texture);
+						UserDrawCallback userDrawCallback = Marshal.GetDelegateForFunctionPointer<UserDrawCallback>(drawCmd.UserCallback);
+						userDrawCallback(drawList, drawCmd);
 					}
+					else
+					{
+						// Project scissor rectangle into framebuffer space and skip if fully outside.
+						Vector4 clipSize = (drawCmd.ClipRect - clipOffset).ToUnity();
+						Vector4 clip = Vector4.Scale(clipSize, clipScale);
 
-					commandBuffer.EnableScissorRect(new Rect(clip.x, fbSize.y - clip.w, clip.z - clip.x, clip.w - clip.y)); // Invert y.
-					commandBuffer.DrawMesh(_mesh, Matrix4x4.identity, _material, subOf, -1, _materialProperties);
+						if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;
+
+						if (prevTextureId != drawCmd.TextureId)
+						{
+							prevTextureId = drawCmd.TextureId;
+
+							bool hasTexture = _textureManager.TryGetTexture(prevTextureId, out UnityEngine.Texture texture);
+							Assert.IsTrue(hasTexture, $"Texture {prevTextureId} does not exist. Try to use UImGuiUtility.GetTextureID().");
+
+							_materialProperties.SetTexture(_textureID, texture);
+						}
+
+						commandBuffer.EnableScissorRect(new Rect(clip.x, fbSize.y - clip.w, clip.z - clip.x, clip.w - clip.y)); // Invert y.
+						commandBuffer.DrawMesh(_mesh, Matrix4x4.identity, _material, subOf, -1, _materialProperties);
+					}
 				}
 			}
 			commandBuffer.DisableScissorRect();
