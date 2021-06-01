@@ -55,77 +55,114 @@ Samples
 It has a demo scene called `UImGuiDemoScene` inside `UImGui/Sample` folder.
 
 You can subscribe to global layout or for a specific `UImGui` context:
-If choose to use global, don't to forget to set ``Do Global Layout`` to ``true`` on ``UImGui`` instance.
+If choose to use global, don't to forget to set ``Do Global Events`` to ``true`` on ``UImGui`` instance.
 
 ```cs
-using ImGuiNET;
 using UImGui;
 using UnityEngine;
 
-public class UsingCurrentUImGui : MonoBehaviour
+public class StaticSample : MonoBehaviour
 {
-	[SerializeField]
-	private UImGui.UImGui _uImGui;
-  
-	private void OnEnable()
+	private void Awake()
 	{
-		_uImGui.Layout += OnLayout;
-		// UImGuiUtility.Layout += OnLayout; // Use this for global layout.
+		UImGuiUtility.Layout += OnLayout;
+		UImGuiUtility.OnInitialize += OnInitialize;
+		UImGuiUtility.OnDeinitialize += OnDeinitialize;
+	}
+
+	private void OnLayout(UImGui.UImGui obj)
+	{
+		// Unity Update method. 
+		// Your code belongs here! Like ImGui.Begin... etc.
+	}
+
+	private void OnInitialize(UImGui.UImGui obj)
+	{
+		// runs after UImGui.OnEnable();
+	}
+
+	private void OnDeinitialize(UImGui.UImGui obj)
+	{
+		// runs after UImGui.OnDisable();
 	}
 
 	private void OnDisable()
 	{
-		_uImGui.Layout -= OnLayout;
-		// UImGuiUtility.Layout -= OnLayout; // Use this for global layout.
+		UImGuiUtility.Layout -= OnLayout;
+		UImGuiUtility.OnInitialize -= OnInitialize;
+		UImGuiUtility.OnDeinitialize -= OnDeinitialize;
+	}
+}
+
+```
+
+To use instance instead a global UImGui, use like this.
+
+```cs
+using UnityEngine;
+
+public class InstanceSample : MonoBehaviour
+{
+	[SerializeField]
+	private UImGui.UImGui _uimGuiInstance;
+
+	private void Awake()
+	{
+		if (_uimGuiInstance == null)
+		{
+			Debug.LogError("Must assign a UImGuiInstance or use UImGuiUtility with Do Global Events on UImGui component.");
+		}
+
+		_uimGuiInstance.Layout += OnLayout;
+		_uimGuiInstance.OnInitialize += OnInitialize;
+		_uimGuiInstance.OnDeinitialize += OnDeinitialize;
 	}
 
-	private void OnLayout()
+	private void OnLayout(UImGui.UImGui obj)
 	{
-            // Your code goes here.
+		// Unity Update method. 
+		// Your code belongs here! Like ImGui.Begin... etc.
+	}
+
+	private void OnInitialize(UImGui.UImGui obj)
+	{
+		// runs after UImGui.OnEnable();
+	}
+
+	private void OnDeinitialize(UImGui.UImGui obj)
+	{
+		// runs after UImGui.OnDisable();
+	}
+
+	private void OnDisable()
+	{
+		_uimGuiInstance.Layout -= OnLayout;
+		_uimGuiInstance.OnInitialize -= OnInitialize;
+		_uimGuiInstance.OnDeinitialize -= OnDeinitialize;
 	}
 }
 ```
 
-The following codes goes on your `Layout` event, like this:  
-
+Sample code
 ```cs
-using ImGuiNET;
-using UnityEngine;
+[SerializeField]
+private float _sliderFloatValue = 1;
 
-public class UsingCurrentUImGui : MonoBehaviour
+[SerializeField]
+private string _inputText;
+
+// Add listeners, etc ...
+
+private void OnLayout(UImGui.UImGui obj)
 {
-	// Or you can use global layout. Look commented lines.
-	[SerializeField]
-	private UImGui.UImGui _uImGui;
-
-	[SerializeField]
-	private float _sliderFloatValue = 1;
-
-	private byte[] _inputText = new byte[100];
-
-	private void OnEnable()
+	ImGui.Text($"Hello, world {123}");
+	if (ImGui.Button("Save"))
 	{
-		_uImGui.Layout += OnLayout;
-		// UImGuiUtility.Layout += OnLayout; // Use this for global layout.
+		Debug.Log("Save");
 	}
 
-	private void OnDisable()
-	{
-		_uImGui.Layout -= OnLayout;
-		// UImGuiUtility.Layout -= OnLayout; // Use this for global layout.
-	}
-
-	private void OnLayout()
-	{
-		ImGui.Text($"Hello, world {123}");
-		if (ImGui.Button("Save"))
-		{
-			Debug.Log("Save");
-		}
-
-		ImGui.InputText("string", _inputText, (uint)(sizeof(byte) * _inputText.Length));
-		ImGui.SliderFloat("float", ref _sliderFloatValue, 0.0f, 1.0f);
-	}
+	ImGui.InputText("string", ref _inputText, 100);
+	ImGui.SliderFloat("float", ref _sliderFloatValue, 0.0f, 1.0f);
 }
 ```
 ![image](https://user-images.githubusercontent.com/961971/119239324-b54bf880-bb1e-11eb-87e3-0ecbfaafde27.png)
@@ -135,7 +172,7 @@ public class UsingCurrentUImGui : MonoBehaviour
 private System.Numerics.Vector4 _myColor;
 private bool _isOpen;
 
-private void OnLayout()
+private void OnLayout(UImGui.UImGui obj)
 {
 	// Create a window called "My First Tool", with a menu bar.
 	ImGui.Begin("My First Tool", ref _isOpen, ImGuiWindowFlags.MenuBar);
@@ -170,46 +207,81 @@ private void OnLayout()
 ```
 ![image](https://user-images.githubusercontent.com/961971/119239823-f42f7d80-bb21-11eb-9f65-9fe03d8b2887.png)
 
-
 Image Sample
 
 ```cs
-using ImGuiNET;
-using UImGui;
-using UnityEngine;
+[SerializeField]
+private Texture _sampleTexture;
 
-public class UsingCurrentUImGui : MonoBehaviour
+private void OnLayout(UImGui.UImGui obj)
 {
-	[SerializeField]
-	private Texture _sampleTexture;
-
-	private void OnEnable()
+	if (ImGui.Begin("Image Sample"))
 	{
-		UImGuiUtility.Layout += OnLayout;
-	}
+		System.IntPtr id = UImGuiUtility.GetTextureId(_sampleTexture);
+		System.Numerics.Vector2 size = new System.Numerics.Vector2(_sampleTexture.width, _sampleTexture.height)
+		ImGui.Image(id, size);
 
-	private void OnDisable()
-	{
-		UImGuiUtility.Layout -= OnLayout;
-	}
-
-	private void OnLayout()
-	{
-		if (ImGui.Begin("Image Sample"))
-		{
-			System.IntPtr id = UImGuiUtility.GetTextureId(_sampleTexture);
-			System.Numerics.Vector2 size = new System.Numerics.Vector2(_sampleTexture.width, _sampleTexture.height)
-			ImGui.Image(id, size);
-
-			ImGui.End();
-		}
+		ImGui.End();
 	}
 }
 ```
 ![image](https://user-images.githubusercontent.com/961971/119574206-b9308280-bd8b-11eb-9df2-8bc07cf57140.png)  
   
-  
-[See more](https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html).  
+Custom UserData
+
+```cs
+[Serializable]
+private struct UserData
+{
+	public int SomeCoolValue;
+}
+
+[SerializeField]
+private UserData _userData;
+private string _input = "";
+
+// Add Listeners... etc.
+
+private unsafe void OnInitialize(UImGui.UImGui uimgui)
+{
+	fixed (UserData* ptr = &_userData)
+	{
+		uimgui.SetUserData((IntPtr)ptr);
+	}
+}
+
+private unsafe void OnLayout(UImGui.UImGui obj)
+{
+	if (ImGui.Begin("Custom UserData"))
+	{
+		fixed (UserData* ptr = &_userData)
+		{
+			ImGuiInputTextCallback customCallback = CustomCallback;
+			ImGui.InputText("label", ref _input, 100, ~(ImGuiInputTextFlags)0, customCallback, (IntPtr)ptr);
+		}
+
+		ImGui.End();
+	}
+}
+
+private unsafe int CustomCallback(ImGuiInputTextCallbackData* data)
+{
+	IntPtr userDataPtr = (IntPtr)data->UserData;
+	if (userDataPtr != IntPtr.Zero)
+	{
+		UserData userData = Marshal.PtrToStructure<UserData>(userDataPtr);
+		Debug.Log(userData.SomeCoolValue);
+	}
+
+	// You must to overwrite how you handle with new inputs.
+	// ...
+
+	return 1;
+}
+```
+![image](https://user-images.githubusercontent.com/961971/120383734-a1ad4880-c2fb-11eb-87e1-398d5e7aac97.png)
+
+You can [see more samples here](https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html).
 
 Using URP
 -------
