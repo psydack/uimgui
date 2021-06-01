@@ -8,7 +8,7 @@ namespace UImGui
 {
 	internal static unsafe class ImGuiExtension
 	{
-		private static readonly HashSet<IntPtr> _managedAllocations = new HashSet<IntPtr>(); // TODO: Check if yet IntPtr has boxing when comparing equality (see original version)
+		private static readonly HashSet<IntPtr> _managedAllocations = new HashSet<IntPtr>();
 
 		internal static void SetBackendPlatformName(this ImGuiIOPtr io, string name)
 		{

@@ -19,7 +19,7 @@ namespace UImGui.Texture
 		private readonly Dictionary<UTexture, IntPtr> _textureIds = new Dictionary<UTexture, IntPtr>();
 		private readonly Dictionary<Sprite, SpriteInfo> _spriteData = new Dictionary<Sprite, SpriteInfo>();
 
-		private readonly HashSet<IntPtr> _allocatedGlyphRangeArrays = new HashSet<IntPtr>(); // TODO: Check if yet IntPtr has boxing when comparing equality (see original version)
+		private readonly HashSet<IntPtr> _allocatedGlyphRangeArrays = new HashSet<IntPtr>();
 
 		public unsafe void Initialize(ImGuiIOPtr io)
 		{

@@ -10,7 +10,6 @@ namespace UImGui.Platform
 		{
 			switch (type)
 			{
-				// TODO: Fix when using only new input system and you choose InputType throws error. 
 				case InputType.InputManager:
 					return true;
 #if HAS_INPUTSYSTEM
