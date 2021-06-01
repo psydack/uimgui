@@ -8,13 +8,19 @@ namespace UImGui
 {
 	public static class UImGuiUtility
 	{
-		public static event Action Layout; // Global/default Layout event, each DearImGui instance also has a private one.
-		internal static void DoLayout() => Layout?.Invoke();
-
 		public static IntPtr GetTextureId(UTexture texture) => Context?.TextureManager.GetTextureId(texture) ?? IntPtr.Zero;
 		internal static SpriteInfo GetSpriteInfo(Sprite sprite) => Context?.TextureManager.GetSpriteInfo(sprite) ?? null;
 
 		internal static Context Context;
+
+		#region Events
+		public static event Action<UImGui> Layout;
+		public static event Action<UImGui> OnInitialize;
+		public static event Action<UImGui> OnDeinitialize;
+		internal static void DoLayout(UImGui uimgui) => Layout?.Invoke(uimgui);
+		internal static void DoOnInitialize(UImGui uimgui) => OnInitialize?.Invoke(uimgui);
+		internal static void DoOnDeinitialize(UImGui uimgui) => OnDeinitialize?.Invoke(uimgui);
+		#endregion
 
 		internal static Context CreateContext()
 		{

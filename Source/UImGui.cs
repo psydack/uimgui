@@ -75,11 +75,15 @@ namespace UImGui
 		private CursorShapesAsset _cursorShapes = null;
 
 		[SerializeField]
-		private bool _doGlobalLayout = true; // Do global/default Layout event too.
+		private bool _doGlobalEvents = true; // Do global/default Layout event too.
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
 
-		public event System.Action Layout;  // Layout event for *this* ImGui instance.
+		#region Events
+		public event System.Action<UImGui> Layout;
+		public event System.Action<UImGui> OnInitialize;
+		public event System.Action<UImGui> OnDeinitialize;
+		#endregion
 
 		public void Reload()
 		{
@@ -155,6 +159,12 @@ namespace UImGui
 			{
 				Fail(nameof(_renderer));
 			}
+
+			if (_doGlobalEvents)
+			{
+				UImGuiUtility.DoOnInitialize(this);
+			}
+			OnInitialize?.Invoke(this);
 		}
 
 		private void OnDisable()
@@ -191,6 +201,12 @@ namespace UImGui
 			}
 
 			_renderCommandBuffer = null;
+
+			if (_doGlobalEvents)
+			{
+				UImGuiUtility.DoOnDeinitialize(this);
+			}
+			OnDeinitialize?.Invoke(this);
 		}
 
 		private void Update()
@@ -207,12 +223,12 @@ namespace UImGui
 			Constants.LayoutMarker.Begin(this);
 			try
 			{
-				if (_doGlobalLayout)
+				if (_doGlobalEvents)
 				{
-					UImGuiUtility.DoLayout();
+					UImGuiUtility.DoLayout(this);
 				}
 
-				Layout?.Invoke();
+				Layout?.Invoke(this);
 			}
 			finally
 			{

@@ -9,7 +9,7 @@ namespace UImGui.Editor
 	[CustomEditor(typeof(UImGui))]
 	internal class UImGuiEditor : UnityEditor.Editor
 	{
-		private SerializedProperty _doGlobalLayout;
+		private SerializedProperty _doGlobalEvents;
 		private SerializedProperty _camera;
 		private SerializedProperty _renderFeature;
 		private SerializedProperty _renderer;
@@ -30,7 +30,7 @@ namespace UImGui.Editor
 
 			EditorGUI.BeginChangeCheck();
 
-			EditorGUILayout.PropertyField(_doGlobalLayout);
+			EditorGUILayout.PropertyField(_doGlobalEvents);
 			if (RenderUtility.IsUsingURP())
 			{
 				EditorGUILayout.PropertyField(_renderFeature);
@@ -63,7 +63,7 @@ namespace UImGui.Editor
 
 		private void OnEnable()
 		{
-			_doGlobalLayout = serializedObject.FindProperty("_doGlobalLayout");
+			_doGlobalEvents = serializedObject.FindProperty("_doGlobalEvents");
 			_camera = serializedObject.FindProperty("_camera");
 			_renderFeature = serializedObject.FindProperty("_renderFeature");
 			_renderer = serializedObject.FindProperty("_rendererType");
