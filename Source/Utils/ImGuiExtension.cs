@@ -79,7 +79,6 @@ namespace UImGui
 			}
 		}
 
-		// TODO: Use this to save data.
 		public static void SetBackendPlatformUserData<T>(this ImGuiIOPtr io, T? data) where T : unmanaged
 		{
 			if (io.NativePtr->BackendPlatformUserData != (void*)0)
