@@ -1,3 +1,62 @@
+#### 3.0.0 (2021-06-01)
+
+##### Build System / Dependencies
+
+*  bump version to 2.1.1 ([d82a7f82](https://github.com/psydack/uimgui/commit/d82a7f82535aa3adbb737ae56636a39f21d36206))
+*  bump version ([18c2bd0b](https://github.com/psydack/uimgui/commit/18c2bd0b24d49f44f9f448e31190dcc9df8506b8))
+
+##### Documentation Changes
+
+*  remove old todo ([edc7aff8](https://github.com/psydack/uimgui/commit/edc7aff889fa5f6256666f52d726144053ca7304))
+*  use globalevents ([ec44e25c](https://github.com/psydack/uimgui/commit/ec44e25c405ab317d9c37b91dd289898cbb6a558))
+*  remove to do ([bf20b544](https://github.com/psydack/uimgui/commit/bf20b5449fecac48d2e4ba5ef2fdf651dbb0613f))
+*  update changelog ([3ac6813f](https://github.com/psydack/uimgui/commit/3ac6813f45fc9cd8d7eca4b9b6f8a4f6796252bf))
+*  update url to add into upm ([cf4ecf5f](https://github.com/psydack/uimgui/commit/cf4ecf5f3fab8335456a080aa7329628589f0b44))
+*  remove know issues ([2e563bd8](https://github.com/psydack/uimgui/commit/2e563bd83f8cbcd4acee6d39fc65af755fcd9111))
+*  add info about freetype ([38cff928](https://github.com/psydack/uimgui/commit/38cff9285c000fe17e85d3ee5807579bb2e98dc5))
+*  add changelog ([12384ba1](https://github.com/psydack/uimgui/commit/12384ba13e70cdd665a9a20587fbdf00df0ce309))
+*  add todo for ttf file. ([0c885762](https://github.com/psydack/uimgui/commit/0c8857620ec2a43fe6656d576041321f06e9dbf8))
+
+##### New Features
+
+*  use event. ([c26c2198](https://github.com/psydack/uimgui/commit/c26c2198844513cdc5216445dfd6a0fd95a4292e))
+*  add ability to use userData ([1b6410c4](https://github.com/psydack/uimgui/commit/1b6410c41afc81c82d0b543ca750a739c2c8fc3c))
+*  enable use of userDrawCallback ([13d62f71](https://github.com/psydack/uimgui/commit/13d62f71c04be63f28a2a53907416bfdad0a97ea))
+*  add error for shader and style ([3d180975](https://github.com/psydack/uimgui/commit/3d180975b44339338750ab90b14f1863fd5ab1da))
+*  add warning for SetMousePosition with InputManager ([c6c6a371](https://github.com/psydack/uimgui/commit/c6c6a371f7ef66a764a98e826b0c4c87c867d09d))
+*  prepare to save user data ([4a6929bf](https://github.com/psydack/uimgui/commit/4a6929bf8677d5ec7116152e50310bc81f6e2ec9))
+*  add imfreetype ([a7fff76f](https://github.com/psydack/uimgui/commit/a7fff76f12b23e8a959d83b603b541baf8b5c207))
+*  add drawer for font definition ([46daa58c](https://github.com/psydack/uimgui/commit/46daa58c1d60cad1b8f422aaea77cda9a8d1c8a1))
+
+##### Bug Fixes
+
+*  use new OnLayout ([b8b10522](https://github.com/psydack/uimgui/commit/b8b105228bc5ace96eefb705fddbf4c2ec64af24))
+*  use callbackData into rendererMesh ([dea8de76](https://github.com/psydack/uimgui/commit/dea8de760c9c4db731f9630154cd9b76c6f688b9))
+*  remove custom assert ([14dd4678](https://github.com/psydack/uimgui/commit/14dd467819a200fed9ef4344874f19a54caf6d90))
+*  class to public ([fbf0044c](https://github.com/psydack/uimgui/commit/fbf0044cb6eabddb87c961604a64a96f5c759038))
+*  enable dock as default ([e5ad8d6f](https://github.com/psydack/uimgui/commit/e5ad8d6f0089e47570cad5de2cd11c6c07ea07c0))
+*  rebuild with dock ([11526648](https://github.com/psydack/uimgui/commit/11526648ab33f1342236d0c0d20002d0e066959c))
+*  remove rasterizer flags ([61c8fcdf](https://github.com/psydack/uimgui/commit/61c8fcdfacc747a99e91fee03134f65f10d66ee7))
+*  add freetype.meta ([14f981ea](https://github.com/psydack/uimgui/commit/14f981ea632db903076e443333de522f60da358e))
+*  remove dock flags =( ([01a19343](https://github.com/psydack/uimgui/commit/01a19343cca055d705173a1c260d2a0eb34d5bc0))
+*  glyphs range null ([3cef0dba](https://github.com/psydack/uimgui/commit/3cef0dbab4181f916c2aea516909878e567c0866))
+
+##### Other Changes
+
+* //github.com/psydack/uimgui ([b0fbb29e](https://github.com/psydack/uimgui/commit/b0fbb29e63fd90560e4ca1b9e7a1242989c8729f))
+* //github.com/psydack/uimgui ([274a976d](https://github.com/psydack/uimgui/commit/274a976d428bc05aae64c3c498541378acb74d01))
+
+##### Refactors
+
+*  remove unused function ([7c8cd20e](https://github.com/psydack/uimgui/commit/7c8cd20e58a0cd6fa250560372d544369597395a))
+*  remove rasterizer type ([4684b82d](https://github.com/psydack/uimgui/commit/4684b82d96c317f0c3eba0b1495d538f735dbfab))
+*  use only build for freetype ([fe8ce2e5](https://github.com/psydack/uimgui/commit/fe8ce2e56aa959e596361fad307c69e15583a3d0))
+*  remove type ([0bb7a6c4](https://github.com/psydack/uimgui/commit/0bb7a6c43e5a06699dec62df798e96728b9c6fe1))
+*  reorder props ([471c5bd9](https://github.com/psydack/uimgui/commit/471c5bd951c4cd85e09dd27e0af83a9a210e98f2))
+*  name index variable correctly ([7bf696d2](https://github.com/psydack/uimgui/commit/7bf696d2a3cd8189736a26c6c699c602f526931d))
+*  make foreach into for ([ac61fa86](https://github.com/psydack/uimgui/commit/ac61fa86452fa60f43000aaafce3122afb620e60))
+*  unsafe method instead a block ([6717845e](https://github.com/psydack/uimgui/commit/6717845e34a0e833988d2e23c5f14a2c73717121))
+
 #### 2.1.1 (2021-06-01)
 
 ##### Build System / Dependencies
