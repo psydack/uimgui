@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System.Text;
 using UImGui.Platform;
 using UnityEditor;
@@ -13,7 +14,7 @@ namespace UImGui.Editor
 		private SerializedProperty _renderFeature;
 		private SerializedProperty _renderer;
 		private SerializedProperty _platform;
-		private SerializedProperty _initialConfiguration;
+		private SerializedProperty _configFlags;
 		private SerializedProperty _fontAtlasConfiguration;
 		private SerializedProperty _iniSettings;
 		private SerializedProperty _shaders;
@@ -38,7 +39,7 @@ namespace UImGui.Editor
 			EditorGUILayout.PropertyField(_camera);
 			EditorGUILayout.PropertyField(_renderer);
 			EditorGUILayout.PropertyField(_platform);
-			EditorGUILayout.PropertyField(_initialConfiguration);
+			EditorGUILayout.PropertyField(_configFlags);
 			EditorGUILayout.PropertyField(_fontAtlasConfiguration);
 			EditorGUILayout.PropertyField(_iniSettings);
 			EditorGUILayout.PropertyField(_shaders);
@@ -67,7 +68,7 @@ namespace UImGui.Editor
 			_renderFeature = serializedObject.FindProperty("_renderFeature");
 			_renderer = serializedObject.FindProperty("_rendererType");
 			_platform = serializedObject.FindProperty("_platformType");
-			_initialConfiguration = serializedObject.FindProperty("_initialConfiguration");
+			_configFlags = serializedObject.FindProperty("_initialConfiguration.ImGuiConfig");
 			_fontAtlasConfiguration = serializedObject.FindProperty("_fontAtlasConfiguration");
 			_iniSettings = serializedObject.FindProperty("_iniSettings");
 			_shaders = serializedObject.FindProperty("_shaders");
@@ -92,11 +93,11 @@ namespace UImGui.Editor
 			{
 				_messages.AppendLine("Platform not available.");
 			}
-			// TODO: Warning for if(UIOConfig.ImGuiConfig has NavEnableSetMousePos and Input != InputSystem) wont work.
-			//else if ((InputType)_platform.enumValueIndex == InputType.InputSystem && (UIOConfig)_initialConfiguration.)
-			//{
-			//	_messages.AppendLine("Will not work NavEnableSetPos with InputManager");
-			//}
+			else if ((InputType)_platform.enumValueIndex != InputType.InputSystem &&
+				(_configFlags.intValue & (int)ImGuiConfigFlags.NavEnableSetMousePos) != 0)
+			{
+				_messages.AppendLine("Will not work NavEnableSetPos with InputManager.");
+			}
 
 			if (_messages.Length > 0)
 			{
