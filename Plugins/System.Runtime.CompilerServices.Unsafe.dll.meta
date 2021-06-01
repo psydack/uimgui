@@ -5,7 +5,8 @@ PluginImporter:
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
-  defineConstraints: []
+  defineConstraints:
+  - '!REMOVE_UIMGUI_UNSAFE_DLL'
   isPreloaded: 1
   isOverridable: 0
   isExplicitlyReferenced: 0
