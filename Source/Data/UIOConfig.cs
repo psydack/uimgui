@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using NumericsConverter;
+using System;
 using UnityEngine;
 
 namespace UImGui
@@ -56,13 +57,13 @@ namespace UImGui
 		[Tooltip("Compact window memory usage when unused. Set to -1.0f to disable.")]
 		public float ConfigMemoryCompactTimer;
 
-		// TODO: Use this!
-		// [Tooltip("Store your own data for retrieval by callbacks.")
-		// public void* UserData;
+		[Tooltip("Store your own data for retrieval by callbacks.")]
+		[NonSerialized]
+		public IntPtr UserData;
 
 		public void SetDefaults()
 		{
-			System.IntPtr context = ImGui.CreateContext();
+			IntPtr context = ImGui.CreateContext();
 			ImGui.SetCurrentContext(context);
 			SetFrom(ImGui.GetIO());
 			ImGui.DestroyContext(context);
@@ -89,6 +90,8 @@ namespace UImGui
 			io.ConfigWindowsResizeFromEdges = ResizeFromEdges;
 			io.ConfigWindowsMoveFromTitleBarOnly = MoveFromTitleOnly;
 			io.ConfigMemoryCompactTimer = ConfigMemoryCompactTimer;
+
+			io.UserData = UserData;
 		}
 
 		public void SetFrom(ImGuiIOPtr io)
@@ -112,6 +115,8 @@ namespace UImGui
 			ResizeFromEdges = io.ConfigWindowsResizeFromEdges;
 			MoveFromTitleOnly = io.ConfigWindowsMoveFromTitleBarOnly;
 			ConfigMemoryCompactTimer = io.ConfigMemoryCompactTimer;
+
+			UserData = io.UserData;
 		}
 	}
 }

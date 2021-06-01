@@ -87,6 +87,13 @@ namespace UImGui
 			OnEnable();
 		}
 
+		public void SetUserData(System.IntPtr userDataPtr)
+		{
+			_initialConfiguration.UserData = userDataPtr;
+			ImGuiIOPtr io = ImGui.GetIO();
+			_initialConfiguration.ApplyTo(io);
+		}
+
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
