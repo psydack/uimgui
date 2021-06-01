@@ -78,5 +78,27 @@ namespace UImGui
 				_managedAllocations.Add((IntPtr)nativeName);
 			}
 		}
+
+		// TODO: Use this to save data.
+		public static void SetBackendPlatformUserData<T>(this ImGuiIOPtr io, T? data) where T : unmanaged
+		{
+			if (io.NativePtr->BackendPlatformUserData != (void*)0)
+			{
+				if (_managedAllocations.Contains((IntPtr)io.NativePtr->BackendPlatformUserData))
+				{
+					Marshal.FreeHGlobal((IntPtr)io.NativePtr->BackendPlatformUserData);
+				}
+
+				io.NativePtr->BackendPlatformUserData = (void*)0;
+			}
+
+			if (data != null)
+			{
+				IntPtr dataPtr = Marshal.AllocHGlobal(sizeof(T));
+				Marshal.StructureToPtr(data, dataPtr, false);
+				io.NativePtr->BackendPlatformUserData = (void*)dataPtr;
+				_managedAllocations.Add(dataPtr);
+			}
+		}
 	}
 }
