@@ -15,7 +15,7 @@ namespace UImGui
 			UImGuiUtility.Layout -= OnLayout;
 		}
 
-		private void OnLayout()
+		private void OnLayout(UImGui uImGui)
 		{
 			ImGui.ShowDemoWindow();
 		}
