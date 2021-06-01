@@ -30,7 +30,6 @@ namespace UImGui.Platform
 			io.SetBackendPlatformName("Unity Input System");
 			io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors;
 
-			// TODO: Check if this works
 			if ((config.ImGuiConfig & ImGuiConfigFlags.NavEnableSetMousePos) != 0)
 			{
 				io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
@@ -44,14 +43,7 @@ namespace UImGui.Platform
 
 			unsafe
 			{
-				// TODO: IMGUI_FEATURE_CUSTOM_ASSERT.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-				//PlatformCallbacks.SetClipboardFunctions(
-				//	GetClipboardTextCallback, SetClipboardTextCallback,
-				//	ImeSetInputScreenPosCallback, LogAssertCallback, DebugBreakCallback);
-#else
 				PlatformCallbacks.SetClipboardFunctions(PlatformCallbacks.GetClipboardTextCallback, PlatformCallbacks.SetClipboardTextCallback);
-#endif
 			}
 
 			_callbacks.Assign(io);

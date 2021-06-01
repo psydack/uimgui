@@ -18,23 +18,6 @@ namespace UImGui.Platform
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate void ImeSetInputScreenPosCallback(int x, int y);
-
-	// TODO: Implement (check) this.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-	//[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	//internal unsafe delegate void LogAssertCallback(byte* condition, byte* file, int line);
-
-	//internal delegate void LogAssertSafeCallback(string condition, string file, int line);
-
-	//[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	//internal delegate void DebugBreakCallback();
-
-	//internal unsafe struct CustomAssertData
-	//{
-	//	public IntPtr LogAssertFn;
-	//	public IntPtr DebugBreakFn;
-	//}
-#endif
 	#endregion
 
 	internal unsafe class PlatformCallbacks
@@ -60,66 +43,22 @@ namespace UImGui.Platform
 			Input.compositionCursorPos = new Vector2(x, y);
 		}
 
-		// TODO: IMGUI_FEATURE_CUSTOM_ASSERT.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-		//[MonoPInvokeCallback(typeof(LogAssertCallback))]
-		//public unsafe static void LogAssertCallback(byte* condition, byte* file, int line)
-		//{
-		//	Debug.LogError($"[DearImGui] Assertion failed: '{Util.StringFromPtr(condition)}', file '{Util.StringFromPtr(file)}', line: {line}.");
-		//}
-
-		//[MonoPInvokeCallback(typeof(DebugBreakCallback))]
-		//public unsafe static void DebugBreakCallback()
-		//{
-		//	System.Diagnostics.Debugger.Break();
-		//}
-
-		// TODO: Implement (check) this.
-		//private static LogAssertCallback _logAssert;
-		//private static DebugBreakCallback _debugBreak;
-#endif
-
 		public static void SetClipboardFunctions(GetClipboardTextCallback getCb, SetClipboardTextCallback setCb)
 		{
 			_getClipboardText = getCb;
 			_setClipboardText = setCb;
 		}
 
-		// TODO: Implement (check) this.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-		//public static void SetClipboardFunctions(GetClipboardTextCallback getCb, SetClipboardTextCallback setCb,
-		//	LogAssertCallback logCb, DebugBreakCallback debugBreakCb)
-		//{
-		//	_getClipboardText = getCb;
-		//	_setClipboardText = setCb;
-		//	_logAssert = logCb;
-		//	_debugBreak = debugBreakCb;
-		//}
-#endif
 		public void Assign(ImGuiIOPtr io)
 		{
 			io.SetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(_setClipboardText);
 			io.GetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(_getClipboardText);
-
-			// TODO: Implement (check) this.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-			//io.SetBackendPlatformUserData<CustomAssertData>(new CustomAssertData
-			//{
-			//	LogAssertFn = Marshal.GetFunctionPointerForDelegate(_logAssert),
-			//	DebugBreakFn = Marshal.GetFunctionPointerForDelegate(_debugBreak),
-			//});
-#endif
 		}
 
 		public void Unset(ImGuiIOPtr io)
 		{
 			io.SetClipboardTextFn = IntPtr.Zero;
 			io.GetClipboardTextFn = IntPtr.Zero;
-
-			// TODO: Implement (check) this.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-			//io.SetBackendPlatformUserData<CustomAssertData>(null);
-#endif
 		}
 
 		public static GetClipboardTextSafeCallback GetClipboardText
@@ -140,26 +79,5 @@ namespace UImGui.Platform
 				catch (Exception ex) { Debug.LogException(ex); }
 			};
 		}
-
-		// TODO: Implement (check) this.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-		//public static LogAssertSafeCallback LogAssert
-		//{
-		//	set => _logAssert = (condition, file, line) =>
-		//	{
-		//		try { value(Util.StringFromPtr(condition), Util.StringFromPtr(file), line); }
-		//		catch (Exception ex) { Debug.LogException(ex); }
-		//	};
-		//}
-
-		//public static DebugBreakCallback DebugBreak
-		//{
-		//	set => _debugBreak = () =>
-		//	{
-		//		try { value(); }
-		//		catch (Exception ex) { Debug.LogException(ex); }
-		//	};
-		//}
-#endif
 	}
 }

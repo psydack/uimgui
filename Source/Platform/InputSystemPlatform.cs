@@ -40,14 +40,7 @@ namespace UImGui.Platform
 
 			unsafe
 			{
-				// TODO: IMGUI_FEATURE_CUSTOM_ASSERT.
-#if IMGUI_FEATURE_CUSTOM_ASSERT
-				//PlatformCallbacks.SetClipboardFunctions(
-				//	GetClipboardTextCallback, SetClipboardTextCallback,
-				//	ImeSetInputScreenPosCallback, LogAssertCallback, DebugBreakCallback);
-#else
 				PlatformCallbacks.SetClipboardFunctions(PlatformCallbacks.GetClipboardTextCallback, PlatformCallbacks.SetClipboardTextCallback);
-#endif
 			}
 
 			SetupKeyboard(io, Keyboard.current);
