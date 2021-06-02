@@ -1,3 +1,13 @@
+#### 3.0.1 (2021-06-02)
+
+##### Documentation Changes
+
+*  add instructions for multiple dll issue ([d2ce2a32](https://github.com/psydack/uimgui/commit/d2ce2a32ec68a9f9ba4832bf89517ee1a680e918))
+
+##### Bug Fixes
+
+*  new constraint for multiple unsafe dll ([2191707f](https://github.com/psydack/uimgui/commit/2191707f0c4d7f5e5c2eee3e79fb5804f2e7235a))
+
 #### 3.0.0 (2021-06-01)
 
 ##### Build System / Dependencies
