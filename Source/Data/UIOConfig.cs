@@ -57,6 +57,19 @@ namespace UImGui
 		[Tooltip("Compact window memory usage when unused. Set to -1.0f to disable.")]
 		public float ConfigMemoryCompactTimer;
 
+		[Header("Docking (when DockingEnable is set)")]
+
+		[Tooltip("Simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.")]
+		public bool ConfigDockingNoSplit;
+
+		[Tooltip("[BETA] [FIXME: This currently creates regression with auto-sizing and general overhead] " +
+			"Make every single floating window display within a docking node.")]
+		public bool ConfigDockingAlwaysTabBar;
+
+		[Tooltip("[BETA] Make window or viewport transparent when docking and only display docking boxes on the target viewport. " +
+			"Useful if rendering of multiple viewport cannot be synced. Best used with ConfigViewportsNoAutoMerge.")]
+		public bool ConfigDockingTransparentPayload;
+
 		[Tooltip("Store your own data for retrieval by callbacks.")]
 		[NonSerialized]
 		public IntPtr UserData;
@@ -86,6 +99,10 @@ namespace UImGui
 			io.DisplayFramebufferScale = DisplayFramebufferScale.ToSystem();
 			io.MouseDrawCursor = MouseDrawCursor;
 
+			io.ConfigDockingNoSplit = ConfigDockingNoSplit;
+			io.ConfigDockingAlwaysTabBar = ConfigDockingAlwaysTabBar;
+			io.ConfigDockingTransparentPayload = ConfigDockingTransparentPayload;
+
 			io.ConfigInputTextCursorBlink = TextCursorBlink;
 			io.ConfigWindowsResizeFromEdges = ResizeFromEdges;
 			io.ConfigWindowsMoveFromTitleBarOnly = MoveFromTitleOnly;
@@ -110,6 +127,10 @@ namespace UImGui
 
 			DisplayFramebufferScale = io.DisplayFramebufferScale.ToUnity();
 			MouseDrawCursor = io.MouseDrawCursor;
+
+			ConfigDockingNoSplit = io.ConfigDockingNoSplit;
+			ConfigDockingAlwaysTabBar = io.ConfigDockingAlwaysTabBar;
+			ConfigDockingTransparentPayload = io.ConfigDockingTransparentPayload;
 
 			TextCursorBlink = io.ConfigInputTextCursorBlink;
 			ResizeFromEdges = io.ConfigWindowsResizeFromEdges;
