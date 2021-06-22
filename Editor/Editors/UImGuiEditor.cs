@@ -103,6 +103,11 @@ namespace UImGui.Editor
 				_messages.AppendLine("Will not work NavEnableSetPos with InputManager.");
 			}
 
+			if ((configFlags.intValue & (int)ImGuiConfigFlags.ViewportsEnable) != 0)
+			{
+				_messages.AppendLine("Unity hasn't support different viewports.");
+			}
+
 			if (_shaders.objectReferenceValue == null || _style.objectReferenceValue == null)
 			{
 				_messages.AppendLine("Must assign a Shader Asset and a Style Asset in configuration section.");
