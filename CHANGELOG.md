@@ -1,3 +1,20 @@
+#### 3.0.1 (2021-06-22)
+
+##### Documentation Changes
+
+*  add todo to implement possible new function ([c6fd3f67](https://github.com/psydack/uimgui/commit/c6fd3f6789a70df862d6805d31dd36f7757f6467))
+
+##### New Features
+
+*  add message on script about multi-viewport ([d340d947](https://github.com/psydack/uimgui/commit/d340d94735e5c858acac467ec0f9214fd18de076))
+*  new  1.84 imgui version ([e5f4aac9](https://github.com/psydack/uimgui/commit/e5f4aac935b90050bc69096da16fb880a57db426))
+*  add version on editor viewer ([52198ec0](https://github.com/psydack/uimgui/commit/52198ec0b77071a39e4e53ca471364cc6cfc82c5))
+
+##### Other Changes
+
+*  update sample scene ([be2b387f](https://github.com/psydack/uimgui/commit/be2b387fbf1f4bb87703ac0d1df7f9e86603abdb))
+*  new docking configs ([31efa0f0](https://github.com/psydack/uimgui/commit/31efa0f06f2dab9840dabd98db24d3d0b68eed56))
+
 #### 3.0.1 (2021-06-02)
 
 ##### Documentation Changes
