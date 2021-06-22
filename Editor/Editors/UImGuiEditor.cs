@@ -78,6 +78,9 @@ namespace UImGui.Editor
 
 		private void CheckRequirements()
 		{
+			EditorGUILayout.LabelField("ImGUI Version: " + ImGui.GetVersion());
+			EditorGUILayout.Space();
+
 			_messages.Clear();
 			if (_camera.objectReferenceValue == null)
 			{
