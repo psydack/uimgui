@@ -130,6 +130,7 @@ namespace UImGui
 
 			if (RenderUtility.IsUsingURP())
 			{
+				_renderFeature.Camera = _camera;
 				_renderFeature.CommandBuffer = _renderCommandBuffer;
 			}
 			else if (!RenderUtility.IsUsingHDRP())
@@ -184,6 +185,7 @@ namespace UImGui
 			{
 				if (_renderFeature != null)
 				{
+					_renderFeature.Camera = null;
 					_renderFeature.CommandBuffer = null;
 				}
 			}

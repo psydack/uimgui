@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Rendering;
 #if HAS_URP
 using UnityEngine.Rendering.Universal;
+using UnityEngine;
 #endif
 
 namespace UImGui.Renderer
@@ -18,6 +19,8 @@ namespace UImGui.Renderer
 			}
 		}
 
+		[HideInInspector]
+		public Camera Camera;
 		public CommandBuffer CommandBuffer;
 		public RenderPassEvent RenderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
 
@@ -35,6 +38,7 @@ namespace UImGui.Renderer
 		public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
 		{
 			if (CommandBuffer == null) return;
+			if (Camera != renderingData.cameraData.camera) return;
 
 			_commandBufferPass.renderPassEvent = RenderPassEvent;
 			_commandBufferPass.commandBuffer = CommandBuffer;
