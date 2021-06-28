@@ -30,7 +30,6 @@ To update (using ImGui.Net.dll) easier and often.
 | Linux                     | :heavy_check_mark: | :x: 		      |
 | MacOS                     | :heavy_check_mark: | :x: 		      |
 | Custom Assert             | :heavy_check_mark: | :x: 		      |
-| Docking                   | :x:                | :heavy_check_mark: |
 | Unity Input Manager       | :heavy_check_mark: | :heavy_check_mark: |
 | Unity Input System        | :heavy_check_mark: | :heavy_check_mark: |
 | Docking                   | :x:                | :heavy_check_mark: |
