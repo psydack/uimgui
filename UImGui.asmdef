@@ -19,17 +19,17 @@
     "versionDefines": [
         {
             "name": "com.unity.render-pipelines.high-definition",
-            "expression": "10",
+            "expression": "10.0.0",
             "define": "HAS_HDRP"
         },
         {
             "name": "com.unity.render-pipelines.universal",
-            "expression": "10",
+            "expression": "10.0.0",
             "define": "HAS_URP"
         },
         {
             "name": "com.unity.inputsystem",
-            "expression": "1",
+            "expression": "1.0.0",
             "define": "HAS_INPUTSYSTEM"
         }
     ],
