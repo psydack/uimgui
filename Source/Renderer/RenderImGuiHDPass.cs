@@ -20,11 +20,10 @@ namespace UImGui.Renderer
 				UImGui uimgui = _uimguis[uindex];
 				CommandBuffer cb = uimgui.CommandBuffer;
 
-				if (cb == null) return;
+				if (cb == null) continue;
 
-				CoreUtils.SetRenderTarget(cb, context.cameraColorBuffer);
 				context.renderContext.ExecuteCommandBuffer(cb);
-				context.renderContext.Submit();
+				cb.Clear();
 			}
 		}
 
