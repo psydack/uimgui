@@ -1,10 +1,10 @@
-using Unity.Profiling;
+﻿using Unity.Profiling;
 
 namespace UImGui
 {
 	internal static class Constants
 	{
-		public static readonly uint Version = (0 << 16) | (0 << 8) | (5);
+		public static readonly uint Version = (3 << 16) | (2 << 8) | (4);
 
 		internal static readonly string UImGuiCommandBuffer = "UImGui";
 
