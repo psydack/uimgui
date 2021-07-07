@@ -290,8 +290,6 @@ Using URP
 Using HDRP
 -------
 - When using the ``High Definition Render Pipeline``, add a custom render pass and select "DearImGuiPass" injected after post processing.
-- Assign it to the `render feature` field of the DearImGui component.
-- See **Known issues HDRP** for more info.
 
 Using Built in
 -------
