@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
-  _renderFeature: {fileID: -4859422046353285552, guid: 4a8e21d5c33334b11b34a596161b9360, type: 2}
+  _renderFeature: {fileID: 0}
   _rendererType: 0
   _platformType: 0
   _iniSettings: {fileID: 0}
   _initialConfiguration:
-    ImGuiConfig: 1089
+    ImGuiConfig: 65
     DoubleClickTime: 0.3
     DoubleClickMaxDist: 6
     DragThreshold: 6
@@ -64,11 +64,14 @@ MonoBehaviour:
     ResizeFromEdges: 1
     MoveFromTitleOnly: 1
     ConfigMemoryCompactTimer: 60
+    ConfigDockingNoSplit: 0
+    ConfigDockingAlwaysTabBar: 0
+    ConfigDockingTransparentPayload: 0
   _fontAtlasConfiguration: {fileID: 0}
   _shaders: {fileID: 11400000, guid: 68f2e550e81076948ba9757c73f74336, type: 2}
   _style: {fileID: 11400000, guid: 90718c4e7d6fa04438adef1ad7a432cc, type: 2}
   _cursorShapes: {fileID: 11400000, guid: 71deade41763c6e4eaeb5df973b321f1, type: 2}
-  _doGlobalLayout: 1
+  _doGlobalEvents: 1
 --- !u!114 &7100641311238782667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,3 +84,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7e55d54eede42459ec52fabbd53824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _barValues:
+  - 1
+  - 4
+  - 9
+  - 16
+  - 25
+  - 36
+  - 49
+  - 64
+  - 81
+  - 100
+  _xValues:
+  - 1
+  - 4
+  - 9
+  - 16
+  - 25
+  - 36
+  - 49
+  - 64
+  - 81
+  - 100
+  _yValues:
+  - 1
+  - 4
+  - 9
+  - 16
+  - 25
+  - 36
+  - 49
+  - 64
+  - 81
+  - 100
