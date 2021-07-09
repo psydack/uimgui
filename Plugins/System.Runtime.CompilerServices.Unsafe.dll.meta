@@ -6,7 +6,7 @@ PluginImporter:
   iconMap: {}
   executionOrder: {}
   defineConstraints:
-  - '!REMOVE_UIMGUI_UNSAFE_DLL'
+  - '!UIMGUI_REMOVE_UNSAFE_DLL'
   isPreloaded: 1
   isOverridable: 0
   isExplicitlyReferenced: 0

@@ -299,7 +299,7 @@ Known issues
 -------
 
 Issue: Already using ``System.Runtime.CompilerServices.Unsafe.dll`` will cause the following error: ``Multiple precompiled assemblies with the same name System.Runtime.CompilerServices.Unsafe.dll included or the current platform Only one assembly with the same name is allowed per platform.
-Resolution: add ``REMOVE_UIMGUI_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.
+Resolution: add ``UIMGUI_REMOVE_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.
 
 Credits
 -------
