@@ -295,6 +295,12 @@ Using Built in
 -------
 No special sets.
 
+Directives
+-------
+- ``UIMGUI_REMOVE_IMPLOT``: don't load implot lib and sources.  
+- ``UIMGUI_REMOVE_IMNODES``: don't load imnodes lib and sources.  
+- ``UIMGUI_REMOVE_IMGUIZMO``: don't load imguizmo lib and sources.  
+
 Known issues
 -------
 
