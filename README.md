@@ -168,7 +168,7 @@ private void OnLayout(UImGui.UImGui obj)
 
 ```cs
 [SerializeField]
-private System.Numerics.Vector4 _myColor;
+private Vector4 _myColor;
 private bool _isOpen;
 
 private void OnLayout(UImGui.UImGui obj)
@@ -196,7 +196,7 @@ private void OnLayout(UImGui.UImGui obj)
 
 
 	// Display contents in a scrolling region
-	ImGui.TextColored(new System.Numerics.Vector4(1, 1, 0, 1), "Important Stuff");
+	ImGui.TextColored(new Vector4(1, 1, 0, 1), "Important Stuff");
 	ImGui.BeginChild("Scrolling");
 	for (int n = 0; n < 50; n++)
 		ImGui.Text($"{n}: Some text");
@@ -217,7 +217,7 @@ private void OnLayout(UImGui.UImGui obj)
 	if (ImGui.Begin("Image Sample"))
 	{
 		System.IntPtr id = UImGuiUtility.GetTextureId(_sampleTexture);
-		System.Numerics.Vector2 size = new System.Numerics.Vector2(_sampleTexture.width, _sampleTexture.height)
+		Vector2 size = new Vector2(_sampleTexture.width, _sampleTexture.height)
 		ImGui.Image(id, size);
 
 		ImGui.End();
