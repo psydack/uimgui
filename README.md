@@ -39,7 +39,10 @@ To update (using ImGui.Net.dll) easier and often.
 | Renderer Mesh             | :heavy_check_mark: | :heavy_check_mark: |
 | Renderer Procedural       |          ~         | :heavy_check_mark: |
 | FreeType                  |          ~         | :heavy_check_mark: |
-| Image / Texture           | :x: 		 | :heavy_check_mark: |
+| Image / Texture           | :x:				 | :heavy_check_mark: |
+| [ImNodes](https://github.com/Nelarius/imnodes)       		| :x:				 | :heavy_check_mark: |
+| [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)   | :x:				 | :heavy_check_mark: |
+| [ImPlot](https://github.com/epezent/implot)      		 	| :x:				 |          ~         |
 
 Usage
 -------
@@ -47,11 +50,12 @@ Usage
 - Add `UImGui` component to the scene and
 - (Optional) Set `Platform Type` to `Input System` if you're using the new [input system](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html) the `SampleDemoWindow` object on the scene the following properties:
 - If you're using **URP** check [Using URP](https://github.com/psydack/uimgui#using-urp) section, for **HDRP** [Using HDRP](https://github.com/psydack/uimgui#using-hdrp) section, for **built in** check [Using Built in](https://github.com/psydack/uimgui#using-hdrp) section.
-- You're ready. Look [Samples section](https://github.com/psydack/uimgui#samples) for more usage samples.
+- You're ready. Look [Samples section](https://github.com/psydack/uimgui#samples) for more usage samples.  
+- To use [ImNodes](https://github.com/Nelarius/imnodes), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) or [ImPlot](https://github.com/epezent/implot)   check the sample script. If you won't use, [you can disable using directives](https://github.com/psydack/uimgui#directives)  
 
 Samples
 -------
-It has a demo scene called `UImGuiDemoScene` inside `UImGui/Sample` folder.
+It has a demo script called `ShowDemoWindow` inside `UImGui/Sample` folder. 
 
 You can subscribe to global layout or for a specific `UImGui` context:
 If choose to use global, don't to forget to set ``Do Global Events`` to ``true`` on ``UImGui`` instance.
@@ -305,7 +309,9 @@ Known issues
 -------
 
 Issue: Already using ``System.Runtime.CompilerServices.Unsafe.dll`` will cause the following error: ``Multiple precompiled assemblies with the same name System.Runtime.CompilerServices.Unsafe.dll included or the current platform Only one assembly with the same name is allowed per platform.
-Resolution: add ``UIMGUI_REMOVE_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.
+Resolution: add ``UIMGUI_REMOVE_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.  
+  
+Issue: ImPlot isn't work right. 
 
 Credits
 -------
