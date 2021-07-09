@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using NumericsConverter;
 using System;
 using System.Runtime.InteropServices;
 using UImGui.Assets;
@@ -9,7 +8,6 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
-using NVector4 = System.Numerics.Vector4;
 using Object = UnityEngine.Object;
 
 // TODO: switch from using ComputeBuffer to GraphicsBuffer
@@ -78,10 +76,10 @@ namespace UImGui.Renderer
 
 		public void RenderDrawLists(CommandBuffer cmd, ImDrawDataPtr drawData)
 		{
-			System.Numerics.Vector2 fbSize = drawData.DisplaySize * drawData.FramebufferScale;
+			Vector2 fbSize = drawData.DisplaySize * drawData.FramebufferScale;
 
 			// Avoid rendering when minimized.
-			if (fbSize.X <= 0f || fbSize.Y <= 0f || drawData.TotalVtxCount == 0) return;
+			if (fbSize.x <= 0f || fbSize.y <= 0f || drawData.TotalVtxCount == 0) return;
 
 			Constants.UpdateBuffersMarker.Begin();
 			UpdateBuffers(drawData);
@@ -90,7 +88,7 @@ namespace UImGui.Renderer
 			cmd.BeginSample(Constants.ExecuteDrawCommandsMarker);
 
 			Constants.CreateDrawComandsMarker.Begin();
-			CreateDrawCommands(cmd, drawData, fbSize.ToUnity());
+			CreateDrawCommands(cmd, drawData, fbSize);
 			Constants.CreateDrawComandsMarker.End();
 
 			cmd.EndSample(Constants.ExecuteDrawCommandsMarker);
@@ -191,10 +189,10 @@ namespace UImGui.Renderer
 		private void CreateDrawCommands(CommandBuffer cmd, ImDrawDataPtr drawData, Vector2 fbSize)
 		{
 			IntPtr prevTextureId = IntPtr.Zero;
-			NVector4 clipOffst = new NVector4(drawData.DisplayPos.X, drawData.DisplayPos.Y,
-				drawData.DisplayPos.X, drawData.DisplayPos.Y);
-			Vector4 clipScale = new Vector4(drawData.FramebufferScale.X, drawData.FramebufferScale.Y,
-				drawData.FramebufferScale.X, drawData.FramebufferScale.Y);
+			Vector4 clipOffst = new Vector4(drawData.DisplayPos.x, drawData.DisplayPos.y,
+				drawData.DisplayPos.x, drawData.DisplayPos.y);
+			Vector4 clipScale = new Vector4(drawData.FramebufferScale.x, drawData.FramebufferScale.y,
+				drawData.FramebufferScale.x, drawData.FramebufferScale.y);
 
 			_material.SetBuffer(_verticesID, _vertexBuffer); // Bind vertex buffer.
 
@@ -219,7 +217,7 @@ namespace UImGui.Renderer
 					else
 					{
 						// Project scissor rectangle into framebuffer space and skip if fully outside.
-						Vector4 clipSize = (drawCmd.ClipRect - clipOffst).ToUnity();
+						Vector4 clipSize = drawCmd.ClipRect - clipOffst;
 						Vector4 clip = Vector4.Scale(clipSize, clipScale);
 
 						if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;

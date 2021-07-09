@@ -9,15 +9,15 @@ namespace UImGui
 	internal static unsafe class Utils
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal static System.Numerics.Vector2 ScreenToImGui(in Vector2 point)
+		internal static Vector2 ScreenToImGui(in Vector2 point)
 		{
-			return new System.Numerics.Vector2(point.x, ImGui.GetIO().DisplaySize.Y - point.y);
+			return new Vector2(point.x, ImGui.GetIO().DisplaySize.y - point.y);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal static Vector2 ImGuiToScreen(in System.Numerics.Vector2 point)
+		internal static Vector2 ImGuiToScreen(in Vector2 point)
 		{
-			return new Vector2(point.X, ImGui.GetIO().DisplaySize.Y - point.Y);
+			return new Vector2(point.x, ImGui.GetIO().DisplaySize.y - point.y);
 		}
 
 		internal static string StringFromPtr(byte* ptr)
