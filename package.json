@@ -3,10 +3,7 @@
   "displayName": "UImGui",
   "version": "3.2.4",
   "description": "A Unity wrapper for ImGui",
-  "unity": "2020.3",
-  "dependencies": {
-    "com.unity.collections": "0.15.0-preview.21"
-  },
+  "unity": "2019.4",
   "keywords": [
     "dear",
     "imgui",
