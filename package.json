@@ -5,7 +5,6 @@
   "description": "A Unity wrapper for ImGui",
   "unity": "2020.3",
   "dependencies": {
-    "com.unity.collections": "0.15.0-preview.21"
   },
   "keywords": [
     "dear",
