@@ -1,3 +1,4 @@
+#if UNITY_2020_1_OR_NEWER
 #ifndef DEARIMGUI_UNIVERSAL_INCLUDED
 #define DEARIMGUI_UNIVERSAL_INCLUDED
 
@@ -38,4 +39,5 @@ half4 ImGuiPassFrag(Varyings input) : SV_Target
     return input.color * SAMPLE_TEXTURE2D(_Texture, sampler_Texture, input.uv);
 }
 
+#endif
 #endif
