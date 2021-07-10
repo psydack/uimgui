@@ -162,6 +162,7 @@ namespace UImGui.Renderer
 							baseVertex = vtxOf + (int)cmd.VtxOffset,
 						};
 						descriptors.Add(descriptor);
+						_mesh.SetSubMesh(i, descriptor, NoMeshChecks);
 					}
 
 					vtxOf += vtxArray.Length;
@@ -169,7 +170,6 @@ namespace UImGui.Renderer
 				}
 			}
 
-			_mesh.SetSubMeshes(descriptors, NoMeshChecks);
 			_mesh.UploadMeshData(false);
 		}
 
