@@ -19,8 +19,10 @@ namespace UImGui
 
 			switch (type)
 			{
+#if UNITY_2020_1_OR_NEWER
 				case RenderType.Mesh:
 					return new RendererMesh(shaders, textures);
+#endif
 				case RenderType.Procedural:
 					return new RendererProcedural(shaders, textures);
 				default:

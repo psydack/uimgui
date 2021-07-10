@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿#if UNITY_2020_1_OR_NEWER
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -223,3 +224,4 @@ namespace UImGui.Renderer
 		}
 	}
 }
+#endif
