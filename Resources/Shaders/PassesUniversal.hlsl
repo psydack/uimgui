@@ -1,15 +1,12 @@
 #ifndef DEARIMGUI_UNIVERSAL_INCLUDED
 #define DEARIMGUI_UNIVERSAL_INCLUDED
 
-#include "./Common.hlsl"
-
-#if UNITY_2020_1_OR_NEWER
-
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #ifndef UNITY_COLORSPACE_GAMMA
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 #endif
 
+#include "./Common.hlsl"
 
 TEXTURE2D(_Texture);
 SAMPLER(sampler_Texture);
@@ -42,10 +39,4 @@ half4 ImGuiPassFrag(Varyings input) : SV_Target
     return input.color * SAMPLE_TEXTURE2D(_Texture, sampler_Texture, input.uv);
 }
 
-#else
-// TODO: Do a better way to compile only on unity_2020+.
-// The code below is only to editor compile doesn't throw exceptions.
-Varyings ImGuiPassVertex(ImVert input) { return (Varyings)0; }
-half4 ImGuiPassFrag(Varyings input) : SV_Target{ return input.color; }
-#endif
 #endif
