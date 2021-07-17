@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using NumericsConverter;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -80,8 +79,8 @@ namespace UImGui
 			im.OversampleH = OversampleH;
 			im.OversampleV = OversampleV;
 			im.PixelSnapH = PixelSnapH;
-			im.GlyphExtraSpacing = GlyphExtraSpacing.ToSystem();
-			im.GlyphOffset = GlyphOffset.ToSystem();
+			im.GlyphExtraSpacing = GlyphExtraSpacing;
+			im.GlyphOffset = GlyphOffset;
 			im.GlyphMinAdvanceX = GlyphMinAdvanceX;
 			im.GlyphMaxAdvanceX = GlyphMaxAdvanceX;
 			im.MergeMode = MergeMode;
@@ -102,8 +101,8 @@ namespace UImGui
 			OversampleH = im.OversampleH;
 			OversampleV = im.OversampleV;
 			PixelSnapH = im.PixelSnapH;
-			GlyphExtraSpacing = im.GlyphExtraSpacing.ToUnity();
-			GlyphOffset = im.GlyphOffset.ToUnity();
+			GlyphExtraSpacing = im.GlyphExtraSpacing;
+			GlyphOffset = im.GlyphOffset;
 			GlyphMinAdvanceX = im.GlyphMinAdvanceX;
 			GlyphMaxAdvanceX = im.GlyphMaxAdvanceX;
 			MergeMode = im.MergeMode;

@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: 255dc83b4dd3e8b47a8ce3e56eb9b0e8
+guid: 3621991b6c0a8d54caa1abc46ab78bb0
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
   defineConstraints:
-  - '!UIMGUI_REMOVE_UNSAFE_DLL'
-  isPreloaded: 1
-  isOverridable: 0
+  - '!UIMGUI_REMOVE_IMNODES'
+  isPreloaded: 0
+  isOverridable: 1
   isExplicitlyReferenced: 0
   validateReferences: 1
   platformData:
@@ -32,7 +32,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: x86_64
+        CPU: AnyCPU
         DefaultValueInitialized: true
         OS: AnyOS
   - first:

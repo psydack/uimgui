@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using NumericsConverter;
 using UnityEngine;
 
 namespace UImGui.Assets
@@ -149,11 +148,11 @@ namespace UImGui.Assets
 		{
 			s.Alpha = Alpha;
 
-			s.WindowPadding = WindowPadding.ToSystem();
+			s.WindowPadding = WindowPadding;
 			s.WindowRounding = WindowRounding;
 			s.WindowBorderSize = WindowBorderSize;
-			s.WindowMinSize = WindowMinSize.ToSystem();
-			s.WindowTitleAlign = WindowTitleAlign.ToSystem();
+			s.WindowMinSize = WindowMinSize;
+			s.WindowTitleAlign = WindowTitleAlign;
 			s.WindowMenuButtonPosition = WindowMenuButtonPosition;
 
 			s.ChildRounding = ChildRounding;
@@ -162,16 +161,16 @@ namespace UImGui.Assets
 			s.PopupRounding = PopupRounding;
 			s.PopupBorderSize = PopupBorderSize;
 
-			s.FramePadding = FramePadding.ToSystem();
+			s.FramePadding = FramePadding;
 			s.FrameRounding = FrameRounding;
 			s.FrameBorderSize = FrameBorderSize;
 
-			s.ItemSpacing = ItemSpacing.ToSystem();
-			s.ItemInnerSpacing = ItemInnerSpacing.ToSystem();
+			s.ItemSpacing = ItemSpacing;
+			s.ItemInnerSpacing = ItemInnerSpacing;
 
-			s.CellPadding = CellPadding.ToSystem();
+			s.CellPadding = CellPadding;
 
-			s.TouchExtraPadding = TouchExtraPadding.ToSystem();
+			s.TouchExtraPadding = TouchExtraPadding;
 
 			s.IndentSpacing = IndentSpacing;
 
@@ -190,12 +189,12 @@ namespace UImGui.Assets
 
 			s.ColorButtonPosition = ColorButtonPosition;
 
-			s.ButtonTextAlign = ButtonTextAlign.ToSystem();
+			s.ButtonTextAlign = ButtonTextAlign;
 
-			s.SelectableTextAlign = SelectableTextAlign.ToSystem();
+			s.SelectableTextAlign = SelectableTextAlign;
 
-			s.DisplayWindowPadding = DisplayWindowPadding.ToSystem();
-			s.DisplaySafeAreaPadding = DisplaySafeAreaPadding.ToSystem();
+			s.DisplayWindowPadding = DisplayWindowPadding;
+			s.DisplaySafeAreaPadding = DisplaySafeAreaPadding;
 
 			s.MouseCursorScale = MouseCursorScale;
 
@@ -208,7 +207,7 @@ namespace UImGui.Assets
 
 			for (int colorIndex = 0; colorIndex < Colors.Length; ++colorIndex)
 			{
-				s.Colors[colorIndex] = Colors[colorIndex].ToSystem();
+				s.Colors[colorIndex] = Colors[colorIndex];
 			}
 		}
 
@@ -216,11 +215,11 @@ namespace UImGui.Assets
 		{
 			Alpha = s.Alpha;
 
-			WindowPadding = s.WindowPadding.ToUnity();
+			WindowPadding = s.WindowPadding;
 			WindowRounding = s.WindowRounding;
 			WindowBorderSize = s.WindowBorderSize;
-			WindowMinSize = s.WindowMinSize.ToUnity();
-			WindowTitleAlign = s.WindowTitleAlign.ToUnity();
+			WindowMinSize = s.WindowMinSize;
+			WindowTitleAlign = s.WindowTitleAlign;
 			WindowMenuButtonPosition = s.WindowMenuButtonPosition;
 
 			ChildRounding = s.ChildRounding;
@@ -229,16 +228,16 @@ namespace UImGui.Assets
 			PopupRounding = s.PopupRounding;
 			PopupBorderSize = s.PopupBorderSize;
 
-			FramePadding = s.FramePadding.ToUnity();
+			FramePadding = s.FramePadding;
 			FrameRounding = s.FrameRounding;
 			FrameBorderSize = s.FrameBorderSize;
 
-			ItemSpacing = s.ItemSpacing.ToUnity();
-			ItemInnerSpacing = s.ItemInnerSpacing.ToUnity();
+			ItemSpacing = s.ItemSpacing;
+			ItemInnerSpacing = s.ItemInnerSpacing;
 
-			CellPadding = s.CellPadding.ToUnity();
+			CellPadding = s.CellPadding;
 
-			TouchExtraPadding = s.TouchExtraPadding.ToUnity();
+			TouchExtraPadding = s.TouchExtraPadding;
 
 			IndentSpacing = s.IndentSpacing;
 
@@ -257,12 +256,12 @@ namespace UImGui.Assets
 
 			ColorButtonPosition = s.ColorButtonPosition;
 
-			ButtonTextAlign = s.ButtonTextAlign.ToUnity();
+			ButtonTextAlign = s.ButtonTextAlign;
 
-			SelectableTextAlign = s.SelectableTextAlign.ToUnity();
+			SelectableTextAlign = s.SelectableTextAlign;
 
-			DisplayWindowPadding = s.DisplayWindowPadding.ToUnity();
-			DisplaySafeAreaPadding = s.DisplaySafeAreaPadding.ToUnity();
+			DisplayWindowPadding = s.DisplayWindowPadding;
+			DisplaySafeAreaPadding = s.DisplaySafeAreaPadding;
 
 			MouseCursorScale = s.MouseCursorScale;
 
@@ -275,7 +274,7 @@ namespace UImGui.Assets
 
 			for (int colorIndex = 0; colorIndex < Colors.Length; ++colorIndex)
 			{
-				Colors[colorIndex] = s.Colors[colorIndex].ToColor();
+				Colors[colorIndex] = s.Colors[colorIndex];
 			}
 		}
 

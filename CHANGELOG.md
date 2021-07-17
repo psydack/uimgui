@@ -1,3 +1,13 @@
+#### 4.0.0 (2021-07-10)
+
+##### Build System / Dependencies
+
+*  bump version ([29016a2c](https://github.com/psydack/uimgui/commit/29016a2c51021c5832d1227e06ceb012610df590))
+
+##### New Features
+
+*  label for addons ([f4c3f094](https://github.com/psydack/uimgui/commit/f4c3f09442658f8ca07a9f2e84c88a6ee8b494c1))
+
 #### 3.0.1 (2021-06-22)
 
 ##### Documentation Changes

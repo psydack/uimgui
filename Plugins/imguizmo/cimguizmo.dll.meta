@@ -1,14 +1,13 @@
 fileFormatVersion: 2
-guid: 255dc83b4dd3e8b47a8ce3e56eb9b0e8
+guid: 5efa29db2c10d6243b4b145691233790
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
-  defineConstraints:
-  - '!UIMGUI_REMOVE_UNSAFE_DLL'
-  isPreloaded: 1
-  isOverridable: 0
+  defineConstraints: []
+  isPreloaded: 0
+  isOverridable: 1
   isExplicitlyReferenced: 0
   validateReferences: 1
   platformData:
@@ -32,7 +31,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: x86_64
+        CPU: AnyCPU
         DefaultValueInitialized: true
         OS: AnyOS
   - first:
@@ -59,12 +58,6 @@ PluginImporter:
       enabled: 1
       settings:
         CPU: x86_64
-  - first:
-      Windows Store Apps: WindowsStoreApps
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
-using NumericsConverter;
+﻿#if UNITY_2020_1_OR_NEWER
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -10,8 +10,6 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
-using NVector2 = System.Numerics.Vector2;
-using NVector4 = System.Numerics.Vector4;
 using Object = UnityEngine.Object;
 
 namespace UImGui.Renderer
@@ -87,10 +85,10 @@ namespace UImGui.Renderer
 
 		public void RenderDrawLists(CommandBuffer commandBuffer, ImDrawDataPtr drawData)
 		{
-			NVector2 fbOSize = drawData.DisplaySize * drawData.FramebufferScale;
+			Vector2 fbOSize = drawData.DisplaySize * drawData.FramebufferScale;
 
 			// Avoid rendering when minimized.
-			if (fbOSize.X <= 0f || fbOSize.Y <= 0f || drawData.TotalVtxCount == 0) return;
+			if (fbOSize.x <= 0f || fbOSize.y <= 0f || drawData.TotalVtxCount == 0) return;
 
 			Constants.UpdateMeshMarker.Begin();
 			UpdateMesh(drawData);
@@ -99,7 +97,7 @@ namespace UImGui.Renderer
 			commandBuffer.BeginSample(Constants.ExecuteDrawCommandsMarker);
 			Constants.CreateDrawCommandsMarker.Begin();
 
-			CreateDrawCommands(commandBuffer, drawData, fbOSize.ToUnity());
+			CreateDrawCommands(commandBuffer, drawData, fbOSize);
 
 			Constants.CreateDrawCommandsMarker.End();
 			commandBuffer.EndSample(Constants.ExecuteDrawCommandsMarker);
@@ -175,11 +173,11 @@ namespace UImGui.Renderer
 
 		private void CreateDrawCommands(CommandBuffer commandBuffer, ImDrawDataPtr drawData, Vector2 fbSize)
 		{
-			System.IntPtr prevTextureId = System.IntPtr.Zero;
-			NVector4 clipOffset = new NVector4(drawData.DisplayPos.X, drawData.DisplayPos.Y,
-				drawData.DisplayPos.X, drawData.DisplayPos.Y);
-			Vector4 clipScale = new Vector4(drawData.FramebufferScale.X, drawData.FramebufferScale.Y,
-				drawData.FramebufferScale.X, drawData.FramebufferScale.Y);
+			IntPtr prevTextureId = IntPtr.Zero;
+			Vector4 clipOffset = new Vector4(drawData.DisplayPos.x, drawData.DisplayPos.y,
+				drawData.DisplayPos.x, drawData.DisplayPos.y);
+			Vector4 clipScale = new Vector4(drawData.FramebufferScale.x, drawData.FramebufferScale.y,
+				drawData.FramebufferScale.x, drawData.FramebufferScale.y);
 
 			commandBuffer.SetViewport(new Rect(0f, 0f, fbSize.x, fbSize.y));
 			commandBuffer.SetViewProjectionMatrices(
@@ -201,7 +199,7 @@ namespace UImGui.Renderer
 					else
 					{
 						// Project scissor rectangle into framebuffer space and skip if fully outside.
-						Vector4 clipSize = (drawCmd.ClipRect - clipOffset).ToUnity();
+						Vector4 clipSize = drawCmd.ClipRect - clipOffset;
 						Vector4 clip = Vector4.Scale(clipSize, clipScale);
 
 						if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;
@@ -226,3 +224,4 @@ namespace UImGui.Renderer
 		}
 	}
 }
+#endif

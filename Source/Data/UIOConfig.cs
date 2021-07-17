@@ -1,5 +1,4 @@
 ﻿using ImGuiNET;
-using NumericsConverter;
 using System;
 using UnityEngine;
 
@@ -96,7 +95,7 @@ namespace UImGui
 			io.FontGlobalScale = FontGlobalScale;
 			io.FontAllowUserScaling = FontAllowUserScaling;
 
-			io.DisplayFramebufferScale = DisplayFramebufferScale.ToSystem();
+			io.DisplayFramebufferScale = DisplayFramebufferScale;
 			io.MouseDrawCursor = MouseDrawCursor;
 
 			io.ConfigDockingNoSplit = ConfigDockingNoSplit;
@@ -125,7 +124,7 @@ namespace UImGui
 			FontGlobalScale = io.FontGlobalScale;
 			FontAllowUserScaling = io.FontAllowUserScaling;
 
-			DisplayFramebufferScale = io.DisplayFramebufferScale.ToUnity();
+			DisplayFramebufferScale = io.DisplayFramebufferScale;
 			MouseDrawCursor = io.MouseDrawCursor;
 
 			ConfigDockingNoSplit = io.ConfigDockingNoSplit;
