@@ -30,7 +30,6 @@ namespace UImGui.Renderer
 		private readonly TextureManager _textureManager;
 
 		private readonly MaterialPropertyBlock _materialProperties = new MaterialPropertyBlock();
-		private readonly int[] _drawArgs = new int[] { 0, 1, 0, 0, 0 }; // Used to build argument buffer.
 
 		private Material _material;
 
@@ -171,14 +170,18 @@ namespace UImGui.Renderer
 				_indexBuffer.SetData(idxArray, 0, idxOf, idxArray.Length);
 
 				// Arguments for indexed draw.
-				_drawArgs[3] = vtxOf; // Base vertex location.
-				for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i)
+				for (int meshIndex = 0, iMax = drawList.CmdBuffer.Size; meshIndex < iMax; ++meshIndex)
 				{
-					ImDrawCmdPtr cmd = drawList.CmdBuffer[i];
-					_drawArgs[0] = (int)cmd.ElemCount; // Index count per instance.
-					_drawArgs[2] = idxOf + (int)cmd.IdxOffset; // Start index location.
-					_argumentsBuffer.SetData(_drawArgs, 0, argOf, 5);
-
+					ImDrawCmdPtr cmd = drawList.CmdBuffer[meshIndex];
+					var drawArgs = new int[]
+					{
+						(int)cmd.ElemCount,
+						1,
+						idxOf + (int)cmd.IdxOffset,
+						vtxOf,
+						0
+					};
+					_argumentsBuffer.SetData(drawArgs, 0, argOf, 5);
 					argOf += 5; // 5 int for each command.
 				}
 				vtxOf += vtxArray.Length;

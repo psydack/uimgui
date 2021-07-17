@@ -5,6 +5,7 @@
 #ifndef UNITY_COLORSPACE_GAMMA
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 #endif
+
 #include "./Common.hlsl"
 
 TEXTURE2D(_Texture);

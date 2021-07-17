@@ -1,6 +1,7 @@
 using ImGuiNET;
 using System.Text;
 using UImGui.Platform;
+using UImGui.Renderer;
 using UnityEditor;
 using UnityEngine;
 
@@ -113,6 +114,13 @@ namespace UImGui.Editor
 			{
 				_messages.AppendLine("Must assign a RenderFeature when using the URP.");
 			}
+
+#if !UNITY_2020_1_OR_NEWER
+			if ((RenderType)_renderer.enumValueIndex == RenderType.Mesh)
+			{
+				_messages.AppendLine("Use procedural.");
+			}
+#endif
 
 			SerializedProperty configFlags = _initialConfiguration.FindPropertyRelative("ImGuiConfig");
 			if (!PlatformUtility.IsAvailable((InputType)_platform.enumValueIndex))
