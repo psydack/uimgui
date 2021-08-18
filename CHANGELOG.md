@@ -1,3 +1,35 @@
+#### 4.0.1 (2021-08-18)
+
+##### Build System / Dependencies
+
+*  bump version to 4.0.1 ([21aafaac](https://github.com/psydack/uimgui/commit/21aafaacdaca83ce33b9cf44694e33693f2af7b9))
+*  bump version ([29016a2c](https://github.com/psydack/uimgui/commit/29016a2c51021c5832d1227e06ceb012610df590))
+
+##### Documentation Changes
+
+*  update changelog ([5fea8897](https://github.com/psydack/uimgui/commit/5fea88978526e7b06a051aa9fc9c55042dbacf4f))
+
+##### New Features
+
+*  add 2019.4 as compatible version ([c0b24724](https://github.com/psydack/uimgui/commit/c0b2472492680323e1f86970c80a7491ae5acb04))
+*  label for addons ([f4c3f094](https://github.com/psydack/uimgui/commit/f4c3f09442658f8ca07a9f2e84c88a6ee8b494c1))
+
+##### Bug Fixes
+
+*  decrease urp and hdrp version for flags ([68dfafdf](https://github.com/psydack/uimgui/commit/68dfafdf75a40b0dd0b0d2db062d1b7212399c61))
+*  shader build for 2020 and 2019 ([201989af](https://github.com/psydack/uimgui/commit/201989afe56177fbfbc7424d9ad26a30ff81e836))
+*  remove shader for 2019 ([7b44c86a](https://github.com/psydack/uimgui/commit/7b44c86a73c610e83435c9eaae0b4f9891f637e5))
+
+##### Other Changes
+
+*  add new ways to use ([ef8ddc1b](https://github.com/psydack/uimgui/commit/ef8ddc1b57495a24f3e0c5b237e6b63ef271caee))
+*  remove mesh render type for < 2020 ([19011b89](https://github.com/psydack/uimgui/commit/19011b891944eb54f9c58f6cf68ff952bc8f51b9))
+*  remove collections package from depency ([e8e7701b](https://github.com/psydack/uimgui/commit/e8e7701b344fe134afe85dbcd100bb403183db7e))
+
+##### Refactors
+
+*  change drawargs to local scope ([664a7aba](https://github.com/psydack/uimgui/commit/664a7abacb996d5b226b66618a3a7d2b843fc0fe))
+
 #### 4.0.0 (2021-07-10)
 
 ##### Build System / Dependencies
