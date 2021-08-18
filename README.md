@@ -291,6 +291,7 @@ Using URP
 -------
 - Add a `Render Im Gui Feature` render feature to the renderer asset. 
 - Assign it to the `render feature` field of the DearImGui component.
+- Check this [issue](https://github.com/psydack/uimgui/issues/14) which I describe how to make it work step by step.
 
 Using HDRP
 -------
