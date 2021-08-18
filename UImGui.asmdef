@@ -18,12 +18,12 @@
     "versionDefines": [
         {
             "name": "com.unity.render-pipelines.high-definition",
-            "expression": "10.0.0",
+            "expression": "7.0.0",
             "define": "HAS_HDRP"
         },
         {
             "name": "com.unity.render-pipelines.universal",
-            "expression": "10.0.0",
+            "expression": "7.0.0",
             "define": "HAS_URP"
         },
         {
