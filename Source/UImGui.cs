@@ -79,6 +79,19 @@ namespace UImGui
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
 
+		public Camera Camera 
+		{ 
+			set 
+			{
+				if(_camera != value)
+				{
+					OnDisable();
+					_camera = value;
+					OnEnable();
+				}
+			}
+		}
+
 		#region Events
 		public event System.Action<UImGui> Layout;
 		public event System.Action<UImGui> OnInitialize;
