@@ -79,19 +79,6 @@ namespace UImGui
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
 
-		public Camera Camera 
-		{ 
-			set 
-			{
-				if(_camera != value)
-				{
-					OnDisable();
-					_camera = value;
-					OnEnable();
-				}
-			}
-		}
-
 		#region Events
 		public event System.Action<UImGui> Layout;
 		public event System.Action<UImGui> OnInitialize;
@@ -109,6 +96,19 @@ namespace UImGui
 			_initialConfiguration.UserData = userDataPtr;
 			ImGuiIOPtr io = ImGui.GetIO();
 			_initialConfiguration.ApplyTo(io);
+		}
+
+		public void SetCamera(Camera camera)
+		{
+			if (camera == null)
+			{
+				enabled = false;
+				throw new System.Exception($"Fail: {camera} is null.");
+			}
+
+			OnDisable();
+			_camera = camera;
+			OnEnable();
 		}
 
 		private void Awake()
@@ -262,12 +262,6 @@ namespace UImGui
 			_renderCommandBuffer.Clear();
 			_renderer.RenderDrawLists(_renderCommandBuffer, ImGui.GetDrawData());
 			Constants.DrawListMarker.End();
-		}
-
-		private void Reset()
-		{
-			_camera = Camera.main;
-			_initialConfiguration.SetDefaults();
 		}
 
 		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)
