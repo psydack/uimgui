@@ -98,6 +98,19 @@ namespace UImGui
 			_initialConfiguration.ApplyTo(io);
 		}
 
+		public void SetCamera(Camera camera)
+		{
+			if (camera == null)
+			{
+				enabled = false;
+				throw new System.Exception($"Fail: {camera} is null.");
+			}
+
+			OnDisable();
+			_camera = camera;
+			OnEnable();
+		}
+
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
@@ -249,12 +262,6 @@ namespace UImGui
 			_renderCommandBuffer.Clear();
 			_renderer.RenderDrawLists(_renderCommandBuffer, ImGui.GetDrawData());
 			Constants.DrawListMarker.End();
-		}
-
-		private void Reset()
-		{
-			_camera = Camera.main;
-			_initialConfiguration.SetDefaults();
 		}
 
 		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)
