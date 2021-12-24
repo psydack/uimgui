@@ -17,6 +17,7 @@ namespace UImGui.Editor
 		private SerializedProperty _platform;
 		private SerializedProperty _initialConfiguration;
 		private SerializedProperty _fontAtlasConfiguration;
+		private SerializedProperty _fontCustomInitializer;
 		private SerializedProperty _iniSettings;
 		private SerializedProperty _shaders;
 		private SerializedProperty _style;
@@ -46,6 +47,7 @@ namespace UImGui.Editor
 			EditorGUILayout.PropertyField(_platform);
 			EditorGUILayout.PropertyField(_initialConfiguration);
 			EditorGUILayout.PropertyField(_fontAtlasConfiguration);
+			EditorGUILayout.PropertyField(_fontCustomInitializer);
 			EditorGUILayout.PropertyField(_iniSettings);
 			EditorGUILayout.PropertyField(_shaders);
 			EditorGUILayout.PropertyField(_style);
@@ -75,6 +77,7 @@ namespace UImGui.Editor
 			_platform = serializedObject.FindProperty("_platformType");
 			_initialConfiguration = serializedObject.FindProperty("_initialConfiguration");
 			_fontAtlasConfiguration = serializedObject.FindProperty("_fontAtlasConfiguration");
+			_fontCustomInitializer = serializedObject.FindProperty("_fontCustomInitializer");
 			_iniSettings = serializedObject.FindProperty("_iniSettings");
 			_shaders = serializedObject.FindProperty("_shaders");
 			_style = serializedObject.FindProperty("_style");

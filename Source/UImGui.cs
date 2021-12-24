@@ -62,6 +62,9 @@ namespace UImGui
 		};
 
 		[SerializeField]
+		private UnityEngine.Events.UnityEvent _fontCustomInitializer;
+
+		[SerializeField]
 		private FontAtlasConfigAsset _fontAtlasConfiguration = null;
 
 		[Header("Customization")]
@@ -160,7 +163,7 @@ namespace UImGui
 			_initialConfiguration.ApplyTo(io);
 			_style?.ApplyTo(ImGui.GetStyle());
 
-			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration);
+			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration, _fontCustomInitializer);
 			_context.TextureManager.Initialize(io);
 
 			IPlatform platform = PlatformUtility.Create(_platformType, _cursorShapes, _iniSettings);
