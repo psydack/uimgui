@@ -101,7 +101,7 @@ namespace UImGui.Texture
 			return id;
 		}
 
-		public void BuildFontAtlas(ImGuiIOPtr io, in FontAtlasConfigAsset settings)
+		public void BuildFontAtlas(ImGuiIOPtr io, in FontAtlasConfigAsset settings, UnityEngine.Events.UnityEvent custom)
 		{
 			if (io.Fonts.IsBuilt())
 			{
@@ -115,8 +115,15 @@ namespace UImGui.Texture
 
 			if (settings == null)
 			{
-				io.Fonts.AddFontDefault();
-				io.Fonts.Build();
+				if (custom.GetPersistentEventCount() > 0)
+				{
+					custom.Invoke();
+				}
+				else
+				{
+					io.Fonts.AddFontDefault();
+					io.Fonts.Build();
+				}
 				return;
 			}
 
