@@ -287,7 +287,7 @@ private unsafe int CustomCallback(ImGuiInputTextCallbackData* data)
 
 Custom font 
 
-[Thanks](https://github.com/psydack/uimgui/pull/24)
+[Thanks](https://github.com/psydack/uimgui/pull/24)  
 [Check here for more information](https://github.com/ocornut/imgui/blob/master/docs/FONTS.md)
 
 - First create a method with ImGuiIOPtr like this
@@ -313,7 +313,7 @@ public void AddJapaneseFont(ImGuiIOPtr io)
 ```  
 - Assign the object that contain these method in UImGui script
 ![image](https://user-images.githubusercontent.com/961971/149441417-54b319c8-30e7-40dd-aa56-edaede47543d.png)
-- Call an awesome Text to text:
+- Create an awesome text:
 ```cs
 if (ImGui.Begin("ウィンドウテスト"))
 {
@@ -322,7 +322,7 @@ if (ImGui.Begin("ウィンドウテスト"))
 	ImGui.End();
 }
 ```
-![image](https://user-images.githubusercontent.com/961971/149443777-38f439f5-5aca-4188-a21b-32274e901382.png)
+![image](https://user-images.githubusercontent.com/961971/149443777-38f439f5-5aca-4188-a21b-32274e901382.png)  
 Yay!
   
 You can [see more samples here](https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html).
