@@ -3,9 +3,9 @@ using UImGui.Assets;
 using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
-#if HAS_HDRP
-#endif
+
 
 namespace UImGui
 {
@@ -62,7 +62,7 @@ namespace UImGui
 		};
 
 		[SerializeField]
-		private UnityEngine.Events.UnityEvent _fontCustomInitializer;
+		private UnityEvent<ImGuiIOPtr> _fontCustomInitializer;
 
 		[SerializeField]
 		private FontAtlasConfigAsset _fontAtlasConfiguration = null;
