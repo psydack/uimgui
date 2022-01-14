@@ -285,6 +285,46 @@ private unsafe int CustomCallback(ImGuiInputTextCallbackData* data)
 ```
 ![image](https://user-images.githubusercontent.com/961971/120383734-a1ad4880-c2fb-11eb-87e1-398d5e7aac97.png)
 
+Custom font 
+
+[Thanks](https://github.com/psydack/uimgui/pull/24)
+[Check here for more information](https://github.com/ocornut/imgui/blob/master/docs/FONTS.md)
+
+- First create a method with ImGuiIOPtr like this
+```cs
+public void AddJapaneseFont(ImGuiIOPtr io)
+{
+	// you can put on StreamingAssetsFolder and call from there like:
+	//string fontPath = $"{Application.streamingAssetsPath}/NotoSansCJKjp - Medium.otf";
+	string fontPath = "D:\\Users\\rofli.souza\\Desktop\\NotoSansCJKjp-Medium.otf";
+	io.Fonts.AddFontFromFileTTF(fontPath, 18, null, io.Fonts.GetGlyphRangesJapanese());
+
+	// you can create a configs and do a lot of stuffs
+	//ImFontConfig fontConfig = default;
+	//ImFontConfigPtr fontConfigPtr = new ImFontConfigPtr(&fontConfig);
+	//fontConfigPtr.MergeMode = true;
+	//io.Fonts.AddFontDefault(fontConfigPtr);
+	//int[] icons = { 0xf000, 0xf3ff, 0 };
+	//fixed (void* iconsPtr = icons)
+	//{
+	//	io.Fonts.AddFontFromFileTTF("fontawesome-webfont.ttf", 18.0f, fontConfigPtr, (System.IntPtr)iconsPtr);
+	//}
+}
+```  
+- Assign the object that contain these method in UImGui script
+![image](https://user-images.githubusercontent.com/961971/149441417-54b319c8-30e7-40dd-aa56-edaede47543d.png)
+- Call an awesome Text to text:
+```cs
+if (ImGui.Begin("ウィンドウテスト"))
+{
+	ImGui.Text("こんにちは！テスト");
+
+	ImGui.End();
+}
+```
+![image](https://user-images.githubusercontent.com/961971/149443777-38f439f5-5aca-4188-a21b-32274e901382.png)
+Yay!
+  
 You can [see more samples here](https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html).
 
 Using URP
@@ -295,7 +335,12 @@ Using URP
 
 Using HDRP
 -------
-- When using the ``High Definition Render Pipeline``, add a custom render pass and select "DearImGuiPass" injected after post processing.
+- When using the ``High Definition Render Pipeline``; 
+- Add a script called Custom Pass Volume anywhere on your scene;
+- Add "DearImGuiPass" 
+- Update Injection Point to before or after post processing.
+- Good to go.
+Any doubts [see this link](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@7.1/manual/Custom-Pass.html)
 
 Using Built in
 -------
@@ -314,6 +359,8 @@ Issue: Already using ``System.Runtime.CompilerServices.Unsafe.dll`` will cause t
 Resolution: add ``UIMGUI_REMOVE_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.  
   
 Issue: ImPlot isn't work right. 
+  
+Issue: Font atlas crash. There's no fix. Use callback for custom font instead
 
 Credits
 -------

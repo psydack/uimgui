@@ -6,6 +6,7 @@ using UImGui.Assets;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Events;
 using UTexture = UnityEngine.Texture;
 
 namespace UImGui.Texture
@@ -101,7 +102,7 @@ namespace UImGui.Texture
 			return id;
 		}
 
-		public void BuildFontAtlas(ImGuiIOPtr io, in FontAtlasConfigAsset settings, UnityEngine.Events.UnityEvent custom)
+		public void BuildFontAtlas(ImGuiIOPtr io, in FontAtlasConfigAsset settings, UnityEvent<ImGuiIOPtr> custom)
 		{
 			if (io.Fonts.IsBuilt())
 			{
@@ -117,13 +118,14 @@ namespace UImGui.Texture
 			{
 				if (custom.GetPersistentEventCount() > 0)
 				{
-					custom.Invoke();
+					custom.Invoke(io);
 				}
 				else
 				{
 					io.Fonts.AddFontDefault();
-					io.Fonts.Build();
 				}
+				
+				io.Fonts.Build();
 				return;
 			}
 
