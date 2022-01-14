@@ -12,6 +12,10 @@
 
         Pass
         {
+            PackageRequirements {
+                "com.unity.render-pipelines.universal"
+            }
+
             Name "DEARIMGUI URP"
 
             HLSLPROGRAM
@@ -56,6 +60,10 @@
 
         Pass
         {
+            PackageRequirements {
+                "com.unity.render-pipelines.high-definition"
+            }
+
             Name "DEARIMGUI HDRP"
 
             HLSLPROGRAM
