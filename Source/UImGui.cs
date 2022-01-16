@@ -62,7 +62,7 @@ namespace UImGui
 		};
 
 		[SerializeField]
-		private UnityEvent<ImGuiIOPtr> _fontCustomInitializer;
+		private UnityEvent<ImGuiIOPtr> _fontCustomInitializer = new UnityEvent<ImGuiIOPtr>();
 
 		[SerializeField]
 		private FontAtlasConfigAsset _fontAtlasConfiguration = null;
