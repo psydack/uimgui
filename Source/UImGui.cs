@@ -1,9 +1,9 @@
 using ImGuiNET;
 using UImGui.Assets;
+using UImGui.Events;
 using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 
@@ -62,7 +62,7 @@ namespace UImGui
 		};
 
 		[SerializeField]
-		private UnityEvent<ImGuiIOPtr> _fontCustomInitializer;
+		private FontInitializerEvent _fontCustomInitializer = new FontInitializerEvent();
 
 		[SerializeField]
 		private FontAtlasConfigAsset _fontAtlasConfiguration = null;
