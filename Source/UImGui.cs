@@ -80,6 +80,8 @@ namespace UImGui
 		[SerializeField]
 		private bool _doGlobalEvents = true; // Do global/default Layout event too.
 
+		private bool _isChangingCamera = false;
+
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
 
 		#region Events
@@ -109,9 +111,14 @@ namespace UImGui
 				throw new System.Exception($"Fail: {camera} is null.");
 			}
 
-			OnDisable();
+			if(camera == _camera)
+			{
+				Debug.LogWarning($"Trying to change to same camera. Camera: {camera}", camera);
+				return;
+			}
+
 			_camera = camera;
-			OnEnable();
+			_isChangingCamera = true;
 		}
 
 		private void Awake()
@@ -265,6 +272,12 @@ namespace UImGui
 			_renderCommandBuffer.Clear();
 			_renderer.RenderDrawLists(_renderCommandBuffer, ImGui.GetDrawData());
 			Constants.DrawListMarker.End();
+
+			if (_isChangingCamera)
+			{
+				_isChangingCamera = false;
+				Reload();
+			}
 		}
 
 		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)
