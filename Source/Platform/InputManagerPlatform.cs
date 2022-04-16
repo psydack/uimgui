@@ -47,7 +47,7 @@ namespace UImGui.Platform
 		private void SetupKeyboard(ImGuiIOPtr io)
 		{
 			// Map and store new keys by assigning io.KeyMap and setting value of array
-			_mainKeys = new int[] {
+			_mainKeys = new [] {
 				io.KeyMap[(int)ImGuiKey.A] = (int)KeyCode.A, // For text edit CTRL+A: select all.
 				io.KeyMap[(int)ImGuiKey.C] = (int)KeyCode.C, // For text edit CTRL+C: copy.
 				io.KeyMap[(int)ImGuiKey.V] = (int)KeyCode.V, // For text edit CTRL+V: paste.
@@ -74,7 +74,7 @@ namespace UImGui.Platform
 				io.KeyMap[(int)ImGuiKey.Space] = (int)KeyCode.Space,
 				io.KeyMap[(int)ImGuiKey.Escape] = (int)KeyCode.Escape,
 				io.KeyMap[(int)ImGuiKey.Enter] = (int)KeyCode.Return,
-				io.KeyMap[(int)ImGuiKey.KeyPadEnter] = (int)KeyCode.KeypadEnter,
+				io.KeyMap[(int)ImGuiKey.KeypadEnter] = (int)KeyCode.KeypadEnter,
 			};
 		}
 
