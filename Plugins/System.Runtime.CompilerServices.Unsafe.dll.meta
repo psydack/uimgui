@@ -5,8 +5,7 @@ PluginImporter:
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
-  defineConstraints:
-  - '!UIMGUI_REMOVE_UNSAFE_DLL'
+  defineConstraints: []
   isPreloaded: 1
   isOverridable: 0
   isExplicitlyReferenced: 0
@@ -40,7 +39,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: x86_64
+        CPU: AnyCPU
   - first:
       Standalone: OSXUniversal
     second:
