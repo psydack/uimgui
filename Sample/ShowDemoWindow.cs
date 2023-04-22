@@ -1,12 +1,12 @@
 using ImGuiNET;
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_IMNODES
 using imnodesNET;
 #endif
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_IMPLOT
 using ImPlotNET;
 using System.Linq;
 #endif
-#if !UIMGUI_REMOVE_IMGUIZMO
+#if UIMGUI_IMGUIZMO
 using ImGuizmoNET;
 #endif
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace UImGui
 {
 	public class ShowDemoWindow : MonoBehaviour
 	{
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_IMPLOT
 		[SerializeField]
 		float[] _barValues = Enumerable.Range(1, 10).Select(x => (x * x) * 1.0f).ToArray();
 		[SerializeField]
@@ -36,7 +36,7 @@ namespace UImGui
 
 		private void OnLayout(UImGui uImGui)
 		{
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_IMPLOT
 			if (ImGui.Begin("Plot Window Sample"))
 			{
 				ImGui.SetNextWindowSize(Vector2.one * 200, ImGuiCond.Once);
@@ -49,7 +49,7 @@ namespace UImGui
 			}
 #endif
 
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_IMNODES
 			if (ImGui.Begin("Nodes Window Sample"))
 			{
 				ImGui.SetNextWindowSize(Vector2.one * 300, ImGuiCond.Once);

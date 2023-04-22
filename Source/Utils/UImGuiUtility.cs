@@ -27,10 +27,10 @@ namespace UImGui
 			return new Context
 			{
 				ImGuiContext = ImGui.CreateContext(),
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_IMPLOT
 				ImPlotContext = ImPlotNET.ImPlot.CreateContext(),
 #endif
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_IMNODES
 				ImNodesContext = new IntPtr(imnodesNET.imnodes.CreateContext()),
 #endif
 				TextureManager = new TextureManager()
@@ -41,10 +41,10 @@ namespace UImGui
 		{
 			ImGui.DestroyContext(context.ImGuiContext);
 
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_IMPLOT
 			ImPlotNET.ImPlot.DestroyContext(context.ImPlotContext);
 #endif
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_IMNODES
 			imnodesNET.imnodes.DestroyContext(context.ImNodesContext);
 #endif
 		}
@@ -54,13 +54,13 @@ namespace UImGui
 			Context = context;
 			ImGui.SetCurrentContext(context?.ImGuiContext ?? IntPtr.Zero);
 
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_IMPLOT
 			ImPlotNET.ImPlot.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
-#if !UIMGUI_REMOVE_IMGUIZMO
+#if UIMGUI_IMGUIZMO
 			ImGuizmoNET.ImGuizmo.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_IMNODES
 			imnodesNET.imnodes.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
 		}

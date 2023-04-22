@@ -83,13 +83,13 @@ namespace UImGui.Editor
 			_style = serializedObject.FindProperty("_style");
 			_cursorShapes = serializedObject.FindProperty("_cursorShapes");
 
-#if UIMGUI_REMOVE_IMNODES
+#if !UIMGUI_IMNODES
 			usingImNodes = false;
 #endif
-#if UIMGUI_REMOVE_IMGUIZMO
+#if !UIMGUI_IMGUIZMO
 			usingImGuizmo = false;
 #endif
-#if UIMGUI_REMOVE_IMPLOT
+#if !UIMGUI_IMPLOT
 			usingImPlot = false;
 #endif
 		}
