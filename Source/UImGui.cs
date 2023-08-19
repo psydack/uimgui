@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 namespace UImGui
 {
 	// TODO: Check Multithread run.
+	[ExecuteInEditMode]
 	public class UImGui : MonoBehaviour
 	{
 		private Context _context;
@@ -121,11 +122,25 @@ namespace UImGui
 
 		private void OnDestroy()
 		{
+			// [ExecuteInEditMode]
+			if (Application.isEditor
+				&& !Application.isPlaying
+				&& _context == null
+				)
+				return;
+
 			UImGuiUtility.DestroyContext(_context);
 		}
 
 		private void OnEnable()
 		{
+			// [ExecuteInEditMode]
+			if (Application.isEditor
+				&& !Application.isPlaying
+				&& _context == null
+				)
+				return;
+
 			void Fail(string reason)
 			{
 				enabled = false;
@@ -188,6 +203,13 @@ namespace UImGui
 
 		private void OnDisable()
 		{
+			// [ExecuteInEditMode]
+			if (Application.isEditor
+				&& !Application.isPlaying
+				&& _context == null
+				)
+				return;
+
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
 
@@ -233,6 +255,13 @@ namespace UImGui
 
 		private void Update()
 		{
+			// [ExecuteInEditMode]
+			if (Application.isEditor
+				&& !Application.isPlaying
+				&& _context == null
+				)
+				return;
+
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
 

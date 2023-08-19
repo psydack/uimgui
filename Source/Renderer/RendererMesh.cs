@@ -72,13 +72,25 @@ namespace UImGui.Renderer
 
 			if (_mesh != null)
 			{
-				Object.Destroy(_mesh);
+				// [ExecuteInEditMode]
+				if (Application.isEditor
+					&& !Application.isPlaying)
+					Object.DestroyImmediate(_mesh);
+				else
+					Object.Destroy(_mesh);
+
 				_mesh = null;
 			}
 
 			if (_material != null)
 			{
-				Object.Destroy(_material);
+				// [ExecuteInEditMode]
+				if (Application.isEditor
+					&& !Application.isPlaying)
+					Object.DestroyImmediate(_material);
+				else
+					Object.Destroy(_material);
+
 				_material = null;
 			}
 		}

@@ -56,7 +56,13 @@ namespace UImGui.Texture
 
 			if (_atlasTexture != null)
 			{
-				UnityEngine.Object.Destroy(_atlasTexture);
+				// [ExecuteInEditMode]
+				if (Application.isEditor
+					&& !Application.isPlaying)
+					UnityEngine.Object.DestroyImmediate(_atlasTexture);
+				else
+					UnityEngine.Object.Destroy(_atlasTexture);
+
 				_atlasTexture = null;
 			}
 		}

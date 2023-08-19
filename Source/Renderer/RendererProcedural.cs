@@ -67,7 +67,16 @@ namespace UImGui.Renderer
 		{
 			io.SetBackendRendererName(null);
 
-			if (_material != null) { Object.Destroy(_material); _material = null; }
+			if (_material != null)
+			{
+				// [ExecuteInEditMode]
+				if (Application.isEditor
+					&& !Application.isPlaying)
+					Object.DestroyImmediate(_material);
+				else
+					Object.Destroy(_material); _material = null;
+			}
+
 			_vertexBuffer?.Release(); _vertexBuffer = null;
 			_indexBuffer?.Release(); _indexBuffer = null;
 			_argumentsBuffer?.Release(); _argumentsBuffer = null;
