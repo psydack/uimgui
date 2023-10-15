@@ -11,25 +11,25 @@ namespace UImGui.Renderer
 
 		protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
 		{
-            _uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
+			_uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
 		}
 
 		protected override void Execute(CustomPassContext context)
 		{
-            if (!Application.isPlaying) return;
-            var renderContext = context.renderContext;
-            
+			if (!Application.isPlaying) return;
+			var renderContext = context.renderContext;
+			
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
 			{
 				UImGui uimgui = _uimguis[uindex];
 
-                uimgui.DoUpdate(context.cmd);
-                renderContext.ExecuteCommandBuffer(context.cmd);
+				uimgui.DoUpdate(context.cmd);
+				renderContext.ExecuteCommandBuffer(context.cmd);
 			}
-            renderContext.Submit();
+			renderContext.Submit();
 		}
 
-        protected override bool executeInSceneView => false;
+		protected override bool executeInSceneView => false;
 
 		protected override void Cleanup() { }
 	}

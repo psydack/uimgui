@@ -216,7 +216,7 @@ namespace UImGui
 					_renderFeature.CommandBuffer = null;
 				}
 			}
-            else if(!RenderUtility.IsUsingHDRP())
+			else if(!RenderUtility.IsUsingHDRP())
 			{
 				if (_camera != null)
 				{
@@ -240,12 +240,12 @@ namespace UImGui
 
 		private void Update()
 		{
-            if (RenderUtility.IsUsingHDRP())
-                return; // skip update call in hdrp
-            DoUpdate(this.CommandBuffer);
-        }
+			if (RenderUtility.IsUsingHDRP())
+				return; // skip update call in hdrp
+			DoUpdate(this.CommandBuffer);
+		}
 
-        internal void DoUpdate(CommandBuffer buffer)
+		internal void DoUpdate(CommandBuffer buffer)
 		{
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
