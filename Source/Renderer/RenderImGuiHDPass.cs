@@ -1,4 +1,4 @@
-﻿#if HAS_HDRP
+#if HAS_HDRP
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -26,6 +26,8 @@ namespace UImGui.Renderer
 				cb.Clear();
 			}
 		}
+
+        protected override bool executeInSceneView => false;
 
 		protected override void Cleanup() { }
 	}
