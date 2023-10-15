@@ -1,4 +1,5 @@
 #if HAS_HDRP
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -10,7 +11,7 @@ namespace UImGui.Renderer
 
 		protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
 		{
-			_uimguis = UnityEngine.Object.FindObjectsOfType<UImGui>();
+            _uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
 		}
 
 		protected override void Execute(CustomPassContext context)
