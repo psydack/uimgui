@@ -16,6 +16,7 @@ namespace UImGui.Renderer
 
 		protected override void Execute(CustomPassContext context)
 		{
+            if (!Application.isPlaying) return;
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
 			{
 				UImGui uimgui = _uimguis[uindex];
