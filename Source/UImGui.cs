@@ -216,7 +216,7 @@ namespace UImGui
 					_renderFeature.CommandBuffer = null;
 				}
 			}
-			else
+            else if(!RenderUtility.IsUsingHDRP())
 			{
 				if (_camera != null)
 				{
@@ -239,6 +239,13 @@ namespace UImGui
 		}
 
 		private void Update()
+		{
+            if (RenderUtility.IsUsingHDRP())
+                return; // skip update call in hdrp
+            DoUpdate(this.CommandBuffer);
+        }
+
+        internal void DoUpdate(CommandBuffer buffer)
 		{
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
@@ -270,7 +277,7 @@ namespace UImGui
 
 			Constants.DrawListMarker.Begin(this);
 			_renderCommandBuffer.Clear();
-			_renderer.RenderDrawLists(_renderCommandBuffer, ImGui.GetDrawData());
+			_renderer.RenderDrawLists(buffer, ImGui.GetDrawData());
 			Constants.DrawListMarker.End();
 
 			if (_isChangingCamera)
