@@ -22,6 +22,8 @@ namespace UImGui.Renderer
 			{
 				UImGui uimgui = _uimguis[uindex];
 
+				if (!uimgui || !uimgui.enabled) continue;
+
 				uimgui.DoUpdate(context.cmd);
 			}
 		}
