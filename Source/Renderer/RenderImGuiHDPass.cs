@@ -17,16 +17,13 @@ namespace UImGui.Renderer
 		protected override void Execute(CustomPassContext context)
 		{
 			if (!Application.isPlaying) return;
-			var renderContext = context.renderContext;
 			
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
 			{
 				UImGui uimgui = _uimguis[uindex];
 
 				uimgui.DoUpdate(context.cmd);
-				renderContext.ExecuteCommandBuffer(context.cmd);
 			}
-			renderContext.Submit();
 		}
 
 		protected override bool executeInSceneView => false;
