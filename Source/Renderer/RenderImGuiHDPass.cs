@@ -17,16 +17,19 @@ namespace UImGui.Renderer
 		protected override void Execute(CustomPassContext context)
 		{
 			if (!Application.isPlaying) return;
-			var renderContext = context.renderContext;
 			
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
 			{
 				UImGui uimgui = _uimguis[uindex];
 
+				if (!uimgui || !uimgui.enabled) continue;
+
 				uimgui.DoUpdate(context.cmd);
-				renderContext.ExecuteCommandBuffer(context.cmd);
+
+				#if UNITY_EDITOR
+				context.renderContext.DrawGizmos(context.hdCamera.camera, GizmoSubset.PostImageEffects);
+				#endif
 			}
-			renderContext.Submit();
 		}
 
 		protected override bool executeInSceneView => false;
