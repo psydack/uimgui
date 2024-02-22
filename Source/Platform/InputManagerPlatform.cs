@@ -46,6 +46,7 @@ namespace UImGui.Platform
 
 		private void SetupKeyboard(ImGuiIOPtr io)
 		{
+			/*
 			// Map and store new keys by assigning io.KeyMap and setting value of array
 			_mainKeys = new int[] {
 				io.KeyMap[(int)ImGuiKey.A] = (int)KeyCode.A, // For text edit CTRL+A: select all.
@@ -75,11 +76,12 @@ namespace UImGui.Platform
 				io.KeyMap[(int)ImGuiKey.Escape] = (int)KeyCode.Escape,
 				io.KeyMap[(int)ImGuiKey.Enter] = (int)KeyCode.Return,
 				io.KeyMap[(int)ImGuiKey.KeyPadEnter] = (int)KeyCode.KeypadEnter,
-			};
+			};*/
 		}
 
 		private void UpdateKeyboard(ImGuiIOPtr io)
 		{
+			/*
 			for (int keyIndex = 0; keyIndex < _mainKeys.Length; keyIndex++)
 			{
 				int key = _mainKeys[keyIndex];
@@ -102,6 +104,7 @@ namespace UImGui.Platform
 					io.AddInputCharacter(_textInputEvent.character);
 				}
 			}
+			*/
 		}
 
 		private static void UpdateMouse(ImGuiIOPtr io)
