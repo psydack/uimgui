@@ -20,8 +20,6 @@ namespace UImGui.Platform
 	{
 		private readonly Event _textInputEvent = new Event();
 
-		private int[] _mainKeys;
-
 		public InputManagerPlatform(CursorShapesAsset cursorShapes, IniSettingsAsset iniSettings) :
 			base(cursorShapes, iniSettings)
 		{ }
