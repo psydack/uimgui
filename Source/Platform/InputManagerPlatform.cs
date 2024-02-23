@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using UImGui.Assets;
 using UnityEngine;
 
@@ -109,14 +109,12 @@ namespace UImGui.Platform
 
 		private static void UpdateMouse(ImGuiIOPtr io)
 		{
-			io.MousePos = Utils.ScreenToImGui(Input.mousePosition);
-
-			io.MouseWheel = Input.mouseScrollDelta.y;
-			io.MouseWheelH = Input.mouseScrollDelta.x;
-
-			io.MouseDown[0] = Input.GetMouseButton(0);
-			io.MouseDown[1] = Input.GetMouseButton(1);
-			io.MouseDown[2] = Input.GetMouseButton(2);
+			Vector2 mousePosition = Utils.ScreenToImGui(Input.mousePosition);
+			io.AddMousePosEvent(mousePosition.x, mousePosition.y);
+			io.AddMouseButtonEvent(0, Input.GetMouseButton(0));
+			io.AddMouseButtonEvent(1, Input.GetMouseButton(1));
+			io.AddMouseButtonEvent(2, Input.GetMouseButton(2));
+			io.AddMouseWheelEvent(Input.mouseScrollDelta.x, Input.mouseScrollDelta.y);
 		}
 	}
 }
