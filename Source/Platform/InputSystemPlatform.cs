@@ -1,4 +1,4 @@
-﻿#if HAS_INPUTSYSTEM
+#if HAS_INPUTSYSTEM
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -69,25 +69,37 @@ namespace UImGui.Platform
                 return;
             }
 
-            io.NavInputs[(int)ImGuiNavInput.Activate] = gamepad.buttonSouth.ReadValue(); // A / Cross
-            io.NavInputs[(int)ImGuiNavInput.Cancel] = gamepad.buttonEast.ReadValue(); // B / Circle
-            io.NavInputs[(int)ImGuiNavInput.Menu] = gamepad.buttonWest.ReadValue(); // X / Square
-            io.NavInputs[(int)ImGuiNavInput.Input] = gamepad.buttonNorth.ReadValue(); // Y / Triangle
+            // TO DO: Confirm it's working. NOT TESTED
 
-            io.NavInputs[(int)ImGuiNavInput.DpadLeft] = gamepad.dpad.left.ReadValue(); // D-Pad Left
-            io.NavInputs[(int)ImGuiNavInput.DpadRight] = gamepad.dpad.right.ReadValue(); // D-Pad Right
-            io.NavInputs[(int)ImGuiNavInput.DpadUp] = gamepad.dpad.up.ReadValue(); // D-Pad Up
-            io.NavInputs[(int)ImGuiNavInput.DpadDown] = gamepad.dpad.down.ReadValue(); // D-Pad Down
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadStart, gamepad.aButton.IsPressed(), gamepad.aButton.ReadValue()); // A / Cross
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadBack, gamepad.bButton.IsPressed(), gamepad.bButton.ReadValue()); // A / Cross
 
-            io.NavInputs[(int)ImGuiNavInput.FocusPrev] = gamepad.leftShoulder.ReadValue(); // LB / L1
-            io.NavInputs[(int)ImGuiNavInput.FocusNext] = gamepad.rightShoulder.ReadValue(); // RB / R1
-            io.NavInputs[(int)ImGuiNavInput.TweakSlow] = gamepad.leftShoulder.ReadValue(); // LB / L1
-            io.NavInputs[(int)ImGuiNavInput.TweakFast] = gamepad.rightShoulder.ReadValue(); // RB / R1
+            io.AddKeyEvent(ImGuiKey.GamepadFaceDown, gamepad.buttonSouth.IsPressed()); // A / Cross
+            io.AddKeyEvent(ImGuiKey.GamepadFaceRight, gamepad.buttonEast.IsPressed()); // B / Circle
+            io.AddKeyEvent(ImGuiKey.GamepadFaceLeft, gamepad.buttonWest.IsPressed()); // X / Square
+            io.AddKeyEvent(ImGuiKey.GamepadFaceUp, gamepad.buttonNorth.IsPressed()); // Y / Triangle
 
-            io.NavInputs[(int)ImGuiNavInput.LStickLeft] = gamepad.leftStick.left.ReadValue();
-            io.NavInputs[(int)ImGuiNavInput.LStickRight] = gamepad.leftStick.right.ReadValue();
-            io.NavInputs[(int)ImGuiNavInput.LStickUp] = gamepad.leftStick.up.ReadValue();
-            io.NavInputs[(int)ImGuiNavInput.LStickDown] = gamepad.leftStick.down.ReadValue();
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadDown, gamepad.dpad.down.IsPressed(), gamepad.dpad.down.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadRight, gamepad.dpad.right.IsPressed(), gamepad.dpad.right.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadLeft, gamepad.dpad.left.IsPressed(), gamepad.dpad.left.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadUp, gamepad.dpad.up.IsPressed(), gamepad.dpad.up.ReadValue());
+
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadL1, gamepad.leftShoulder.IsPressed(), gamepad.leftShoulder.ReadValue()); // LB / L1
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadL2, gamepad.leftTrigger.IsPressed(), gamepad.leftTrigger.ReadValue()); // LB / L2
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadR1, gamepad.rightShoulder.IsPressed(), gamepad.rightShoulder.ReadValue()); // RB / R1
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadR2, gamepad.rightTrigger.IsPressed(), gamepad.rightTrigger.ReadValue()); // RB / R2
+
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickDown, gamepad.leftStick.down.IsPressed(), gamepad.leftStick.down.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickLeft, gamepad.leftStick.left.IsPressed(), gamepad.leftStick.left.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickRight, gamepad.leftStick.right.IsPressed(), gamepad.leftStick.right.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickUp, gamepad.leftStick.up.IsPressed(), gamepad.leftStick.up.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadL3, gamepad.leftStickButton.IsPressed(), gamepad.leftStickButton.ReadValue());
+
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickDown, gamepad.rightStick.down.IsPressed(), gamepad.rightStick.down.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickLeft, gamepad.rightStick.left.IsPressed(), gamepad.rightStick.left.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickRight, gamepad.rightStick.right.IsPressed(), gamepad.rightStick.right.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickUp, gamepad.rightStick.up.IsPressed(), gamepad.rightStick.up.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadR3, gamepad.rightStickButton.IsPressed(), gamepad.rightStickButton.ReadValue());
         }
 
         private void SetupKeyboard(ImGuiIOPtr io, Keyboard keyboard)
