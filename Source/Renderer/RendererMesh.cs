@@ -109,7 +109,7 @@ namespace UImGui.Renderer
 			int subMeshCount = 0;
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				subMeshCount += drawData.CmdListsRange[n].CmdBuffer.Size;
+				subMeshCount += drawData.CmdLists[n].CmdBuffer.Size;
 			}
 
 			if (_prevSubMeshCount != subMeshCount)
@@ -128,7 +128,7 @@ namespace UImGui.Renderer
 
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				ImDrawListPtr drawList = drawData.CmdListsRange[n];
+				ImDrawListPtr drawList = drawData.CmdLists[n];
 
 				unsafe
 				{
@@ -187,7 +187,7 @@ namespace UImGui.Renderer
 			int subOf = 0;
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				ImDrawListPtr drawList = drawData.CmdListsRange[n];
+				ImDrawListPtr drawList = drawData.CmdLists[n];
 				for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i, ++subOf)
 				{
 					ImDrawCmdPtr drawCmd = drawList.CmdBuffer[i];

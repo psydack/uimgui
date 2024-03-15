@@ -130,7 +130,7 @@ namespace UImGui.Renderer
 			int drawArgCount = 0; // nr of drawArgs is the same as the nr of ImDrawCmd
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				drawArgCount += drawData.CmdListsRange[n].CmdBuffer.Size;
+				drawArgCount += drawData.CmdLists[n].CmdBuffer.Size;
 			}
 
 			// create or resize vertex/index buffers
@@ -155,7 +155,7 @@ namespace UImGui.Renderer
 			int argOf = 0;
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				ImDrawListPtr drawList = drawData.CmdListsRange[n];
+				ImDrawListPtr drawList = drawData.CmdLists[n];
 				NativeArray<ImDrawVert> vtxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ImDrawVert>(
 					(void*)drawList.VtxBuffer.Data, drawList.VtxBuffer.Size, Allocator.None);
 				NativeArray<ushort> idxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ushort>(
@@ -208,7 +208,7 @@ namespace UImGui.Renderer
 			int argOf = 0;
 			for (int commandListIndex = 0, nMax = drawData.CmdListsCount; commandListIndex < nMax; ++commandListIndex)
 			{
-				ImDrawListPtr drawList = drawData.CmdListsRange[commandListIndex];
+				ImDrawListPtr drawList = drawData.CmdLists[commandListIndex];
 				for (int commandIndex = 0, iMax = drawList.CmdBuffer.Size; commandIndex < iMax; ++commandIndex, argOf += 5 * 4)
 				{
 					ImDrawCmdPtr drawCmd = drawList.CmdBuffer[commandIndex];

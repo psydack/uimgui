@@ -1,9 +1,9 @@
 {
   "name": "com.psydack.uimgui",
   "displayName": "UImGui",
-  "version": "4.1.1",
+  "version": "5.0.0",
   "description": "A Unity wrapper for ImGui",
-  "unity": "2019.4",
+  "unity": "2021.0",
   "dependencies": {
   },
   "keywords": [

@@ -1,10 +1,9 @@
-﻿#if HAS_INPUTSYSTEM
+#if HAS_INPUTSYSTEM
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using UImGui.Assets;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
@@ -24,8 +23,6 @@ namespace UImGui.Platform
     internal sealed class InputSystemPlatform : PlatformBase
     {
         private readonly List<char> _textInput = new();
-
-        private int[] _mainKeys;
 
         private readonly List<KeyControl> _keyControls = new();
 
@@ -69,36 +66,43 @@ namespace UImGui.Platform
                 return;
             }
 
-            io.NavInputs[(int)ImGuiNavInput.Activate] = gamepad.buttonSouth.ReadValue(); // A / Cross
-            io.NavInputs[(int)ImGuiNavInput.Cancel] = gamepad.buttonEast.ReadValue(); // B / Circle
-            io.NavInputs[(int)ImGuiNavInput.Menu] = gamepad.buttonWest.ReadValue(); // X / Square
-            io.NavInputs[(int)ImGuiNavInput.Input] = gamepad.buttonNorth.ReadValue(); // Y / Triangle
+            // TO DO: Confirm it's working. NOT TESTED
 
-            io.NavInputs[(int)ImGuiNavInput.DpadLeft] = gamepad.dpad.left.ReadValue(); // D-Pad Left
-            io.NavInputs[(int)ImGuiNavInput.DpadRight] = gamepad.dpad.right.ReadValue(); // D-Pad Right
-            io.NavInputs[(int)ImGuiNavInput.DpadUp] = gamepad.dpad.up.ReadValue(); // D-Pad Up
-            io.NavInputs[(int)ImGuiNavInput.DpadDown] = gamepad.dpad.down.ReadValue(); // D-Pad Down
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadStart, gamepad.aButton.IsPressed(), gamepad.aButton.ReadValue()); // A / Cross
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadBack, gamepad.bButton.IsPressed(), gamepad.bButton.ReadValue()); // A / Cross
 
-            io.NavInputs[(int)ImGuiNavInput.FocusPrev] = gamepad.leftShoulder.ReadValue(); // LB / L1
-            io.NavInputs[(int)ImGuiNavInput.FocusNext] = gamepad.rightShoulder.ReadValue(); // RB / R1
-            io.NavInputs[(int)ImGuiNavInput.TweakSlow] = gamepad.leftShoulder.ReadValue(); // LB / L1
-            io.NavInputs[(int)ImGuiNavInput.TweakFast] = gamepad.rightShoulder.ReadValue(); // RB / R1
+            io.AddKeyEvent(ImGuiKey.GamepadFaceDown, gamepad.buttonSouth.IsPressed()); // A / Cross
+            io.AddKeyEvent(ImGuiKey.GamepadFaceRight, gamepad.buttonEast.IsPressed()); // B / Circle
+            io.AddKeyEvent(ImGuiKey.GamepadFaceLeft, gamepad.buttonWest.IsPressed()); // X / Square
+            io.AddKeyEvent(ImGuiKey.GamepadFaceUp, gamepad.buttonNorth.IsPressed()); // Y / Triangle
 
-            io.NavInputs[(int)ImGuiNavInput.LStickLeft] = gamepad.leftStick.left.ReadValue();
-            io.NavInputs[(int)ImGuiNavInput.LStickRight] = gamepad.leftStick.right.ReadValue();
-            io.NavInputs[(int)ImGuiNavInput.LStickUp] = gamepad.leftStick.up.ReadValue();
-            io.NavInputs[(int)ImGuiNavInput.LStickDown] = gamepad.leftStick.down.ReadValue();
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadDown, gamepad.dpad.down.IsPressed(), gamepad.dpad.down.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadRight, gamepad.dpad.right.IsPressed(), gamepad.dpad.right.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadLeft, gamepad.dpad.left.IsPressed(), gamepad.dpad.left.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadDpadUp, gamepad.dpad.up.IsPressed(), gamepad.dpad.up.ReadValue());
+
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadL1, gamepad.leftShoulder.IsPressed(), gamepad.leftShoulder.ReadValue()); // LB / L1
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadL2, gamepad.leftTrigger.IsPressed(), gamepad.leftTrigger.ReadValue()); // LB / L2
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadR1, gamepad.rightShoulder.IsPressed(), gamepad.rightShoulder.ReadValue()); // RB / R1
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadR2, gamepad.rightTrigger.IsPressed(), gamepad.rightTrigger.ReadValue()); // RB / R2
+
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickDown, gamepad.leftStick.down.IsPressed(), gamepad.leftStick.down.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickLeft, gamepad.leftStick.left.IsPressed(), gamepad.leftStick.left.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickRight, gamepad.leftStick.right.IsPressed(), gamepad.leftStick.right.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadLStickUp, gamepad.leftStick.up.IsPressed(), gamepad.leftStick.up.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadL3, gamepad.leftStickButton.IsPressed(), gamepad.leftStickButton.ReadValue());
+
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickDown, gamepad.rightStick.down.IsPressed(), gamepad.rightStick.down.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickLeft, gamepad.rightStick.left.IsPressed(), gamepad.rightStick.left.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickRight, gamepad.rightStick.right.IsPressed(), gamepad.rightStick.right.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadRStickUp, gamepad.rightStick.up.IsPressed(), gamepad.rightStick.up.ReadValue());
+            io.AddKeyAnalogEvent(ImGuiKey.GamepadR3, gamepad.rightStickButton.IsPressed(), gamepad.rightStickButton.ReadValue());
         }
 
-        private void SetupKeyboard(ImGuiIOPtr io, Keyboard keyboard)
+        private void SetupKeyboard(Keyboard keyboard)
         {
             if (_keyboard != null)
             {
-                for (var i = 0; i < (int)ImGuiKey.COUNT; ++i)
-                {
-                    io.KeyMap[i] = -1;
-                }
-
                 _keyboard.onTextInput -= _textInput.Add;
             }
 
@@ -106,78 +110,7 @@ namespace UImGui.Platform
             _keyControls.Clear();
 
             // Map and store new keys by assigning io.KeyMap and setting value of array.
-            _mainKeys = new[]
-            {
-                // Letter keys mapped by display name to avoid being layout agnostic (used as shortcuts).
-                io.KeyMap[(int)ImGuiKey.A] = RegisterKeyControl("a"), // For text edit CTRL+A: select all.
-                io.KeyMap[(int)ImGuiKey.C] = RegisterKeyControl("c"), // For text edit CTRL+C: copy.
-                io.KeyMap[(int)ImGuiKey.V] = RegisterKeyControl("v"), // For text edit CTRL+V: paste.
-                io.KeyMap[(int)ImGuiKey.X] = RegisterKeyControl("x"), // For text edit CTRL+X: cut.
-                io.KeyMap[(int)ImGuiKey.Y] = RegisterKeyControl("y"), // For text edit CTRL+Y: redo.
-                io.KeyMap[(int)ImGuiKey.Z] = RegisterKeyControl("z"), // For text edit CTRL+Z: undo.
-
-                io.KeyMap[(int)ImGuiKey.Tab] = RegisterKeyControl(Key.Tab),
-                io.KeyMap[(int)ImGuiKey.LeftArrow] = RegisterKeyControl(Key.LeftArrow),
-                io.KeyMap[(int)ImGuiKey.RightArrow] = RegisterKeyControl(Key.RightArrow),
-                io.KeyMap[(int)ImGuiKey.UpArrow] = RegisterKeyControl(Key.UpArrow),
-                io.KeyMap[(int)ImGuiKey.DownArrow] = RegisterKeyControl(Key.DownArrow),
-                io.KeyMap[(int)ImGuiKey.PageUp] = RegisterKeyControl(Key.PageUp),
-                io.KeyMap[(int)ImGuiKey.PageDown] = RegisterKeyControl(Key.PageDown),
-                io.KeyMap[(int)ImGuiKey.Home] = RegisterKeyControl(Key.Home),
-                io.KeyMap[(int)ImGuiKey.End] = RegisterKeyControl(Key.End),
-                io.KeyMap[(int)ImGuiKey.Insert] = RegisterKeyControl(Key.Insert),
-                io.KeyMap[(int)ImGuiKey.Delete] = RegisterKeyControl(Key.Delete),
-                io.KeyMap[(int)ImGuiKey.Backspace] = RegisterKeyControl(Key.Backspace),
-                io.KeyMap[(int)ImGuiKey.Space] = RegisterKeyControl(Key.Space),
-                io.KeyMap[(int)ImGuiKey.Escape] = RegisterKeyControl(Key.Escape),
-                io.KeyMap[(int)ImGuiKey.Enter] = RegisterKeyControl(Key.Enter),
-                io.KeyMap[(int)ImGuiKey.KeyPadEnter] = RegisterKeyControl(Key.NumpadEnter)
-            };
             _keyboard.onTextInput += _textInput.Add;
-        }
-
-        private int RegisterKeyControl(string displayName)
-        {
-            try
-            {
-                Assert.AreEqual(-1, _keyControls.FindIndex(c => c.displayName == displayName));
-                var newIndex = _keyControls.Count;
-                var key = _keyboard.FindKeyOnCurrentKeyboardLayout(displayName);
-                if (key != null)
-                {
-                    _keyControls.Add(key);
-                    return newIndex;
-                }
-
-                return -1;
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-                return -1;
-            }
-        }
-
-        private int RegisterKeyControl(Key key)
-        {
-            try
-            {
-                Assert.AreEqual(-1, _keyControls.FindIndex(c => c.keyCode == key));
-                var newIndex = _keyControls.Count;
-                var keyControl = _keyboard[key];
-                if (keyControl != null)
-                {
-                    _keyControls.Add(keyControl);
-                    return newIndex;
-                }
-
-                return -1;
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-                return -1;
-            }
         }
 
         private void UpdateKeyboard(ImGuiIOPtr io, Keyboard keyboard)
@@ -187,16 +120,17 @@ namespace UImGui.Platform
                 return;
             }
 
-            // main keys
-            foreach (var keyIndex in _mainKeys)
+            // BUG: mod key make everything slow. Go to line
+            for (int keyIndex = 0; keyIndex < Keyboard.KeyCount; keyIndex++)
             {
-                if (keyIndex >= 0 && keyIndex < _keyControls.Count && keyIndex < io.KeysDown.Count)
+                Key key = (Key)keyIndex;
+                if (TryMapKeys(key, out ImGuiKey imguikey))
                 {
-                    io.KeysDown[keyIndex] = _keyControls[keyIndex].isPressed;
+                    KeyControl keyControl = keyboard[key];
+                    io.AddKeyEvent(imguikey, keyControl.IsPressed());
                 }
             }
 
-            // Keyboard modifiers.
             io.KeyShift = keyboard[Key.LeftShift].isPressed || keyboard[Key.RightShift].isPressed;
             io.KeyCtrl = keyboard[Key.LeftCtrl].isPressed || keyboard[Key.RightCtrl].isPressed;
             io.KeyAlt = keyboard[Key.LeftAlt].isPressed || keyboard[Key.RightAlt].isPressed;
@@ -211,6 +145,71 @@ namespace UImGui.Platform
             _textInput.Clear();
         }
 
+        private bool TryMapKeys(Key key, out ImGuiKey imguikey)
+        {
+            static ImGuiKey KeyToImGuiKeyShortcut(Key keyToConvert, Key startKey1, ImGuiKey startKey2)
+            {
+                int changeFromStart1 = (int)keyToConvert - (int)startKey1;
+                return startKey2 + changeFromStart1;
+            }
+
+            imguikey = key switch
+            {
+                >= Key.F1 and <= Key.F12 => KeyToImGuiKeyShortcut(key, Key.F1, ImGuiKey.F1),
+                >= Key.Numpad0 and <= Key.Numpad9 => KeyToImGuiKeyShortcut(key, Key.Numpad0, ImGuiKey.Keypad0),
+                >= Key.A and <= Key.Z => KeyToImGuiKeyShortcut(key, Key.A, ImGuiKey.A),
+                >= Key.Digit1 and <= Key.Digit9 => KeyToImGuiKeyShortcut(key, Key.Digit1, ImGuiKey._1),
+                Key.Digit0 => ImGuiKey._0,
+                // BUG: mod keys make everything slow. 
+                // Key.LeftShift or Key.RightShift => ImGuiKey.ModShift,
+                // Key.LeftCtrl or Key.RightCtrl => ImGuiKey.ModCtrl,
+                // Key.LeftAlt or Key.RightAlt => ImGuiKey.ModAlt,
+                Key.LeftWindows or Key.RightWindows => ImGuiKey.ModSuper,
+                Key.ContextMenu => ImGuiKey.Menu,
+                Key.UpArrow => ImGuiKey.UpArrow,
+                Key.DownArrow => ImGuiKey.DownArrow,
+                Key.LeftArrow => ImGuiKey.LeftArrow,
+                Key.RightArrow => ImGuiKey.RightArrow,
+                Key.Enter => ImGuiKey.Enter,
+                Key.Escape => ImGuiKey.Escape,
+                Key.Space => ImGuiKey.Space,
+                Key.Tab => ImGuiKey.Tab,
+                Key.Backspace => ImGuiKey.Backspace,
+                Key.Insert => ImGuiKey.Insert,
+                Key.Delete => ImGuiKey.Delete,
+                Key.PageUp => ImGuiKey.PageUp,
+                Key.PageDown => ImGuiKey.PageDown,
+                Key.Home => ImGuiKey.Home,
+                Key.End => ImGuiKey.End,
+                Key.CapsLock => ImGuiKey.CapsLock,
+                Key.ScrollLock => ImGuiKey.ScrollLock,
+                Key.PrintScreen => ImGuiKey.PrintScreen,
+                Key.Pause => ImGuiKey.Pause,
+                Key.NumLock => ImGuiKey.NumLock,
+                Key.NumpadDivide => ImGuiKey.KeypadDivide,
+                Key.NumpadMultiply => ImGuiKey.KeypadMultiply,
+                Key.NumpadMinus => ImGuiKey.KeypadSubtract,
+                Key.NumpadPlus => ImGuiKey.KeypadAdd,
+                Key.NumpadPeriod => ImGuiKey.KeypadDecimal,
+                Key.NumpadEnter => ImGuiKey.KeypadEnter,
+                Key.NumpadEquals => ImGuiKey.KeypadEqual,
+                Key.Backquote => ImGuiKey.GraveAccent,
+                Key.Minus => ImGuiKey.Minus,
+                Key.Equals => ImGuiKey.Equal,
+                Key.LeftBracket => ImGuiKey.LeftBracket,
+                Key.RightBracket => ImGuiKey.RightBracket,
+                Key.Semicolon => ImGuiKey.Semicolon,
+                Key.Quote => ImGuiKey.Apostrophe,
+                Key.Comma => ImGuiKey.Comma,
+                Key.Period => ImGuiKey.Period,
+                Key.Slash => ImGuiKey.Slash,
+                Key.Backslash => ImGuiKey.Backslash,
+                _ => ImGuiKey.None
+            };
+
+            return imguikey != ImGuiKey.None;
+        }
+
         private void OnDeviceChange(InputDevice device, InputDeviceChange change)
         {
             if (device is Keyboard keyboard)
@@ -218,13 +217,13 @@ namespace UImGui.Platform
                 // Keyboard layout change, remap main keys.
                 if (change == InputDeviceChange.ConfigurationChanged)
                 {
-                    SetupKeyboard(ImGui.GetIO(), keyboard);
+                    SetupKeyboard(keyboard);
                 }
 
                 // Keyboard device changed, setup again.
                 if (Keyboard.current != _keyboard)
                 {
-                    SetupKeyboard(ImGui.GetIO(), Keyboard.current);
+                    SetupKeyboard(Keyboard.current);
                 }
             }
         }
@@ -243,7 +242,7 @@ namespace UImGui.Platform
                 PlatformCallbacks.SetClipboardFunctions(PlatformCallbacks.GetClipboardTextCallback, PlatformCallbacks.SetClipboardTextCallback);
             }
 
-            SetupKeyboard(io, Keyboard.current);
+            SetupKeyboard(Keyboard.current);
 
             return true;
         }

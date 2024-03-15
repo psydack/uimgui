@@ -1,3 +1,39 @@
+#### 5.0.0 (2024-03-15)
+
+##### New Features
+
+*  add unity version as req for urp and hdrp ([b40c461e](https://github.com/psydack/uimgui/commit/b40c461effc07fde06710cc96b7ecd5f31a7e73a))
+
+##### Bug Fixes
+
+*  remove variable not used ([5d11cfe5](https://github.com/psydack/uimgui/commit/5d11cfe56df69b0363b8fa10a016a5d9706d8745))
+*  mouse update events ([84f0fb17](https://github.com/psydack/uimgui/commit/84f0fb17d83d5d83bc6ff82a5bf14dfb95a8d0ff))
+*  change camera to the end of update method ([58d332f3](https://github.com/psydack/uimgui/commit/58d332f303c04366faabd29c947d9f6fc051beb1))
+*  [#28](https://github.com/psydack/uimgui/pull/28) create custom event for font initialization ([62df991d](https://github.com/psydack/uimgui/commit/62df991dab0dc8619c79371353e24692aa2134bd))
+*  attempt to fix [#28](https://github.com/psydack/uimgui/pull/28) ([4d09e1d0](https://github.com/psydack/uimgui/commit/4d09e1d06872c7eba1eff41758f8022c5fbce062))
+
+##### Refactors
+
+*  change message to use rendertype as procedural on 2019 ([3dd04897](https://github.com/psydack/uimgui/commit/3dd04897c9be992b2407de307157aea53b7cb521))
+
+#### 5.0.0 (2024-03-15)
+
+##### New Features
+
+*  add unity version as req for urp and hdrp ([b40c461e](https://github.com/psydack/uimgui/commit/b40c461effc07fde06710cc96b7ecd5f31a7e73a))
+
+##### Bug Fixes
+
+*  remove variable not used ([5d11cfe5](https://github.com/psydack/uimgui/commit/5d11cfe56df69b0363b8fa10a016a5d9706d8745))
+*  mouse update events ([84f0fb17](https://github.com/psydack/uimgui/commit/84f0fb17d83d5d83bc6ff82a5bf14dfb95a8d0ff))
+*  change camera to the end of update method ([58d332f3](https://github.com/psydack/uimgui/commit/58d332f303c04366faabd29c947d9f6fc051beb1))
+*  [#28](https://github.com/psydack/uimgui/pull/28) create custom event for font initialization ([62df991d](https://github.com/psydack/uimgui/commit/62df991dab0dc8619c79371353e24692aa2134bd))
+*  attempt to fix [#28](https://github.com/psydack/uimgui/pull/28) ([4d09e1d0](https://github.com/psydack/uimgui/commit/4d09e1d06872c7eba1eff41758f8022c5fbce062))
+
+##### Refactors
+
+*  change message to use rendertype as procedural on 2019 ([3dd04897](https://github.com/psydack/uimgui/commit/3dd04897c9be992b2407de307157aea53b7cb521))
+
 #### 4.0.1 (2021-08-18)
 
 ##### Build System / Dependencies

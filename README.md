@@ -6,7 +6,7 @@ UImGui (Unity ImGui) is an UPM package for the immediate mode GUI library using 
 This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-imgui-unity) project. 
 This project use [FreeType](https://github.com/ocornut/imgui/tree/master/misc/freetype) as default renderer.
 
-**Using imgui 1.84 WIP**
+**Using imgui 1.90.1**
 
 ----
 
@@ -23,30 +23,30 @@ To update (using ImGui.Net.dll) easier and often.
 
 ## Features
 
-| Feature                   |         RG         |      UImGui        | 
-| -----------------         | ------------------ | ------------------ |
-| IL2CPP                    | :x:                | :heavy_check_mark: |
-| Windows                   | :heavy_check_mark: | :heavy_check_mark: |
-| Linux                     | :heavy_check_mark: | :x: 		      |
-| MacOS                     | :heavy_check_mark: | :x: 		      |
-| Custom Assert             | :heavy_check_mark: | :x: 		      |
-| Unity Input Manager       | :heavy_check_mark: | :heavy_check_mark: |
-| Unity Input System        | :heavy_check_mark: | :heavy_check_mark: |
-| Docking                   | :x:                | :heavy_check_mark: |
-| RenderPipeline Built in   | :heavy_check_mark: | :heavy_check_mark: |
-| RenderPipeline URP        | :x:                | :heavy_check_mark: |
-| RenderPipeline HDRP       | :x:                | :heavy_check_mark: |
-| Renderer Mesh             | :heavy_check_mark: | :heavy_check_mark: |
-| Renderer Procedural       |          ~         | :heavy_check_mark: |
-| FreeType                  |          ~         | :heavy_check_mark: |
-| Image / Texture           | :x:				 | :heavy_check_mark: |
-| [ImNodes](https://github.com/Nelarius/imnodes)       		| :x:				 | :heavy_check_mark: |
-| [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)   | :x:				 | :heavy_check_mark: |
-| [ImPlot](https://github.com/epezent/implot)      		 	| :x:				 |          ~         |
+| Feature                                                   |         RG         |      UImGui        | 
+| -----------------                                         | ------------------ | ------------------ |
+| IL2CPP                                                    | :x:                | :heavy_check_mark: |
+| Windows                                                   | :heavy_check_mark: | :heavy_check_mark: |
+| Linux                                                     | :heavy_check_mark: | :heavy_check_mark: |
+| MacOS                                                     | :heavy_check_mark: | :heavy_check_mark: |
+| Custom Assert                                             | :heavy_check_mark: | :x: 		          |
+| Unity Input Manager                                       | :heavy_check_mark: | :heavy_check_mark: |
+| Unity Input System                                        | :heavy_check_mark: | :heavy_check_mark: |
+| Docking                                                   | :x:                | :heavy_check_mark: |
+| RenderPipeline Built in                                   | :heavy_check_mark: | :heavy_check_mark: |
+| RenderPipeline URP                                        | :x:                | :heavy_check_mark: |
+| RenderPipeline HDRP                                       | :x:                | :heavy_check_mark: |
+| Renderer Mesh                                             | :heavy_check_mark: | :heavy_check_mark: |
+| Renderer Procedural                                       | ~                  | :heavy_check_mark: |
+| FreeType                                                  | ~                  | WIP |
+| Image / Texture                                           | :x:				 | :heavy_check_mark: |
+| [ImNodes](https://github.com/Nelarius/imnodes)       		| :x:				 | WIP                |
+| [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)   | :x:				 | WIP                |
+| [ImPlot](https://github.com/epezent/implot)      		 	| :x:				 | WIP                |
 
 Usage
 -------
-- [Add package](https://docs.unity3d.com/Manual/upm-ui-giturl.html) from git URL: https://github.com/psydack/uimgui.git or add manually in your packages folders and update your manifest.json with the [lastest version](https://github.com/psydack/uimgui/blob/main/package.json) (e.g: "com.psydack.uimgui" : "4.0.0")
+- [Add package](https://docs.unity3d.com/Manual/upm-ui-giturl.html) from git URL: https://github.com/psydack/uimgui.git or add manually in your packages folders and update your manifest.json with the [lastest version](https://github.com/psydack/uimgui/blob/main/package.json) (e.g: "com.psydack.uimgui" : "5.0.0")
 - Add `UImGui` component to the scene and
 - (Optional) Set `Platform Type` to `Input System` if you're using the new [input system](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html) the `SampleDemoWindow` object on the scene the following properties:
 - If you're using **URP** check [Using URP](https://github.com/psydack/uimgui#using-urp) section, for **HDRP** [Using HDRP](https://github.com/psydack/uimgui#using-hdrp) section, for **built in** check [Using Built in](https://github.com/psydack/uimgui#using-hdrp) section.
