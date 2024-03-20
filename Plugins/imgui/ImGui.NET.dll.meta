@@ -19,7 +19,8 @@ PluginImporter:
         Exclude Editor: 0
         Exclude Linux64: 0
         Exclude OSXUniversal: 0
-        Exclude Win: 1
+        Exclude WebGL: 0
+        Exclude Win: 0
         Exclude Win64: 0
   - first:
       Any: 
@@ -31,7 +32,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: x86_64
+        CPU: AnyCPU
         DefaultValueInitialized: true
         OS: AnyOS
   - first:
@@ -39,25 +40,30 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: x86_64
+        CPU: AnyCPU
   - first:
       Standalone: OSXUniversal
     second:
       enabled: 1
       settings:
-        CPU: None
+        CPU: AnyCPU
   - first:
       Standalone: Win
     second:
-      enabled: 0
+      enabled: 1
       settings:
-        CPU: None
+        CPU: AnyCPU
   - first:
       Standalone: Win64
     second:
       enabled: 1
       settings:
-        CPU: x86_64
+        CPU: AnyCPU
+  - first:
+      WebGL: WebGL
+    second:
+      enabled: 1
+      settings: {}
   - first:
       Windows Store Apps: WindowsStoreApps
     second:

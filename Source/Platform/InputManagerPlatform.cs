@@ -74,7 +74,7 @@ namespace UImGui.Platform
 
 		private static bool TryMapKeys(KeyCode key, out ImGuiKey imguikey)
 		{
-			static ImGuiKey KeyToImGuiKeyShortcut(KeyCode keyToConvert, KeyCode startKey1, ImGuiKey startKey2)
+			ImGuiKey KeyToImGuiKeyShortcut(KeyCode keyToConvert, KeyCode startKey1, ImGuiKey startKey2)
 			{
 				int changeFromStart1 = (int)keyToConvert - (int)startKey1;
 				return startKey2 + changeFromStart1;
