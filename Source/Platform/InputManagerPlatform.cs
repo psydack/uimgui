@@ -19,6 +19,7 @@ namespace UImGui.Platform
 	internal sealed class InputManagerPlatform : PlatformBase
 	{
 		private readonly Event _textInputEvent = new Event();
+		private readonly KeyCode[] _keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
 		public InputManagerPlatform(CursorShapesAsset cursorShapes, IniSettingsAsset iniSettings) :
 			base(cursorShapes, iniSettings)
@@ -43,7 +44,7 @@ namespace UImGui.Platform
 		private void UpdateKeyboard(ImGuiIOPtr io)
 		{
 			// BUG: mod key make everything slow. Go to line
-			foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
+			foreach (KeyCode keyCode in _keyCodes)
 			{
 				if (TryMapKeys(keyCode, out ImGuiKey imguikey))
 				{
