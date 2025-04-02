@@ -52,11 +52,15 @@ namespace UImGui.Platform
 				}
 			}
 
-      			// Handle mod keys separately as 2 buttons map to 1 key
+      		// Handle mod keys separately as 2 buttons map to 1 key
 			io.AddKeyEvent(ImGuiKey.ModShift, Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 			io.AddKeyEvent(ImGuiKey.ModCtrl, Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
 			io.AddKeyEvent(ImGuiKey.ModAlt, Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt));
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IOS
+			io.AddKeyEvent(ImGuiKey.ModSuper, Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand));
+#else
 			io.AddKeyEvent(ImGuiKey.ModSuper, Input.GetKey(KeyCode.LeftWindows) || Input.GetKey(KeyCode.RightWindows));
+#endif
 
 			// Text input.
 			while (Event.PopEvent(_textInputEvent))
