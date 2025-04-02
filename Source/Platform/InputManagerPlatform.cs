@@ -52,6 +52,12 @@ namespace UImGui.Platform
 				}
 			}
 
+      			// Handle mod keys separately as 2 buttons map to 1 key
+			io.AddKeyEvent(ImGuiKey.ModShift, Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+			io.AddKeyEvent(ImGuiKey.ModCtrl, Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
+			io.AddKeyEvent(ImGuiKey.ModAlt, Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt));
+			io.AddKeyEvent(ImGuiKey.ModSuper, Input.GetKey(KeyCode.LeftWindows) || Input.GetKey(KeyCode.RightWindows));
+
 			// Text input.
 			while (Event.PopEvent(_textInputEvent))
 			{
@@ -87,11 +93,19 @@ namespace UImGui.Platform
 				>= KeyCode.Keypad0 and <= KeyCode.Keypad9 => KeyToImGuiKeyShortcut(key, KeyCode.Keypad0, ImGuiKey.Keypad0),
 				>= KeyCode.A and <= KeyCode.Z => KeyToImGuiKeyShortcut(key, KeyCode.A, ImGuiKey.A),
 				>= KeyCode.Alpha0 and <= KeyCode.Alpha9 => KeyToImGuiKeyShortcut(key, KeyCode.Alpha0, ImGuiKey._0),
-				// BUG: mod keys make everything slow. 
-				// KeyCode.LeftShift or KeyCode.RightShift => ImGuiKey.ModShift,
-				// KeyCode.LeftControl or KeyCode.RightControl => ImGuiKey.ModCtrl,
-				// KeyCode.LeftAlt or KeyCode.RightAlt => ImGuiKey.ModAlt,
-				// KeyCode.LeftWindows or KeyCode.RightWindows => ImGuiKey.ModSuper,
+				KeyCode.LeftControl => ImGuiKey.LeftCtrl,
+				KeyCode.RightControl => ImGuiKey.RightCtrl,
+				KeyCode.LeftShift => ImGuiKey.LeftShift,
+				KeyCode.RightShift => ImGuiKey.RightShift,
+				KeyCode.LeftAlt => ImGuiKey.LeftAlt,
+				KeyCode.RightAlt => ImGuiKey.RightAlt,
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IOS
+				KeyCode.LeftCommand => ImGuiKey.LeftSuper,
+				KeyCode.RightCommand => ImGuiKey.RightSuper,
+#else
+				KeyCode.LeftWindows => ImGuiKey.LeftSuper,
+				KeyCode.RightWindows => ImGuiKey.RightSuper,
+#endif
 				KeyCode.Menu => ImGuiKey.Menu,
 				KeyCode.UpArrow => ImGuiKey.UpArrow,
 				KeyCode.DownArrow => ImGuiKey.DownArrow,
