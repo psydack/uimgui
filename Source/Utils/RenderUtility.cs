@@ -5,7 +5,8 @@ using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 #if HAS_URP
 using UnityEngine.Rendering.Universal;
-#elif HAS_HDRP
+#endif
+#if HAS_HDRP
 using UnityEngine.Rendering.HighDefinition;
 #endif
 
