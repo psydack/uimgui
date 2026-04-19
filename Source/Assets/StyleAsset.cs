@@ -280,7 +280,7 @@ namespace UImGui.Assets
 
 		public void SetDefault()
 		{
-			System.IntPtr context = ImGui.CreateContext();
+			var context = ImGui.CreateContext();
 			ImGui.SetCurrentContext(context);
 			SetFrom(ImGui.GetStyle());
 			ImGui.DestroyContext(context);

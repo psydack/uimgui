@@ -33,7 +33,7 @@ namespace UImGui
 
 		public static bool IsUsingURP()
 		{
-			RenderPipelineAsset currentRP = GraphicsSettings.currentRenderPipeline;
+			var currentRP = GraphicsSettings.currentRenderPipeline;
 #if HAS_URP
 			return currentRP is UniversalRenderPipelineAsset;
 #else
@@ -43,7 +43,7 @@ namespace UImGui
 
 		public static bool IsUsingHDRP()
 		{
-			RenderPipelineAsset currentRP = GraphicsSettings.currentRenderPipeline;
+			var currentRP = GraphicsSettings.currentRenderPipeline;
 
 #if HAS_HDRP
 			return currentRP is HDRenderPipelineAsset;

@@ -24,9 +24,9 @@ namespace UImGui.Editor
 		private SerializedProperty _cursorShapes;
 		private readonly StringBuilder _messages = new StringBuilder();
 
-		private bool usingImNodes = true;
-		private bool usingImGuizmo = true;
-		private bool usingImPlot = true;
+		private bool _isUsingImNodes = true;
+		private bool _isUsingImGuizmo = true;
+		private bool _isUsingImPlot = true;
 
 		public override void OnInspectorGUI()
 		{
@@ -84,22 +84,22 @@ namespace UImGui.Editor
 			_cursorShapes = serializedObject.FindProperty("_cursorShapes");
 
 #if UIMGUI_REMOVE_IMNODES
-			usingImNodes = false;
+			_isUsingImNodes = false;
 #endif
 #if UIMGUI_REMOVE_IMGUIZMO
-			usingImGuizmo = false;
+			_isUsingImGuizmo = false;
 #endif
 #if UIMGUI_REMOVE_IMPLOT
-			usingImPlot = false;
+			_isUsingImPlot = false;
 #endif
 		}
 
 		private void CheckRequirements()
 		{
-			var textImGui = $"ImGUI: {ImGui.GetVersion()}";
-			var textImNodes = $"ImNodes: { (usingImNodes ? "0.4 - 2021-07-09" : "disabled") }";
-			var textImGuizmo = $"ImGuizmo: { (usingImGuizmo ? "?? - 2021-07-09" : "disabled") }";
-			var textImPlot = $"ImPlot: { (usingImPlot ? "0.10 - 2021-07-09" : "disabled") }";
+			string textImGui = $"ImGUI: {ImGui.GetVersion()}";
+			string textImNodes = $"ImNodes: { (_isUsingImNodes ? "0.4 - 2021-07-09" : "disabled") }";
+			string textImGuizmo = $"ImGuizmo: { (_isUsingImGuizmo ? "?? - 2021-07-09" : "disabled") }";
+			string textImPlot = $"ImPlot: { (_isUsingImPlot ? "0.10 - 2021-07-09" : "disabled") }";
 
 			EditorGUILayout.LabelField(textImGui);
 			EditorGUILayout.LabelField(textImNodes);

@@ -9,12 +9,12 @@ namespace UImGui.Platform
 	#region Callback methods
 	// TODO: Should return Utf8 byte*, how to deal with memory ownership?
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	internal unsafe delegate string GetClipboardTextCallback(void* user_data);
-	internal delegate string GetClipboardTextSafeCallback(IntPtr user_data);
+	internal unsafe delegate string GetClipboardTextCallback(void* userData);
+	internal delegate string GetClipboardTextSafeCallback(IntPtr userData);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	internal unsafe delegate void SetClipboardTextCallback(void* user_data, byte* text);
-	internal delegate void SetClipboardTextSafeCallback(IntPtr user_data, string text);
+	internal unsafe delegate void SetClipboardTextCallback(void* userData, byte* text);
+	internal delegate void SetClipboardTextSafeCallback(IntPtr userData, string text);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate void ImeSetInputScreenPosCallback(int x, int y);
@@ -26,13 +26,13 @@ namespace UImGui.Platform
 		private static SetClipboardTextCallback _setClipboardText;
 
 		[MonoPInvokeCallback(typeof(GetClipboardTextCallback))]
-		public static unsafe string GetClipboardTextCallback(void* user_data)
+		public static unsafe string GetClipboardTextCallback(void* userData)
 		{
 			return GUIUtility.systemCopyBuffer;
 		}
 
 		[MonoPInvokeCallback(typeof(SetClipboardTextCallback))]
-		public static unsafe void SetClipboardTextCallback(void* user_data, byte* text)
+		public static unsafe void SetClipboardTextCallback(void* userData, byte* text)
 		{
 			GUIUtility.systemCopyBuffer = Utils.StringFromPtr(text);
 		}
@@ -43,10 +43,10 @@ namespace UImGui.Platform
 			Input.compositionCursorPos = new Vector2(x, y);
 		}
 
-		public static void SetClipboardFunctions(GetClipboardTextCallback getCb, SetClipboardTextCallback setCb)
+		public static void SetClipboardFunctions(GetClipboardTextCallback getCallback, SetClipboardTextCallback setCallback)
 		{
-			_getClipboardText = getCb;
-			_setClipboardText = setCb;
+			_getClipboardText = getCallback;
+			_setClipboardText = setCallback;
 		}
 
 		public void Assign(ImGuiIOPtr io)
@@ -64,18 +64,18 @@ namespace UImGui.Platform
 		public static GetClipboardTextSafeCallback GetClipboardText
 		{
 			// TODO: convert return string to Utf8 byte*
-			set => _getClipboardText = (user_data) =>
+			set => _getClipboardText = (userData) =>
 			{
-				try { return value(new IntPtr(user_data)); }
+				try { return value(new IntPtr(userData)); }
 				catch (Exception ex) { Debug.LogException(ex); return null; }
 			};
 		}
 
 		public static SetClipboardTextSafeCallback SetClipboardText
 		{
-			set => _setClipboardText = (user_data, text) =>
+			set => _setClipboardText = (userData, text) =>
 			{
-				try { value(new IntPtr(user_data), Utils.StringFromPtr(text)); }
+				try { value(new IntPtr(userData), Utils.StringFromPtr(text)); }
 				catch (Exception ex) { Debug.LogException(ex); }
 			};
 		}

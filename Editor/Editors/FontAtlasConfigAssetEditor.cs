@@ -64,7 +64,7 @@ namespace UImGui.Editor
 		private void DrawRasterizerFlagsProperty()
 		{
 			EditorGUI.BeginChangeCheck();
-			ImFreetype.BuilderFlags value = (ImFreetype.BuilderFlags)EditorGUILayout.EnumFlagsField(
+			var value = (ImFreetype.BuilderFlags)EditorGUILayout.EnumFlagsField(
 				Styles.rasterizerFlags,
 				(ImFreetype.BuilderFlags)_rasterizerFlags.intValue);
 			if (EditorGUI.EndChangeCheck())

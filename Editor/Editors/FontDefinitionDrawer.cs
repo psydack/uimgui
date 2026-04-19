@@ -10,8 +10,8 @@ namespace UImGui.Editor
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
-			SerializedProperty fontPath = property.FindPropertyRelative(nameof(FontDefinition.Path));
-			SerializedProperty config = property.FindPropertyRelative(nameof(FontDefinition.Config));
+			var fontPath = property.FindPropertyRelative(nameof(FontDefinition.Path));
+			var config = property.FindPropertyRelative(nameof(FontDefinition.Config));
 
 			float height = EditorGUIUtility.singleLineHeight; // font file asset.
 			height += EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight; // path
@@ -30,9 +30,9 @@ namespace UImGui.Editor
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			SerializedProperty fontAsset = property.FindPropertyRelative("_fontAsset");
-			SerializedProperty fontPath = property.FindPropertyRelative(nameof(FontDefinition.Path));
-			SerializedProperty config = property.FindPropertyRelative(nameof(FontDefinition.Config));
+			var fontAsset = property.FindPropertyRelative("_fontAsset");
+			var fontPath = property.FindPropertyRelative(nameof(FontDefinition.Path));
+			var config = property.FindPropertyRelative(nameof(FontDefinition.Config));
 
 			position.height = EditorGUIUtility.singleLineHeight;
 			EditorGUI.PropertyField(position, fontAsset);
@@ -50,7 +50,7 @@ namespace UImGui.Editor
 				position.height = EditorGUIUtility.singleLineHeight;
 
 				EditorGUI.BeginDisabledGroup(true);
-				Rect fieldPos = EditorGUI.PrefixLabel(position, new GUIContent(EditorStreamingAssetsPath));
+				var fieldPos = EditorGUI.PrefixLabel(position, new GUIContent(EditorStreamingAssetsPath));
 				EditorGUI.LabelField(fieldPos, fontPath.stringValue);
 				EditorGUI.EndDisabledGroup();
 

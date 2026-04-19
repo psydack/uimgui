@@ -124,10 +124,10 @@ namespace UImGui.Platform
             for (int keyIndex = 0; keyIndex < Keyboard.KeyCount; keyIndex++)
             {
                 Key key = (Key)keyIndex;
-                if (TryMapKeys(key, out ImGuiKey imguikey))
+                if (TryMapKeys(key, out ImGuiKey imguiKey))
                 {
-                    KeyControl keyControl = keyboard[key];
-                    io.AddKeyEvent(imguikey, keyControl.IsPressed());
+                    var keyControl = keyboard[key];
+                    io.AddKeyEvent(imguiKey, keyControl.IsPressed());
                 }
             }
 
@@ -145,7 +145,7 @@ namespace UImGui.Platform
             _textInput.Clear();
         }
 
-        private bool TryMapKeys(Key key, out ImGuiKey imguikey)
+        private bool TryMapKeys(Key key, out ImGuiKey imguiKey)
         {
             static ImGuiKey KeyToImGuiKeyShortcut(Key keyToConvert, Key startKey1, ImGuiKey startKey2)
             {
@@ -153,7 +153,7 @@ namespace UImGui.Platform
                 return startKey2 + changeFromStart1;
             }
 
-            imguikey = key switch
+            imguiKey = key switch
             {
                 >= Key.F1 and <= Key.F12 => KeyToImGuiKeyShortcut(key, Key.F1, ImGuiKey.F1),
                 >= Key.Numpad0 and <= Key.Numpad9 => KeyToImGuiKeyShortcut(key, Key.Numpad0, ImGuiKey.Keypad0),
@@ -207,7 +207,7 @@ namespace UImGui.Platform
                 _ => ImGuiKey.None
             };
 
-            return imguikey != ImGuiKey.None;
+            return imguiKey != ImGuiKey.None;
         }
 
         private void OnDeviceChange(InputDevice device, InputDeviceChange change)

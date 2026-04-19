@@ -6,7 +6,7 @@ UImGui (Unity ImGui) is an UPM package for the immediate mode GUI library using 
 This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-imgui-unity) project. 
 This project use [FreeType](https://github.com/ocornut/imgui/tree/master/misc/freetype) as default renderer.
 
-**Using imgui 1.90.1**
+**Using imgui 1.92.7**
 
 ----
 

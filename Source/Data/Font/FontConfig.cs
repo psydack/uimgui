@@ -116,7 +116,7 @@ namespace UImGui
 		public unsafe List<ushort> BuildRanges()
 		{
 			ImFontAtlas* atlas = null;
-			List<ushort> ranges = new List<ushort>();
+			var ranges = new List<ushort>();
 
 			void AddRangePtr(ushort* r)
 			{

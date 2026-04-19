@@ -2,5 +2,5 @@
 
 namespace UImGui.Renderer
 {
-	internal delegate void UserDrawCallback(ImDrawListPtr parent_list, ImDrawCmdPtr cmd);
+	internal delegate void UserDrawCallback(ImDrawListPtr parentList, ImDrawCmdPtr cmd);
 }

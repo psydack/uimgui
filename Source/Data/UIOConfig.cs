@@ -75,7 +75,7 @@ namespace UImGui
 
 		public void SetDefaults()
 		{
-			IntPtr context = ImGui.CreateContext();
+			var context = ImGui.CreateContext();
 			ImGui.SetCurrentContext(context);
 			SetFrom(ImGui.GetIO());
 			ImGui.DestroyContext(context);

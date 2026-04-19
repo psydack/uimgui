@@ -24,7 +24,7 @@ namespace UImGui.Texture
 
 		public unsafe void Initialize(ImGuiIOPtr io)
 		{
-			ImFontAtlasPtr atlasPtr = io.Fonts;
+			var atlasPtr = io.Fonts;
 			atlasPtr.GetTexDataAsRGBA32(out byte* pixels, out int width, out int height, out int bytesPerPixel);
 
 			_atlasTexture = new Texture2D(width, height, TextureFormat.RGBA32, false, false)
@@ -33,12 +33,12 @@ namespace UImGui.Texture
 			};
 
 			// TODO: Remove collections and make native array manually.
-			NativeArray<byte> srcData = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<byte>(pixels, width * height * bytesPerPixel, Allocator.None);
+			var srcData = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<byte>(pixels, width * height * bytesPerPixel, Allocator.None);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 			NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref srcData, AtomicSafetyHandle.GetTempMemoryHandle());
 #endif
 			// Invert y while copying the atlas texture.
-			NativeArray<byte> dstData = _atlasTexture.GetRawTextureData<byte>();
+			var dstData = _atlasTexture.GetRawTextureData<byte>();
 			int stride = width * bytesPerPixel;
 			for (int y = 0; y < height; ++y)
 			{
@@ -79,7 +79,7 @@ namespace UImGui.Texture
 
 		public SpriteInfo GetSpriteInfo(Sprite sprite)
 		{
-			if (!_spriteData.TryGetValue(sprite, out SpriteInfo spriteInfo))
+			if (!_spriteData.TryGetValue(sprite, out var spriteInfo))
 			{
 				_spriteData[sprite] = spriteInfo = new SpriteInfo
 				{
@@ -132,7 +132,7 @@ namespace UImGui.Texture
 			// Add fonts from config asset.
 			for (int fontIndex = 0; fontIndex < settings.Fonts.Length; fontIndex++)
 			{
-				FontDefinition fontDefinition = settings.Fonts[fontIndex];
+				var fontDefinition = settings.Fonts[fontIndex];
 				string fontPath = System.IO.Path.Combine(Application.streamingAssetsPath, fontDefinition.Path);
 				if (!System.IO.File.Exists(fontPath))
 				{
@@ -143,7 +143,7 @@ namespace UImGui.Texture
 				unsafe
 				{
 					ImFontConfig fontConfig = default;
-					ImFontConfigPtr fontConfigPtr = new ImFontConfigPtr(&fontConfig);
+					var fontConfigPtr = new ImFontConfigPtr(&fontConfig);
 
 					fontDefinition.Config.ApplyTo(fontConfigPtr);
 					fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
@@ -171,7 +171,7 @@ namespace UImGui.Texture
 
 		private unsafe IntPtr AllocateGlyphRangeArray(in FontConfig fontConfig)
 		{
-			List<ushort> values = fontConfig.BuildRanges();
+			var values = fontConfig.BuildRanges();
 			if (values.Count == 0)
 			{
 				return IntPtr.Zero;
