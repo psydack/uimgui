@@ -27,6 +27,11 @@
             "define": "HAS_URP"
         },
         {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "17.0.0",
+            "define": "HAS_URP_17"
+        },
+        {
             "name": "com.unity.inputsystem",
             "expression": "1.0.0",
             "define": "HAS_INPUTSYSTEM"

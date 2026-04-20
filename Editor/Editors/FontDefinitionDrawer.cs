@@ -63,7 +63,7 @@ namespace UImGui.Editor
 		private string GetStreamingAssetPath(SerializedProperty property)
 		{
 			string path = property.objectReferenceValue != null ?
-				AssetDatabase.GetAssetPath(property.objectReferenceValue.GetInstanceID()) :
+				AssetDatabase.GetAssetPath(property.objectReferenceValue) :
 				string.Empty;
 			return path.StartsWith(EditorStreamingAssetsPath) ? path.Substring(EditorStreamingAssetsPath.Length) : string.Empty;
 		}

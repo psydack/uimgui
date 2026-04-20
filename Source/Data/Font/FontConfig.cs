@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UImGui
 {
 	[System.Serializable]
-	internal struct FontConfig
+	public struct FontConfig
 	{
 		[Tooltip("TTF/OTF data ownership taken by the container ImFontAtlas (will delete memory itself). (default=true)")]
 		public bool FontDataOwnedByAtlas;

@@ -167,8 +167,6 @@ namespace UImGui.Platform
                 Key.RightAlt => ImGuiKey.RightAlt,
                 Key.LeftMeta => ImGuiKey.LeftSuper,
                 Key.RightMeta => ImGuiKey.RightSuper,
-                Key.LeftWindows => ImGuiKey.LeftSuper,
-                Key.RightWindows => ImGuiKey.RightSuper,
                 Key.ContextMenu => ImGuiKey.Menu,
                 Key.UpArrow => ImGuiKey.UpArrow,
                 Key.DownArrow => ImGuiKey.DownArrow,

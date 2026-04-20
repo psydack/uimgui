@@ -3,7 +3,7 @@
 namespace UImGui
 {
 	[Flags]
-	internal enum ScriptGlyphRanges
+	public enum ScriptGlyphRanges
 	{
 		Default = 1 << 0,
 		Cyrillic = 1 << 1,

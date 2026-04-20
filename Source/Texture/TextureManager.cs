@@ -12,7 +12,7 @@ using UTexture = UnityEngine.Texture;
 namespace UImGui.Texture
 {
 	// TODO: Write documentation for methods
-	internal class TextureManager
+	public class TextureManager
 	{
 		private Texture2D _atlasTexture;
 
@@ -50,6 +50,8 @@ namespace UImGui.Texture
 
 		public void Shutdown()
 		{
+			FreeGlyphRangeArrays();
+
 			_textures.Clear();
 			_textureIds.Clear();
 			_spriteData.Clear();
@@ -74,11 +76,23 @@ namespace UImGui.Texture
 
 		public IntPtr GetTextureId(UTexture texture)
 		{
+			if (texture == null)
+			{
+				Debug.LogWarning("[UImGui] Cannot register a null texture.");
+				return IntPtr.Zero;
+			}
+
 			return _textureIds.TryGetValue(texture, out IntPtr id) ? id : RegisterTexture(texture);
 		}
 
 		public SpriteInfo GetSpriteInfo(Sprite sprite)
 		{
+			if (sprite == null)
+			{
+				Debug.LogWarning("[UImGui] Cannot get sprite info for a null sprite.");
+				return null;
+			}
+
 			if (!_spriteData.TryGetValue(sprite, out var spriteInfo))
 			{
 				_spriteData[sprite] = spriteInfo = new SpriteInfo
@@ -95,6 +109,11 @@ namespace UImGui.Texture
 
 		private IntPtr RegisterTexture(UTexture texture)
 		{
+			if (texture == null)
+			{
+				return IntPtr.Zero;
+			}
+
 			IntPtr id = texture.GetNativeTexturePtr();
 			_textures[id] = texture;
 			_textureIds[texture] = id;

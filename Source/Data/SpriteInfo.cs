@@ -3,7 +3,7 @@ using UTexture = UnityEngine.Texture;
 
 namespace UImGui.Texture
 {
-	internal sealed class SpriteInfo
+	public sealed class SpriteInfo
 	{
 		public UTexture Texture;
 		public Vector2 Size;
