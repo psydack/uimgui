@@ -30,8 +30,14 @@ namespace UImGui
 #if UIMGUI_ENABLE_IMPLOT
 				ImPlotContext = ImPlotNET.ImPlot.CreateContext(),
 #endif
+#if UIMGUI_ENABLE_IMPLOT3D
+				ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext(),
+#endif
 #if UIMGUI_ENABLE_IMNODES
 				ImNodesContext = new IntPtr(imnodesNET.imnodes.CreateContext()),
+#endif
+#if UIMGUI_ENABLE_IMNODES_R
+				ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext(),
 #endif
 				TextureManager = new TextureManager()
 			};
@@ -43,6 +49,9 @@ namespace UImGui
 
 #if UIMGUI_ENABLE_IMPLOT
 			ImPlotNET.ImPlot.DestroyContext(context.ImPlotContext);
+#endif
+#if UIMGUI_ENABLE_IMPLOT3D
+			ImPlot3DNET.ImPlot3D.DestroyContext(context.ImPlot3DContext);
 #endif
 #if UIMGUI_ENABLE_IMNODES
 			imnodesNET.imnodes.DestroyContext(context.ImNodesContext);
@@ -57,11 +66,23 @@ namespace UImGui
 #if UIMGUI_ENABLE_IMPLOT
 			ImPlotNET.ImPlot.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
+#if UIMGUI_ENABLE_IMPLOT3D
+			ImPlot3DNET.ImPlot3D.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
 #if UIMGUI_ENABLE_IMGUIZMO
 			ImGuizmoNET.ImGuizmo.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
+#if UIMGUI_ENABLE_IMGUIZMO_QUAT
+			ImGuizmoQuatNET.ImGuizmoQuat.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
 #if UIMGUI_ENABLE_IMNODES
 			imnodesNET.imnodes.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
+#if UIMGUI_ENABLE_IMNODES_R
+			ImNodesRNET.ImNodesR.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
+#if UIMGUI_ENABLE_CIMCTE
+			CimCTENET.CimCTE.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
 		}
 	}
