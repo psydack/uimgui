@@ -3,6 +3,10 @@ using System;
 using UImGui.Assets;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Rendering;
+#if HAS_URP
+using UnityEngine.Rendering.Universal;
+#endif
 
 namespace UImGui.Platform
 {
@@ -61,7 +65,15 @@ namespace UImGui.Platform
 		{
 			Assert.IsTrue(io.Fonts.IsBuilt(), "Font atlas not built! Generally built by the renderer. Missing call to renderer NewFrame() function?");
 
-			io.DisplaySize = displayRect.size; // TODO: dpi aware, scale, etc.
+			float framebufferScale = 1f;
+#if HAS_URP
+			if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urpAsset)
+			{
+				framebufferScale = urpAsset.renderScale;
+			}
+#endif
+			io.DisplaySize = displayRect.size;
+			io.DisplayFramebufferScale = Vector2.one * framebufferScale; // accounts for URP render scale
 
 			io.DeltaTime = Time.unscaledDeltaTime;
 

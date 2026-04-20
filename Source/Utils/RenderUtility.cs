@@ -18,6 +18,11 @@ namespace UImGui
 		{
 			Assert.IsNotNull(shaders, "Shaders not assigned.");
 
+#if UNITY_WEBGL
+			// SV_VertexID is not supported on WebGL/GLES 2.0 — force Mesh renderer.
+			type = RenderType.Mesh;
+#endif
+
 			switch (type)
 			{
 #if UNITY_2020_1_OR_NEWER

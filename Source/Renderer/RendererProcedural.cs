@@ -10,10 +10,6 @@ using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
 
-// TODO: switch from using ComputeBuffer to GraphicsBuffer
-// starting from 2020.1 API that takes ComputeBuffer can also take GraphicsBuffer
-// https://docs.unity3d.com/2020.1/Documentation/ScriptReference/GraphicsBuffer.Target.html
-
 namespace UImGui.Renderer
 {
 	/// <summary>
@@ -33,9 +29,9 @@ namespace UImGui.Renderer
 
 		private Material _material;
 
-		private ComputeBuffer _vertexBuffer; // GPU buffer for vertex data.
+		private GraphicsBuffer _vertexBuffer; // GPU buffer for vertex data.
 		private GraphicsBuffer _indexBuffer; // GPU buffer for indexes.
-		private ComputeBuffer _argumentsBuffer; // GPU buffer for draw arguments.
+		private GraphicsBuffer _argumentsBuffer; // GPU buffer for draw arguments.
 
 		public RendererProcedural(ShaderResourcesAsset resources, TextureManager texManager)
 		{
@@ -86,21 +82,21 @@ namespace UImGui.Renderer
 
 			cmd.BeginSample(Constants.ExecuteDrawCommandsMarker);
 
-			Constants.CreateDrawComandsMarker.Begin();
+			Constants.CreateDrawCommandsProceduralMarker.Begin();
 			CreateDrawCommands(cmd, drawData, framebufferOutputSize);
-			Constants.CreateDrawComandsMarker.End();
+			Constants.CreateDrawCommandsProceduralMarker.End();
 
 			cmd.EndSample(Constants.ExecuteDrawCommandsMarker);
 		}
 
-		private void CreateOrResizeVtxBuffer(ref ComputeBuffer buffer, int count)
+		private void CreateOrResizeVtxBuffer(ref GraphicsBuffer buffer, int count)
 		{
 			buffer?.Release();
 
 			unsafe
 			{
 				int num = (((count - 1) / 256) + 1) * 256;
-				buffer = new ComputeBuffer(num, sizeof(ImDrawVert));
+				buffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, num, sizeof(ImDrawVert));
 			}
 		}
 
@@ -115,13 +111,13 @@ namespace UImGui.Renderer
 			}
 		}
 
-		private void CreateOrResizeArgBuffer(ref ComputeBuffer buffer, int count)
+		private void CreateOrResizeArgBuffer(ref GraphicsBuffer buffer, int count)
 		{
 			buffer?.Release();
 			unsafe
 			{
 				int num = (((count - 1) / 256) + 1) * 256;
-				buffer = new ComputeBuffer(num, sizeof(int), ComputeBufferType.IndirectArguments);
+				buffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, num, sizeof(int));
 			}
 		}
 

@@ -140,6 +140,13 @@ namespace UImGui.Texture
 					continue;
 				}
 
+				string ext = System.IO.Path.GetExtension(fontPath).ToLowerInvariant();
+				if (ext != ".ttf" && ext != ".otf")
+				{
+					Debug.LogWarning($"[UImGui] Font file '{fontPath}' is not a .ttf or .otf file and will be skipped.");
+					continue;
+				}
+
 				unsafe
 				{
 					ImFontConfig fontConfig = default;
@@ -148,7 +155,6 @@ namespace UImGui.Texture
 					fontDefinition.Config.ApplyTo(fontConfigPtr);
 					fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
 
-					// TODO: Add check if is TTF File.
 					io.Fonts.AddFontFromFileTTF(fontPath, fontDefinition.Config.SizeInPixels, fontConfigPtr);
 				}
 			}

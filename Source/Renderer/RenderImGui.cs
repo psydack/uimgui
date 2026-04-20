@@ -3,6 +3,9 @@
 using UnityEngine.Rendering.Universal;
 using UnityEngine;
 #endif
+#if UNITY_6_0_OR_NEWER && HAS_URP
+using UnityEngine.Rendering.RenderGraphModule;
+#endif
 
 namespace UImGui.Renderer
 {
@@ -22,7 +25,7 @@ namespace UImGui.Renderer
 		[HideInInspector]
 		public Camera Camera;
 		public CommandBuffer CommandBuffer;
-		public RenderPassEvent RenderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+		public RenderPassEvent RenderPassEvent = RenderPassEvent.AfterRenderingTransparents;
 
 		private CommandBufferPass _commandBufferPass;
 
@@ -45,6 +48,28 @@ namespace UImGui.Renderer
 
 			renderer.EnqueuePass(_commandBufferPass);
 		}
+
+#if UNITY_6_0_OR_NEWER
+		public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
+		{
+			if (CommandBuffer == null) return;
+			var cameraData = frameData.Get<UniversalCameraData>();
+			if (Camera != cameraData.camera) return;
+
+			using var builder = renderGraph.AddUnsafePass<PassData>("UImGui CommandBuffer Pass", out var passData);
+			passData.CommandBuffer = CommandBuffer;
+			builder.AllowPassCulling(false);
+			builder.SetRenderFunc((PassData data, UnsafeGraphContext ctx) =>
+			{
+				ctx.cmd.ExecuteCommandBuffer(data.CommandBuffer);
+			});
+		}
+
+		private class PassData
+		{
+			public CommandBuffer CommandBuffer;
+		}
+#endif
 	}
 #else
 	public class RenderImGui : UnityEngine.ScriptableObject

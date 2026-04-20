@@ -43,7 +43,6 @@ namespace UImGui.Platform
 
 		private void UpdateKeyboard(ImGuiIOPtr io)
 		{
-			// BUG: mod key make everything slow. Go to line
 			foreach (KeyCode keyCode in _keyCodes)
 			{
 				if (TryMapKeys(keyCode, out ImGuiKey imguiKey))
@@ -52,7 +51,7 @@ namespace UImGui.Platform
 				}
 			}
 
-      		// Handle mod keys separately as 2 buttons map to 1 key
+			// Handle mod keys separately as 2 buttons map to 1 key
 			io.AddKeyEvent(ImGuiKey.ModShift, Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 			io.AddKeyEvent(ImGuiKey.ModCtrl, Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
 			io.AddKeyEvent(ImGuiKey.ModAlt, Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt));

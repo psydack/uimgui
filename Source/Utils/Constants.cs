@@ -8,7 +8,6 @@ namespace UImGui
 
 		internal static readonly string UImGuiCommandBuffer = "UImGui";
 
-		// TODO: Test all profile markers.
 		internal static readonly ProfilerMarker PrepareFrameMarker = new ProfilerMarker("UImGui.PrepareFrame");
 		internal static readonly ProfilerMarker LayoutMarker = new ProfilerMarker("UImGui.Layout");
 		internal static readonly ProfilerMarker DrawListMarker = new ProfilerMarker("UImGui.RenderDrawLists");
@@ -17,7 +16,7 @@ namespace UImGui
 		internal static readonly ProfilerMarker CreateDrawCommandsMarker = new ProfilerMarker("UImGui.RendererMesh.CreateDrawCommands");
 
 		internal static readonly ProfilerMarker UpdateBuffersMarker = new ProfilerMarker("UImGui.RendererProcedural.UpdateBuffers");
-		internal static readonly ProfilerMarker CreateDrawComandsMarker = new ProfilerMarker("UImGui.RendererProcedural.CreateDrawCommands");
+		internal static readonly ProfilerMarker CreateDrawCommandsProceduralMarker = new ProfilerMarker("UImGui.RendererProcedural.CreateDrawCommands");
 
 		internal static readonly string ExecuteDrawCommandsMarker = "UImGui.ExecuteDrawCommands";
 	}

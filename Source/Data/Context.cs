@@ -3,7 +3,7 @@ using UImGui.Texture;
 
 namespace UImGui
 {
-	internal sealed class Context
+	public sealed class Context
 	{
 		public IntPtr ImGuiContext;
 		public IntPtr ImNodesContext;

@@ -48,7 +48,7 @@ namespace UImGui.Platform
 
             io.MousePos = Utils.ScreenToImGui(mouse.position.ReadValue());
 
-            var mouseScroll = mouse.scroll.ReadValue() / 120f;
+            var mouseScroll = mouse.scroll.ReadValue();
             io.MouseWheel = mouseScroll.y;
             io.MouseWheelH = mouseScroll.x;
 
@@ -120,7 +120,6 @@ namespace UImGui.Platform
                 return;
             }
 
-            // BUG: mod key make everything slow. Go to line
             for (int keyIndex = 0; keyIndex < Keyboard.KeyCount; keyIndex++)
             {
                 Key key = (Key)keyIndex;
@@ -131,10 +130,10 @@ namespace UImGui.Platform
                 }
             }
 
-            io.KeyShift = keyboard[Key.LeftShift].isPressed || keyboard[Key.RightShift].isPressed;
-            io.KeyCtrl = keyboard[Key.LeftCtrl].isPressed || keyboard[Key.RightCtrl].isPressed;
-            io.KeyAlt = keyboard[Key.LeftAlt].isPressed || keyboard[Key.RightAlt].isPressed;
-            io.KeySuper = keyboard[Key.LeftMeta].isPressed || keyboard[Key.RightMeta].isPressed;
+            io.AddKeyEvent(ImGuiKey.ModShift, keyboard[Key.LeftShift].isPressed || keyboard[Key.RightShift].isPressed);
+            io.AddKeyEvent(ImGuiKey.ModCtrl, keyboard[Key.LeftCtrl].isPressed || keyboard[Key.RightCtrl].isPressed);
+            io.AddKeyEvent(ImGuiKey.ModAlt, keyboard[Key.LeftAlt].isPressed || keyboard[Key.RightAlt].isPressed);
+            io.AddKeyEvent(ImGuiKey.ModSuper, keyboard[Key.LeftMeta].isPressed || keyboard[Key.RightMeta].isPressed);
 
             // Text input.
             for (int i = 0, iMax = _textInput.Count; i < iMax; ++i)
@@ -160,11 +159,16 @@ namespace UImGui.Platform
                 >= Key.A and <= Key.Z => KeyToImGuiKeyShortcut(key, Key.A, ImGuiKey.A),
                 >= Key.Digit1 and <= Key.Digit9 => KeyToImGuiKeyShortcut(key, Key.Digit1, ImGuiKey._1),
                 Key.Digit0 => ImGuiKey._0,
-                // BUG: mod keys make everything slow. 
-                // Key.LeftShift or Key.RightShift => ImGuiKey.ModShift,
-                // Key.LeftCtrl or Key.RightCtrl => ImGuiKey.ModCtrl,
-                // Key.LeftAlt or Key.RightAlt => ImGuiKey.ModAlt,
-                Key.LeftWindows or Key.RightWindows => ImGuiKey.ModSuper,
+                Key.LeftShift => ImGuiKey.LeftShift,
+                Key.RightShift => ImGuiKey.RightShift,
+                Key.LeftCtrl => ImGuiKey.LeftCtrl,
+                Key.RightCtrl => ImGuiKey.RightCtrl,
+                Key.LeftAlt => ImGuiKey.LeftAlt,
+                Key.RightAlt => ImGuiKey.RightAlt,
+                Key.LeftMeta => ImGuiKey.LeftSuper,
+                Key.RightMeta => ImGuiKey.RightSuper,
+                Key.LeftWindows => ImGuiKey.LeftSuper,
+                Key.RightWindows => ImGuiKey.RightSuper,
                 Key.ContextMenu => ImGuiKey.Menu,
                 Key.UpArrow => ImGuiKey.UpArrow,
                 Key.DownArrow => ImGuiKey.DownArrow,

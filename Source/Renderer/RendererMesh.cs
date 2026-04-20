@@ -132,7 +132,6 @@ namespace UImGui.Renderer
 
 				unsafe
 				{
-					// TODO: Convert NativeArray to C# array or list (remove collections).
 					var vtxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ImDrawVert>(
 						(void*)drawList.VtxBuffer.Data, drawList.VtxBuffer.Size, Allocator.None);
 					var idxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ushort>(

@@ -11,7 +11,7 @@ namespace UImGui
 		public static IntPtr GetTextureId(UTexture texture) => Context?.TextureManager.GetTextureId(texture) ?? IntPtr.Zero;
 		internal static SpriteInfo GetSpriteInfo(Sprite sprite) => Context?.TextureManager.GetSpriteInfo(sprite) ?? null;
 
-		internal static Context Context;
+		public static Context Context { get; internal set; }
 
 		#region Events
 		public static event Action<UImGui> Layout;
@@ -22,7 +22,7 @@ namespace UImGui
 		internal static void DoOnDeinitialize(UImGui uimgui) => OnDeinitialize?.Invoke(uimgui);
 		#endregion
 
-		internal static unsafe Context CreateContext()
+		public static unsafe Context CreateContext()
 		{
 			return new Context
 			{
@@ -37,7 +37,7 @@ namespace UImGui
 			};
 		}
 
-		internal static void DestroyContext(Context context)
+		public static void DestroyContext(Context context)
 		{
 			ImGui.DestroyContext(context.ImGuiContext);
 
@@ -49,7 +49,7 @@ namespace UImGui
 #endif
 		}
 
-		internal static void SetCurrentContext(Context context)
+		public static void SetCurrentContext(Context context)
 		{
 			Context = context;
 			ImGui.SetCurrentContext(context?.ImGuiContext ?? IntPtr.Zero);

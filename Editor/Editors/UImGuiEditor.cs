@@ -118,13 +118,6 @@ namespace UImGui.Editor
 				_messages.AppendLine("Must assign a RenderFeature when using the URP.");
 			}
 
-#if !UNITY_2020_1_OR_NEWER
-			if ((RenderType)_renderer.enumValueIndex == RenderType.Mesh)
-			{
-				_messages.AppendLine("Unity 2019 can't use Mesh. Please select procedural.");
-			}
-#endif
-
 			SerializedProperty configFlags = _initialConfiguration.FindPropertyRelative("ImGuiConfig");
 			if (!PlatformUtility.IsAvailable((InputType)_platform.enumValueIndex))
 			{

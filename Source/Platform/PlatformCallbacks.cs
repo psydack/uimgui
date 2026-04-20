@@ -7,7 +7,6 @@ using UnityEngine;
 namespace UImGui.Platform
 {
 	#region Callback methods
-	// TODO: Should return Utf8 byte*, how to deal with memory ownership?
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal unsafe delegate string GetClipboardTextCallback(void* userData);
 	internal delegate string GetClipboardTextSafeCallback(IntPtr userData);
@@ -63,7 +62,6 @@ namespace UImGui.Platform
 
 		public static GetClipboardTextSafeCallback GetClipboardText
 		{
-			// TODO: convert return string to Utf8 byte*
 			set => _getClipboardText = (userData) =>
 			{
 				try { return value(new IntPtr(userData)); }
