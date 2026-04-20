@@ -255,17 +255,8 @@ namespace UImGui
 			_context.TextureManager.PrepareFrame(io);
 			_platform.PrepareFrame(io, _camera.pixelRect);
 			ImGui.NewFrame();
-#if !UIMGUI_REMOVE_IMGUIZMO
-			// Wrapped in try-catch: ImGuizmo native DLL can SIGSEGV in Unity 2022.3+ if
-			// the context isn't fully ready. Use UIMGUI_REMOVE_IMGUIZMO if not needed.
-			try
-			{
-				ImGuizmoNET.ImGuizmo.BeginFrame();
-			}
-			catch (Exception e)
-			{
-				Debug.LogError($"[UImGui] ImGuizmo.BeginFrame() failed: {e.Message} — add UIMGUI_REMOVE_IMGUIZMO to Player Settings if you don't use ImGuizmo.");
-			}
+#if UIMGUI_ENABLE_IMGUIZMO
+			ImGuizmoNET.ImGuizmo.BeginFrame();
 #endif
 			Constants.PrepareFrameMarker.End();
 

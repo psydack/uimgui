@@ -6,7 +6,7 @@ PluginImporter:
   iconMap: {}
   executionOrder: {}
   defineConstraints:
-  - '!UIMGUI_REMOVE_IMNODES'
+  - UIMGUI_ENABLE_IMNODES
   isPreloaded: 0
   isOverridable: 1
   isExplicitlyReferenced: 0

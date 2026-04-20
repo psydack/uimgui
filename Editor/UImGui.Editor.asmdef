@@ -2,7 +2,8 @@
     "name": "UImGui.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:9a87097604f806340b969a2d9261a322"
+        "GUID:9a87097604f806340b969a2d9261a322",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [
         "Editor"
@@ -13,6 +14,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "7.0.0",
+            "define": "HAS_URP"
+        }
+    ],
     "noEngineReferences": false
 }

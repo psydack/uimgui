@@ -10,6 +10,7 @@ using UnityEngine.Rendering.RenderGraphModule;
 namespace UImGui.Renderer
 {
 #if HAS_URP
+	[CreateAssetMenu(menuName = "Dear ImGui/Render ImGui")]
 	public class RenderImGui : ScriptableRendererFeature
 	{
 		private class CommandBufferPass : ScriptableRenderPass
@@ -71,6 +72,7 @@ namespace UImGui.Renderer
 
 	}
 #else
+	[UnityEngine.CreateAssetMenu(menuName = "Dear ImGui/Render ImGui")]
 	public class RenderImGui : UnityEngine.ScriptableObject
 	{
 		public CommandBuffer CommandBuffer;

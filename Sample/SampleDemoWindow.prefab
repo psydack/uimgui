@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5338779034653158535}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5187045405267620860
 MonoBehaviour:
@@ -45,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
-  _renderFeature: {fileID: 0}
+  _renderFeature: {fileID: 11400000, guid: e9715c0c1f24ece4db779658940bf4d1, type: 2}
   _rendererType: 0
   _platformType: 0
   _iniSettings: {fileID: 0}
@@ -67,6 +68,9 @@ MonoBehaviour:
     ConfigDockingNoSplit: 0
     ConfigDockingAlwaysTabBar: 0
     ConfigDockingTransparentPayload: 0
+  _fontCustomInitializer:
+    m_PersistentCalls:
+      m_Calls: []
   _fontAtlasConfiguration: {fileID: 0}
   _shaders: {fileID: 11400000, guid: 68f2e550e81076948ba9757c73f74336, type: 2}
   _style: {fileID: 11400000, guid: 90718c4e7d6fa04438adef1ad7a432cc, type: 2}
