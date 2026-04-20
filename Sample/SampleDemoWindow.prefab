@@ -49,7 +49,7 @@ MonoBehaviour:
   _renderFeature: {fileID: 11400000, guid: e9715c0c1f24ece4db779658940bf4d1, type: 2}
   _rendererType: 0
   _platformType: 0
-  _iniSettings: {fileID: 0}
+  _iniSettings: {fileID: 11400000, guid: 328286c5087d03748aa81d8b6d46741f, type: 2}
   _initialConfiguration:
     ImGuiConfig: 65
     DoubleClickTime: 0.3
@@ -88,36 +88,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7e55d54eede42459ec52fabbd53824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _barValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
-  _xValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
-  _yValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
