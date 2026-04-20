@@ -28,7 +28,12 @@ namespace UImGui
 		private RenderType _rendererType = RenderType.Mesh;
 
 		[SerializeField]
-		private InputType _platformType = InputType.InputManager;
+		private InputType _platformType =
+#if HAS_INPUTSYSTEM
+			InputType.InputSystem;
+#else
+			InputType.InputManager;
+#endif
 
 		[Tooltip("Null value uses default imgui.ini file.")]
 		[SerializeField]
