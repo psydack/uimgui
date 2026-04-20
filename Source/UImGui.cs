@@ -6,6 +6,10 @@ using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if UNITY_EDITOR && HAS_URP
+using UnityEditor;
+using UnityEngine.Rendering.Universal;
+#endif
 
 
 namespace UImGui
@@ -155,12 +159,20 @@ namespace UImGui
 				Fail(nameof(_renderFeature));
 			}
 
+#if UNITY_EDITOR && HAS_URP
+			if (RenderUtility.IsUsingURP())
+			{
+				EnsureRenderFeatureRegistered();
+			}
+#endif
+
 			_renderCommandBuffer = RenderUtility.GetCommandBuffer(Constants.UImGuiCommandBuffer);
 
 			if (RenderUtility.IsUsingURP())
 			{
 #if HAS_URP
 				_renderFeature.Camera = _camera;
+				_renderFeature.UImGui = this;
 #endif
 				_renderFeature.CommandBuffer = _renderCommandBuffer;
 			}
@@ -218,6 +230,7 @@ namespace UImGui
 				{
 #if HAS_URP
 					_renderFeature.Camera = null;
+					_renderFeature.UImGui = null;
 #endif
 					_renderFeature.CommandBuffer = null;
 				}
@@ -248,6 +261,10 @@ namespace UImGui
 		{
 			if (RenderUtility.IsUsingHDRP())
 				return; // skip update call in hdrp
+#if HAS_URP_17 && HAS_URP
+			if (RenderUtility.IsUsingURP())
+				return; // URP RenderGraph records and renders from RenderImGui.RecordRenderGraph.
+#endif
 			DoUpdate(this.CommandBuffer);
 		}
 
@@ -282,7 +299,10 @@ namespace UImGui
 			}
 
 			Constants.DrawListMarker.Begin(this);
-			_renderCommandBuffer.Clear();
+			if (buffer == _renderCommandBuffer)
+			{
+				_renderCommandBuffer.Clear();
+			}
 			_renderer.RenderDrawLists(buffer, ImGui.GetDrawData());
 			Constants.DrawListMarker.End();
 
@@ -306,5 +326,66 @@ namespace UImGui
 			_platform = platform;
 			_platform?.Initialize(io, _initialConfiguration, "Unity " + _platformType.ToString());
 		}
+
+#if UNITY_EDITOR && HAS_URP
+		private void EnsureRenderFeatureRegistered()
+		{
+			if (_renderFeature == null)
+			{
+				return;
+			}
+
+			if (GraphicsSettings.currentRenderPipeline is not UniversalRenderPipelineAsset pipeline)
+			{
+				return;
+			}
+
+			var pipelineObject = new SerializedObject(pipeline);
+			var rendererDataList = pipelineObject.FindProperty("m_RendererDataList");
+			if (rendererDataList == null)
+			{
+				return;
+			}
+
+			for (var i = 0; i < rendererDataList.arraySize; i++)
+			{
+				if (rendererDataList.GetArrayElementAtIndex(i).objectReferenceValue is not UniversalRendererData rendererData)
+				{
+					continue;
+				}
+
+				var features = rendererData.rendererFeatures;
+				var changed = false;
+				var found = false;
+
+				for (var featureIndex = 0; featureIndex < features.Count; featureIndex++)
+				{
+					if (features[featureIndex] is not RenderImGui)
+					{
+						continue;
+					}
+
+					found = true;
+					if (features[featureIndex] != _renderFeature)
+					{
+						features[featureIndex] = _renderFeature;
+						changed = true;
+					}
+				}
+
+				if (!found)
+				{
+					features.Add(_renderFeature);
+					changed = true;
+				}
+
+				if (changed)
+				{
+					EditorUtility.SetDirty(rendererData);
+					AssetDatabase.SaveAssetIfDirty(rendererData);
+				}
+			}
+		}
+#endif
 	}
 }

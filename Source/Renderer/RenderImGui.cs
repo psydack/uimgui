@@ -16,24 +16,26 @@ namespace UImGui.Renderer
 		private class CommandBufferPass : ScriptableRenderPass
 		{
 			public CommandBuffer commandBuffer;
+			public global::UImGui.UImGui uImGui;
 
 #if HAS_URP_17
 			public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
 			{
-				if (commandBuffer == null) return;
+				if (uImGui == null) return;
 
 				using var builder = renderGraph.AddUnsafePass<PassData>("UImGui CommandBuffer Pass", out var passData);
-				passData.CommandBuffer = commandBuffer;
+				passData.UImGui = uImGui;
 				builder.AllowPassCulling(false);
 				builder.SetRenderFunc((PassData data, UnsafeGraphContext ctx) =>
 				{
-					Graphics.ExecuteCommandBuffer(data.CommandBuffer);
+					var nativeCommandBuffer = CommandBufferHelpers.GetNativeCommandBuffer(ctx.cmd);
+					data.UImGui.DoUpdate(nativeCommandBuffer);
 				});
 			}
 
 			private class PassData
 			{
-				public CommandBuffer CommandBuffer;
+				public global::UImGui.UImGui UImGui;
 			}
 #else
 			public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -45,6 +47,8 @@ namespace UImGui.Renderer
 
 		[HideInInspector]
 		public Camera Camera;
+		[HideInInspector]
+		public global::UImGui.UImGui UImGui;
 		public CommandBuffer CommandBuffer;
 		public RenderPassEvent RenderPassEvent = RenderPassEvent.AfterRenderingTransparents;
 
@@ -66,6 +70,7 @@ namespace UImGui.Renderer
 
 			_commandBufferPass.renderPassEvent = RenderPassEvent;
 			_commandBufferPass.commandBuffer = CommandBuffer;
+			_commandBufferPass.uImGui = UImGui;
 
 			renderer.EnqueuePass(_commandBufferPass);
 		}
