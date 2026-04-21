@@ -2,7 +2,8 @@
     "name": "UImGui.Tests",
     "rootNamespace": "UImGui.Tests",
     "references": [
-        "UImGui"
+        "UImGui",
+        "GUID:27a62d5358735d64dbe4d43f0a81e5bf"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -447,6 +447,30 @@ Recommended approach:
 
 ---
 
+## Frame lifecycle
+
+Understanding where ImGui work happens is important when debugging or integrating with URP.
+
+```
+Unity Update()
+  └─ UImGui.DoUpdate()
+       ├─ ImGui.NewFrame()
+       ├─ fires Layout event  ← your OnLayout callbacks go here
+       └─ ImGui.Render()      ← draw data is finalized
+
+URP RecordRenderGraph()
+  └─ RenderImGui render feature
+       └─ RenderDrawData()    ← GPU commands issued from finalized draw data
+```
+
+Key rules:
+
+- **Submit all ImGui calls inside the `Layout` event.** Do not call ImGui widgets in `Update`, `LateUpdate`, or coroutines.
+- **Do not mutate ImGui state after `Layout` fires and before the next frame's `NewFrame`.** The draw data is already finalized at that point.
+- The two-phase split (`DoUpdate` → `RenderDrawData`) is required by URP 17+ Render Graph. Built-in and HDRP use a similar separation.
+
+---
+
 ## Textures and images
 
 To render a Unity texture in Dear ImGui, request a texture ID from the utility bridge:
@@ -535,6 +559,21 @@ Useful starting points:
 ---
 
 ## Troubleshooting
+
+### Locked DLL on Windows — Editor crashes or fails to reload
+
+On Windows, Unity keeps native DLLs locked while the Editor is open.  
+**Always close the Unity Editor before copying or replacing `cimgui.dll` or any other native plugin.**  
+Replacing a locked DLL without closing the Editor leaves a partially overwritten file that causes load failures or crashes on next open.
+
+### Font atlas is empty or shows only boxes
+
+`FontAtlasConfigAsset` is **optional**. The default Dear ImGui font renders without it.  
+If you assigned a custom font atlas config and see no glyphs:
+
+1. Confirm the `.ttf` / `.otf` file exists in `Assets/StreamingAssets/` at the path listed in the asset.
+2. The path in the asset is **relative to `Application.streamingAssetsPath`** — do not include the full `Assets/StreamingAssets/` prefix.
+3. Re-enter Play mode after copying the font file.
 
 ### `EntryPointNotFoundException: igGetIO_Nil`
 

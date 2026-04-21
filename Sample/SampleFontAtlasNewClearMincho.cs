@@ -40,9 +40,23 @@ namespace UImGui
 
 			ImGui.TextColored(new System.Numerics.Vector4(0.2f, 1f, 0.2f, 1f), "Font loaded.");
 			ImGui.Separator();
-			ImGui.Text("English: Hello world");
-			ImGui.Text("Japanese: \u3053\u3093\u306b\u3061\u306f");
-			ImGui.Text("Cyrillic: \u041f\u0440\u0438\u0432\u0435\u0442");
+
+			ImGui.Text("English:  Hello, World!");
+			ImGui.Spacing();
+
+			ImGui.TextDisabled("-- Japanese scripts --");
+			// hiragana: konnichiwa, sekai (hello, world)
+			ImGui.Text("Hiragana:  \u3053\u3093\u306b\u3061\u306f\u3001\u305b\u304b\u3044\uff01");
+			// katakana: haro warudo (hello world)
+			ImGui.Text("Katakana:  \u30cf\u30ed\u30fc\u30fb\u30ef\u30fc\u30eb\u30c9");
+			// kanji: sekai (world), nihongo (Japanese), sakura (cherry blossom)
+			ImGui.Text("Kanji:     \u4e16\u754c \u30fb \u65e5\u672c\u8a9e \u30fb \u685c");
+			// mixed natural Japanese: sekai yo, konnichiwa
+			ImGui.Text("Mixed:     \u4e16\u754c\u3088\u3001\u3053\u3093\u306b\u3061\u306f\uff01");
+			ImGui.Spacing();
+
+			ImGui.TextDisabled("-- Other scripts --");
+			ImGui.Text("Cyrillic:  \u041f\u0440\u0438\u0432\u0435\u0442 \u043c\u0438\u0440");
 			ImGui.End();
 		}
 	}
