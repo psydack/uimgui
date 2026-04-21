@@ -208,8 +208,8 @@ No special setup is required.
 
 ### HDRP
 
-1. Add a **Custom Pass Volume** to the scene.
-2. Add **DearImGuiPass**.
+1. Add a Volume > **Custom Pass** to the scene.
+2. Add **DearImGuiPass** in the custom passes.
 3. Set the injection point before or after post processing.
 
 ---
@@ -405,6 +405,9 @@ UImGui uses **FreeType** as the default font loading path.
 
 You can customize the font atlas through the font initializer callback and your own font configuration.
 
+> Font atlas status: **WIP**.  
+> The workflow is usable, but still under stabilization and sample hardening.
+
 ```csharp
 using ImGuiNET;
 
@@ -413,7 +416,7 @@ public static class MyFonts
     public static unsafe void AddFonts(ImGuiIOPtr io)
     {
         io.Fonts.AddFontDefault();
-        io.Fonts.AddFontFromFileTTF("Assets/Fonts/NotoSans-Regular.ttf", 18.0f);
+        io.Fonts.AddFontFromFileTTF("Assets/Fonts/NewClear-mincho.ttf", 18.0f);
     }
 }
 ```
@@ -423,6 +426,7 @@ Recommended approach:
 - keep font loading centralized
 - build the atlas at initialization time
 - avoid ad hoc runtime font mutations unless you know the lifecycle implications
+- use `NewClear-mincho.ttf` as the reference sample font in this repository
 
 ---
 
@@ -580,6 +584,7 @@ The practical goal of UImGui is straightforward:
 - ImGui.NET: <https://github.com/mellinoe/ImGui.NET>
 - Original inspiration: <https://github.com/realgamessoftware/dear-imgui-unity>
 - cimgui ecosystem: <https://github.com/orgs/cimgui/repositories>
+- NewClear-mincho free font sample: <https://booth.pm/en/items/713295>
 
 ---
 
