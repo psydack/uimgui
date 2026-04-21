@@ -278,15 +278,17 @@ namespace UImGui
 
 			Constants.PrepareFrameMarker.Begin(this);
 			_context.TextureManager.PrepareFrame(io);
-			if (!_context.TextureManager.HasValidAtlas)
-			{
-				Debug.LogError("[UImGui] Skipping frame because the font atlas texture is invalid.");
-				Constants.PrepareFrameMarker.End();
-				return;
-			}
 			_platform.PrepareFrame(io, _camera.pixelRect);
 			ImGui.NewFrame();
+			_context.TextureManager.PrepareFrame(io); // catch WantCreate set by NewFrame
 			Constants.PrepareFrameMarker.End();
+
+			if (!_context.TextureManager.HasValidAtlas)
+			{
+				Debug.LogWarning("[UImGui] Font atlas not ready yet, skipping render.");
+				ImGui.EndFrame();
+				return;
+			}
 
 			Constants.LayoutMarker.Begin(this);
 			try
