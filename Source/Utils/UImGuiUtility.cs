@@ -24,26 +24,25 @@ namespace UImGui
 
 		public static unsafe Context CreateContext()
 		{
+			IntPtr imGuiContext = ImGui.CreateContext();
 			var context = new Context
 			{
-				ImGuiContext = ImGui.CreateContext(),
-#if UIMGUI_ENABLE_IMPLOT
-				ImPlotContext = ImPlotNET.ImPlot.CreateContext(),
-#endif
-#if UIMGUI_ENABLE_IMPLOT3D
-				ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext(),
-#endif
-#if UIMGUI_ENABLE_IMNODES
-				ImNodesContext = imnodesNET.imnodes.CreateContext(),
-#endif
-#if UIMGUI_ENABLE_IMNODES_R
-				ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext(),
-#endif
+				ImGuiContext = imGuiContext,
 				TextureManager = new TextureManager()
 			};
 
+#if UIMGUI_ENABLE_IMPLOT
+			context.ImPlotContext = ImPlotNET.ImPlot.CreateContext();
+#endif
+#if UIMGUI_ENABLE_IMPLOT3D
+			context.ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext();
+#endif
+#if UIMGUI_ENABLE_IMNODES
+			context.ImNodesContext = imnodesNET.imnodes.CreateContext();
+#endif
 #if UIMGUI_ENABLE_IMNODES_R
-			ImNodesRNET.ImNodesR.SetImGuiContext(context.ImGuiContext);
+			ImNodesRNET.ImNodesR.SetImGuiContext(imGuiContext);
+			context.ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext();
 			ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
 #endif
 
@@ -65,9 +64,15 @@ namespace UImGui
 			imnodesNET.imnodes.DestroyContext(context.ImNodesContext);
 #endif
 #if UIMGUI_ENABLE_IMNODES_R
+			if (context.ImNodesRContext != IntPtr.Zero)
+			{
+				ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
+				ImNodesRNET.ImNodesR.FreeContext(context.ImNodesRContext);
+				context.ImNodesRContext = IntPtr.Zero;
+			}
+
 			ImNodesRNET.ImNodesR.SetContext(IntPtr.Zero);
 			ImNodesRNET.ImNodesR.SetImGuiContext(IntPtr.Zero);
-			ImNodesRNET.ImNodesR.FreeContext(context.ImNodesRContext);
 #endif
 
 			ImGui.DestroyContext(context.ImGuiContext);
