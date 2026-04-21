@@ -6,9 +6,20 @@ using System.Text;
 
 namespace UImGui
 {
-	internal static unsafe class ImGuiExtension
+	public static unsafe class ImGuiExtension
 	{
 		private static readonly HashSet<IntPtr> _managedAllocations = new HashSet<IntPtr>();
+
+		[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+		private static extern void igActivateItemByID(uint id);
+
+		public static void ActivateItemByID(uint id) => igActivateItemByID(id);
+
+		public static bool BeginTabItem(string label, ImGuiTabItemFlags flags)
+		{
+			bool open = true;
+			return ImGui.BeginTabItem(label, ref open, flags);
+		}
 
 		internal static void SetBackendPlatformName(this ImGuiIOPtr io, string name)
 		{

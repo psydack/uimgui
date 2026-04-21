@@ -6,7 +6,7 @@ PluginImporter:
   iconMap: {}
   executionOrder: {}
   defineConstraints:
-  - '!UIMGUI_REMOVE_IMPLOT'
+  - UIMGUI_ENABLE_IMPLOT
   isPreloaded: 0
   isOverridable: 1
   isExplicitlyReferenced: 0

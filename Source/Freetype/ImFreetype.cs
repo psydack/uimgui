@@ -37,15 +37,15 @@ namespace UImGui
 
 		// Override allocators. By default ImGuiFreeType will use IM_ALLOC()/IM_FREE()
 		// However, as FreeType does lots of allocations we provide a way for the user to redirect it to a separate memory heap if desired.
-		public delegate void FreeType_Alloc(uint sz, IntPtr userData);
-		public delegate void FreeType_Free(IntPtr ptr, IntPtr userData);
+		public delegate void FreeTypeAlloc(uint sz, IntPtr userData);
+		public delegate void FreeTypeFree(IntPtr ptr, IntPtr userData);
 
-		public static void SetAllocatorFunctions(FreeType_Alloc alloc_function, FreeType_Free free_function, IntPtr user_data = default)
+		public static void SetAllocatorFunctions(FreeTypeAlloc allocFunction, FreeTypeFree freeFunction, IntPtr userData = default)
 		{
 			ImFreetypeNative.SetAllocatorFunctions(
-				Marshal.GetFunctionPointerForDelegate(alloc_function),
-				Marshal.GetFunctionPointerForDelegate(free_function),
-				user_data
+				allocFunc: Marshal.GetFunctionPointerForDelegate(allocFunction),
+				freeFunc: Marshal.GetFunctionPointerForDelegate(freeFunction),
+				userData: userData
 			);
 		}
 	}

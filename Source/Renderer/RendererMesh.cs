@@ -1,4 +1,4 @@
-﻿#if UNITY_2020_1_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
+using Num = System.Numerics;
 
 namespace UImGui.Renderer
 {
@@ -51,8 +52,8 @@ namespace UImGui.Renderer
 		public void Initialize(ImGuiIOPtr io)
 		{
 			io.SetBackendRendererName("Unity Mesh");
-			// Supports ImDrawCmd::VtxOffset to output large meshes while still using 16-bits indices.
-			io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+			// Supports large meshes and the explicit texture backend expected by current ImGui.NET/cimgui.
+			io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset | ImGuiBackendFlags.RendererHasTextures;
 
 			_material = new Material(_shader)
 			{
@@ -85,10 +86,10 @@ namespace UImGui.Renderer
 
 		public void RenderDrawLists(CommandBuffer commandBuffer, ImDrawDataPtr drawData)
 		{
-			Vector2 fbOSize = drawData.DisplaySize * drawData.FramebufferScale;
+			var framebufferOutputSize = (drawData.DisplaySize * drawData.FramebufferScale).ToUnity();
 
 			// Avoid rendering when minimized.
-			if (fbOSize.x <= 0f || fbOSize.y <= 0f || drawData.TotalVtxCount == 0) return;
+			if (framebufferOutputSize.x <= 0f || framebufferOutputSize.y <= 0f || drawData.TotalVtxCount == 0) return;
 
 			Constants.UpdateMeshMarker.Begin();
 			UpdateMesh(drawData);
@@ -97,7 +98,7 @@ namespace UImGui.Renderer
 			commandBuffer.BeginSample(Constants.ExecuteDrawCommandsMarker);
 			Constants.CreateDrawCommandsMarker.Begin();
 
-			CreateDrawCommands(commandBuffer, drawData, fbOSize);
+			CreateDrawCommands(commandBuffer, drawData, framebufferOutputSize);
 
 			Constants.CreateDrawCommandsMarker.End();
 			commandBuffer.EndSample(Constants.ExecuteDrawCommandsMarker);
@@ -122,20 +123,19 @@ namespace UImGui.Renderer
 			_mesh.SetIndexBufferParams(drawData.TotalIdxCount, IndexFormat.UInt16);
 
 			//  Upload data into mesh.
-			int vtxOf = 0;
-			int idxOf = 0;
-			List<SubMeshDescriptor> descriptors = new List<SubMeshDescriptor>();
+			int vertexOffset = 0;
+			int indexOffset = 0;
+			var descriptors = new List<SubMeshDescriptor>();
 
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				ImDrawListPtr drawList = drawData.CmdLists[n];
+				var drawList = drawData.CmdLists[n];
 
 				unsafe
 				{
-					// TODO: Convert NativeArray to C# array or list (remove collections).
-					NativeArray<ImDrawVert> vtxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ImDrawVert>(
+					var vtxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ImDrawVert>(
 						(void*)drawList.VtxBuffer.Data, drawList.VtxBuffer.Size, Allocator.None);
-					NativeArray<ushort> idxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ushort>(
+					var idxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ushort>(
 						(void*)drawList.IdxBuffer.Data, drawList.IdxBuffer.Size, Allocator.None);
 
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
@@ -145,25 +145,25 @@ namespace UImGui.Renderer
 						.SetAtomicSafetyHandle(ref idxArray, AtomicSafetyHandle.GetTempMemoryHandle());
 #endif
 					// Upload vertex/index data.
-					_mesh.SetVertexBufferData(vtxArray, 0, vtxOf, vtxArray.Length, 0, NoMeshChecks);
-					_mesh.SetIndexBufferData(idxArray, 0, idxOf, idxArray.Length, NoMeshChecks);
+					_mesh.SetVertexBufferData(vtxArray, 0, vertexOffset, vtxArray.Length, 0, NoMeshChecks);
+					_mesh.SetIndexBufferData(idxArray, 0, indexOffset, idxArray.Length, NoMeshChecks);
 
 					// Define subMeshes.
 					for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i)
 					{
-						ImDrawCmdPtr cmd = drawList.CmdBuffer[i];
-						SubMeshDescriptor descriptor = new SubMeshDescriptor
+						var cmd = drawList.CmdBuffer[i];
+						var descriptor = new SubMeshDescriptor
 						{
 							topology = MeshTopology.Triangles,
-							indexStart = idxOf + (int)cmd.IdxOffset,
+							indexStart = indexOffset + (int)cmd.IdxOffset,
 							indexCount = (int)cmd.ElemCount,
-							baseVertex = vtxOf + (int)cmd.VtxOffset,
+							baseVertex = vertexOffset + (int)cmd.VtxOffset,
 						};
 						descriptors.Add(descriptor);
 					}
 
-					vtxOf += vtxArray.Length;
-					idxOf += idxArray.Length;
+					vertexOffset += vtxArray.Length;
+					indexOffset += idxArray.Length;
 				}
 			}
 
@@ -171,42 +171,47 @@ namespace UImGui.Renderer
 			_mesh.UploadMeshData(false);
 		}
 
-		private void CreateDrawCommands(CommandBuffer commandBuffer, ImDrawDataPtr drawData, Vector2 fbSize)
+		private void CreateDrawCommands(CommandBuffer commandBuffer, ImDrawDataPtr drawData, Vector2 framebufferOutputSize)
 		{
 			IntPtr prevTextureId = IntPtr.Zero;
-			Vector4 clipOffset = new Vector4(drawData.DisplayPos.x, drawData.DisplayPos.y,
-				drawData.DisplayPos.x, drawData.DisplayPos.y);
-			Vector4 clipScale = new Vector4(drawData.FramebufferScale.x, drawData.FramebufferScale.y,
-				drawData.FramebufferScale.x, drawData.FramebufferScale.y);
+			var clipOffset = new Num.Vector4(drawData.DisplayPos.X, drawData.DisplayPos.Y,
+				drawData.DisplayPos.X, drawData.DisplayPos.Y);
+			var clipScale = new Num.Vector4(drawData.FramebufferScale.X, drawData.FramebufferScale.Y,
+				drawData.FramebufferScale.X, drawData.FramebufferScale.Y);
 
-			commandBuffer.SetViewport(new Rect(0f, 0f, fbSize.x, fbSize.y));
+			commandBuffer.SetViewport(new Rect(0f, 0f, framebufferOutputSize.x, framebufferOutputSize.y));
 			commandBuffer.SetViewProjectionMatrices(
-				Matrix4x4.Translate(new Vector3(0.5f / fbSize.x, 0.5f / fbSize.y, 0f)), // Small adjustment to improve text.
-				Matrix4x4.Ortho(0f, fbSize.x, fbSize.y, 0f, 0f, 1f));
+				Matrix4x4.Translate(new Vector3(0.5f / framebufferOutputSize.x, 0.5f / framebufferOutputSize.y, 0f)), // Small adjustment to improve text.
+				Matrix4x4.Ortho(0f, framebufferOutputSize.x, framebufferOutputSize.y, 0f, 0f, 1f));
 
-			int subOf = 0;
+			int subMeshOffset = 0;
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{
-				ImDrawListPtr drawList = drawData.CmdLists[n];
-				for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i, ++subOf)
+				var drawList = drawData.CmdLists[n];
+				for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i, ++subMeshOffset)
 				{
-					ImDrawCmdPtr drawCmd = drawList.CmdBuffer[i];
+					var drawCmd = drawList.CmdBuffer[i];
 					if (drawCmd.UserCallback != IntPtr.Zero)
 					{
-						UserDrawCallback userDrawCallback = Marshal.GetDelegateForFunctionPointer<UserDrawCallback>(drawCmd.UserCallback);
+						var userDrawCallback = Marshal.GetDelegateForFunctionPointer<UserDrawCallback>(drawCmd.UserCallback);
 						userDrawCallback(drawList, drawCmd);
 					}
 					else
 					{
 						// Project scissor rectangle into framebuffer space and skip if fully outside.
-						Vector4 clipSize = drawCmd.ClipRect - clipOffset;
-						Vector4 clip = Vector4.Scale(clipSize, clipScale);
+						var clipRect = drawCmd.ClipRect;
+						var clip = new Num.Vector4(
+							(clipRect.X - clipOffset.X) * clipScale.X,
+							(clipRect.Y - clipOffset.Y) * clipScale.Y,
+							(clipRect.Z - clipOffset.Z) * clipScale.Z,
+							(clipRect.W - clipOffset.W) * clipScale.W);
 
-						if (clip.x >= fbSize.x || clip.y >= fbSize.y || clip.z < 0f || clip.w < 0f) continue;
+						if (clip.X >= framebufferOutputSize.x || clip.Y >= framebufferOutputSize.y || clip.Z < 0f || clip.W < 0f) continue;
 
-						if (prevTextureId != drawCmd.TextureId)
+						var textureId = drawCmd.GetTexID();
+						if (prevTextureId != textureId)
 						{
-							prevTextureId = drawCmd.TextureId;
+							prevTextureId = textureId;
 
 							// TODO: Implement ImDrawCmdPtr.GetTexID().
 							bool hasTexture = _textureManager.TryGetTexture(prevTextureId, out UnityEngine.Texture texture);
@@ -215,8 +220,8 @@ namespace UImGui.Renderer
 							_materialProperties.SetTexture(_textureID, texture);
 						}
 
-						commandBuffer.EnableScissorRect(new Rect(clip.x, fbSize.y - clip.w, clip.z - clip.x, clip.w - clip.y)); // Invert y.
-						commandBuffer.DrawMesh(_mesh, Matrix4x4.identity, _material, subOf, -1, _materialProperties);
+						commandBuffer.EnableScissorRect(new Rect(clip.X, framebufferOutputSize.y - clip.W, clip.Z - clip.X, clip.W - clip.Y)); // Invert y.
+						commandBuffer.DrawMesh(_mesh, Matrix4x4.identity, _material, subMeshOffset, -1, _materialProperties);
 					}
 				}
 			}

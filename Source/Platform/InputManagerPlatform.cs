@@ -43,16 +43,15 @@ namespace UImGui.Platform
 
 		private void UpdateKeyboard(ImGuiIOPtr io)
 		{
-			// BUG: mod key make everything slow. Go to line
 			foreach (KeyCode keyCode in _keyCodes)
 			{
-				if (TryMapKeys(keyCode, out ImGuiKey imguikey))
+				if (TryMapKeys(keyCode, out ImGuiKey imguiKey))
 				{
-					io.AddKeyEvent(imguikey, Input.GetKey(keyCode));
+					io.AddKeyEvent(imguiKey, Input.GetKey(keyCode));
 				}
 			}
 
-      		// Handle mod keys separately as 2 buttons map to 1 key
+			// Handle mod keys separately as 2 buttons map to 1 key
 			io.AddKeyEvent(ImGuiKey.ModShift, Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
 			io.AddKeyEvent(ImGuiKey.ModCtrl, Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
 			io.AddKeyEvent(ImGuiKey.ModAlt, Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt));
@@ -75,7 +74,7 @@ namespace UImGui.Platform
 
 		private static void UpdateMouse(ImGuiIOPtr io)
 		{
-			Vector2 mousePosition = Utils.ScreenToImGui(Input.mousePosition);
+			var mousePosition = Utils.ScreenToImGui(Input.mousePosition);
 			io.AddMousePosEvent(mousePosition.x, mousePosition.y);
 			io.AddMouseButtonEvent(0, Input.GetMouseButton(0));
 			io.AddMouseButtonEvent(1, Input.GetMouseButton(1));
@@ -83,7 +82,7 @@ namespace UImGui.Platform
 			io.AddMouseWheelEvent(Input.mouseScrollDelta.x, Input.mouseScrollDelta.y);
 		}
 
-		private static bool TryMapKeys(KeyCode key, out ImGuiKey imguikey)
+		private static bool TryMapKeys(KeyCode key, out ImGuiKey imguiKey)
 		{
 			static ImGuiKey KeyToImGuiKeyShortcut(KeyCode keyToConvert, KeyCode startKey1, ImGuiKey startKey2)
 			{
@@ -91,7 +90,7 @@ namespace UImGui.Platform
 				return startKey2 + changeFromStart1;
 			}
 
-			imguikey = key switch
+			imguiKey = key switch
 			{
 				>= KeyCode.F1 and <= KeyCode.F12 => KeyToImGuiKeyShortcut(key, KeyCode.F1, ImGuiKey.F1),
 				>= KeyCode.Keypad0 and <= KeyCode.Keypad9 => KeyToImGuiKeyShortcut(key, KeyCode.Keypad0, ImGuiKey.Keypad0),
@@ -152,7 +151,7 @@ namespace UImGui.Platform
 				_ => ImGuiKey.None
 			};
 
-			return imguikey != ImGuiKey.None;
+			return imguiKey != ImGuiKey.None;
 		}
 	}
 }

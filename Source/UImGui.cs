@@ -1,3 +1,4 @@
+using System;
 using ImGuiNET;
 using UImGui.Assets;
 using UImGui.Events;
@@ -5,6 +6,10 @@ using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if UNITY_EDITOR && HAS_URP
+using UnityEditor;
+using UnityEngine.Rendering.Universal;
+#endif
 
 
 namespace UImGui
@@ -27,7 +32,12 @@ namespace UImGui
 		private RenderType _rendererType = RenderType.Mesh;
 
 		[SerializeField]
-		private InputType _platformType = InputType.InputManager;
+		private InputType _platformType =
+#if HAS_INPUTSYSTEM
+			InputType.InputSystem;
+#else
+			InputType.InputManager;
+#endif
 
 		[Tooltip("Null value uses default imgui.ini file.")]
 		[SerializeField]
@@ -149,12 +159,20 @@ namespace UImGui
 				Fail(nameof(_renderFeature));
 			}
 
+#if UNITY_EDITOR && HAS_URP
+			if (RenderUtility.IsUsingURP())
+			{
+				EnsureRenderFeatureRegistered();
+			}
+#endif
+
 			_renderCommandBuffer = RenderUtility.GetCommandBuffer(Constants.UImGuiCommandBuffer);
 
 			if (RenderUtility.IsUsingURP())
 			{
 #if HAS_URP
 				_renderFeature.Camera = _camera;
+				_renderFeature.UImGui = this;
 #endif
 				_renderFeature.CommandBuffer = _renderCommandBuffer;
 			}
@@ -171,7 +189,6 @@ namespace UImGui
 			_style?.ApplyTo(ImGui.GetStyle());
 
 			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration, _fontCustomInitializer);
-			_context.TextureManager.Initialize(io);
 
 			IPlatform platform = PlatformUtility.Create(_platformType, _cursorShapes, _iniSettings);
 			SetPlatform(platform, io);
@@ -212,6 +229,7 @@ namespace UImGui
 				{
 #if HAS_URP
 					_renderFeature.Camera = null;
+					_renderFeature.UImGui = null;
 #endif
 					_renderFeature.CommandBuffer = null;
 				}
@@ -242,6 +260,14 @@ namespace UImGui
 		{
 			if (RenderUtility.IsUsingHDRP())
 				return; // skip update call in hdrp
+
+#if HAS_URP_17 && HAS_URP
+			if (RenderUtility.IsUsingURP())
+			{
+				DoUpdate(null);
+				return;
+			}
+#endif
 			DoUpdate(this.CommandBuffer);
 		}
 
@@ -251,12 +277,8 @@ namespace UImGui
 			ImGuiIOPtr io = ImGui.GetIO();
 
 			Constants.PrepareFrameMarker.Begin(this);
-			_context.TextureManager.PrepareFrame(io);
 			_platform.PrepareFrame(io, _camera.pixelRect);
 			ImGui.NewFrame();
-#if !UIMGUI_REMOVE_IMGUIZMO
-			ImGuizmoNET.ImGuizmo.BeginFrame();
-#endif
 			Constants.PrepareFrameMarker.End();
 
 			Constants.LayoutMarker.Begin(this);
@@ -275,16 +297,35 @@ namespace UImGui
 				Constants.LayoutMarker.End();
 			}
 
-			Constants.DrawListMarker.Begin(this);
-			_renderCommandBuffer.Clear();
-			_renderer.RenderDrawLists(buffer, ImGui.GetDrawData());
-			Constants.DrawListMarker.End();
+			_context.TextureManager.UpdateTextures(ImGui.GetDrawData());
+			if (buffer != null)
+			{
+				RenderDrawData(buffer);
+			}
 
 			if (_isChangingCamera)
 			{
 				_isChangingCamera = false;
 				Reload();
 			}
+		}
+
+		internal void RenderDrawData(CommandBuffer buffer)
+		{
+			if (buffer == null || _renderer == null)
+			{
+				return;
+			}
+
+			UImGuiUtility.SetCurrentContext(_context);
+
+			Constants.DrawListMarker.Begin(this);
+			if (buffer == _renderCommandBuffer)
+			{
+				_renderCommandBuffer.Clear();
+			}
+			_renderer.RenderDrawLists(buffer, ImGui.GetDrawData());
+			Constants.DrawListMarker.End();
 		}
 
 		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)
@@ -300,5 +341,66 @@ namespace UImGui
 			_platform = platform;
 			_platform?.Initialize(io, _initialConfiguration, "Unity " + _platformType.ToString());
 		}
+
+#if UNITY_EDITOR && HAS_URP
+		private void EnsureRenderFeatureRegistered()
+		{
+			if (_renderFeature == null)
+			{
+				return;
+			}
+
+			if (GraphicsSettings.currentRenderPipeline is not UniversalRenderPipelineAsset pipeline)
+			{
+				return;
+			}
+
+			var pipelineObject = new SerializedObject(pipeline);
+			var rendererDataList = pipelineObject.FindProperty("m_RendererDataList");
+			if (rendererDataList == null)
+			{
+				return;
+			}
+
+			for (var i = 0; i < rendererDataList.arraySize; i++)
+			{
+				if (rendererDataList.GetArrayElementAtIndex(i).objectReferenceValue is not UniversalRendererData rendererData)
+				{
+					continue;
+				}
+
+				var features = rendererData.rendererFeatures;
+				var changed = false;
+				var found = false;
+
+				for (var featureIndex = 0; featureIndex < features.Count; featureIndex++)
+				{
+					if (features[featureIndex] is not RenderImGui)
+					{
+						continue;
+					}
+
+					found = true;
+					if (features[featureIndex] != _renderFeature)
+					{
+						features[featureIndex] = _renderFeature;
+						changed = true;
+					}
+				}
+
+				if (!found)
+				{
+					features.Add(_renderFeature);
+					changed = true;
+				}
+
+				if (changed)
+				{
+					EditorUtility.SetDirty(rendererData);
+					AssetDatabase.SaveAssetIfDirty(rendererData);
+				}
+			}
+		}
+#endif
 	}
 }

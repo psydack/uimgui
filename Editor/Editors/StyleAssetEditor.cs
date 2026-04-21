@@ -12,7 +12,7 @@ namespace UImGui.Editor
 
 		public override void OnInspectorGUI()
 		{
-			StyleAsset styleAsset = target as StyleAsset;
+			var styleAsset = target as StyleAsset;
 
 			bool hasContext = ImGui.GetCurrentContext() != System.IntPtr.Zero;
 			if (!hasContext)
@@ -23,7 +23,7 @@ namespace UImGui.Editor
 
 			if (hasContext)
 			{
-				ImGuiStylePtr style = ImGui.GetStyle();
+				var style = ImGui.GetStyle();
 
 				GUILayout.BeginHorizontal();
 				if (GUILayout.Button("Apply"))
@@ -54,9 +54,9 @@ namespace UImGui.Editor
 			{
 				for (int indexColumn = 0; indexColumn < (int)ImGuiCol.COUNT; ++indexColumn)
 				{
-					Color indexColor = styleAsset.Colors[indexColumn];
+					var indexColor = styleAsset.Colors[indexColumn];
 					string colorName = ImGui.GetStyleColorName((ImGuiCol)indexColumn);
-					Color newColor = EditorGUILayout.ColorField(colorName, indexColor);
+					var newColor = EditorGUILayout.ColorField(colorName, indexColor);
 					changed |= newColor != indexColor;
 					styleAsset.Colors[indexColumn] = newColor;
 				}

@@ -11,7 +11,11 @@ namespace UImGui.Platform
 			switch (type)
 			{
 				case InputType.InputManager:
+#if !ENABLE_LEGACY_INPUT_MANAGER
+					return false;
+#else
 					return true;
+#endif
 #if HAS_INPUTSYSTEM
 				case InputType.InputSystem:
 					return true;
@@ -27,7 +31,12 @@ namespace UImGui.Platform
 			switch (type)
 			{
 				case InputType.InputManager:
+#if HAS_INPUTSYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+					Debug.LogWarning("[DearImGui] Input Manager is disabled in Player Settings. Falling back to Input System.");
+					return new InputSystemPlatform(cursors, iniSettings);
+#else
 					return new InputManagerPlatform(cursors, iniSettings);
+#endif
 #if HAS_INPUTSYSTEM
 				case InputType.InputSystem:
 					return new InputSystemPlatform(cursors, iniSettings);

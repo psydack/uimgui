@@ -1,8 +1,9 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
+using Num = System.Numerics;
 
 namespace UImGui
 {
@@ -11,13 +12,30 @@ namespace UImGui
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal static Vector2 ScreenToImGui(in Vector2 point)
 		{
-			return new Vector2(point.x, ImGui.GetIO().DisplaySize.y - point.y);
+			var displaySize = ImGui.GetIO().DisplaySize;
+			return new Vector2(point.x, displaySize.Y - point.y);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static Num.Vector2 ScreenToImGuiNumerics(in Vector2 point)
+		{
+			var imguiPoint = ScreenToImGui(point);
+			return imguiPoint.AsNumerics();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static Vector2 ImGuiToScreen(in Num.Vector2 point)
+		{
+			var localPoint = point;
+			var unityPoint = localPoint.AsUnity();
+			return ImGuiToScreen(unityPoint);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal static Vector2 ImGuiToScreen(in Vector2 point)
 		{
-			return new Vector2(point.x, ImGui.GetIO().DisplaySize.y - point.y);
+			var displaySize = ImGui.GetIO().DisplaySize;
+			return new Vector2(point.x, displaySize.Y - point.y);
 		}
 
 		internal static string StringFromPtr(byte* ptr)

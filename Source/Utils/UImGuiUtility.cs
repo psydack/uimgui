@@ -11,7 +11,7 @@ namespace UImGui
 		public static IntPtr GetTextureId(UTexture texture) => Context?.TextureManager.GetTextureId(texture) ?? IntPtr.Zero;
 		internal static SpriteInfo GetSpriteInfo(Sprite sprite) => Context?.TextureManager.GetSpriteInfo(sprite) ?? null;
 
-		internal static Context Context;
+		public static Context Context { get; internal set; }
 
 		#region Events
 		public static event Action<UImGui> Layout;
@@ -22,46 +22,88 @@ namespace UImGui
 		internal static void DoOnDeinitialize(UImGui uimgui) => OnDeinitialize?.Invoke(uimgui);
 		#endregion
 
-		internal static unsafe Context CreateContext()
+		public static unsafe Context CreateContext()
 		{
-			return new Context
+			IntPtr imGuiContext = ImGui.CreateContext();
+			var context = new Context
 			{
-				ImGuiContext = ImGui.CreateContext(),
-#if !UIMGUI_REMOVE_IMPLOT
-				ImPlotContext = ImPlotNET.ImPlot.CreateContext(),
-#endif
-#if !UIMGUI_REMOVE_IMNODES
-				ImNodesContext = new IntPtr(imnodesNET.imnodes.CreateContext()),
-#endif
+				ImGuiContext = imGuiContext,
 				TextureManager = new TextureManager()
 			};
+
+#if UIMGUI_ENABLE_IMPLOT
+			context.ImPlotContext = ImPlotNET.ImPlot.CreateContext();
+#endif
+#if UIMGUI_ENABLE_IMPLOT3D
+			context.ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext();
+#endif
+#if UIMGUI_ENABLE_IMNODES
+			context.ImNodesContext = imnodesNET.imnodes.CreateContext();
+#endif
+#if UIMGUI_ENABLE_IMNODES_R
+			ImNodesRNET.ImNodesR.SetImGuiContext(imGuiContext);
+			context.ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext();
+			ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
+#endif
+
+			return context;
 		}
 
-		internal static void DestroyContext(Context context)
+		public static void DestroyContext(Context context)
 		{
-			ImGui.DestroyContext(context.ImGuiContext);
+			if (context == null)
+				return;
 
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_ENABLE_IMPLOT
 			ImPlotNET.ImPlot.DestroyContext(context.ImPlotContext);
 #endif
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_ENABLE_IMPLOT3D
+			ImPlot3DNET.ImPlot3D.DestroyContext(context.ImPlot3DContext);
+#endif
+#if UIMGUI_ENABLE_IMNODES
 			imnodesNET.imnodes.DestroyContext(context.ImNodesContext);
 #endif
+#if UIMGUI_ENABLE_IMNODES_R
+			if (context.ImNodesRContext != IntPtr.Zero)
+			{
+				ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
+				ImNodesRNET.ImNodesR.FreeContext(context.ImNodesRContext);
+				context.ImNodesRContext = IntPtr.Zero;
+			}
+
+			ImNodesRNET.ImNodesR.SetContext(IntPtr.Zero);
+			ImNodesRNET.ImNodesR.SetImGuiContext(IntPtr.Zero);
+#endif
+
+			ImGui.DestroyContext(context.ImGuiContext);
 		}
 
-		internal static void SetCurrentContext(Context context)
+		public static void SetCurrentContext(Context context)
 		{
 			Context = context;
 			ImGui.SetCurrentContext(context?.ImGuiContext ?? IntPtr.Zero);
 
-#if !UIMGUI_REMOVE_IMPLOT
+#if UIMGUI_ENABLE_IMPLOT
 			ImPlotNET.ImPlot.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
-#if !UIMGUI_REMOVE_IMGUIZMO
+#if UIMGUI_ENABLE_IMPLOT3D
+			ImPlot3DNET.ImPlot3D.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
+#if UIMGUI_ENABLE_IMGUIZMO
 			ImGuizmoNET.ImGuizmo.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
-#if !UIMGUI_REMOVE_IMNODES
+#if UIMGUI_ENABLE_IMGUIZMO_QUAT
+			ImGuizmoQuatNET.ImGuizmoQuat.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
+#if UIMGUI_ENABLE_IMNODES
 			imnodesNET.imnodes.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+#endif
+#if UIMGUI_ENABLE_IMNODES_R
+			ImNodesRNET.ImNodesR.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+			ImNodesRNET.ImNodesR.SetContext(context?.ImNodesRContext ?? IntPtr.Zero);
+#endif
+#if UIMGUI_ENABLE_CIMCTE
+			CimCTENET.CimCTE.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
 #endif
 		}
 	}

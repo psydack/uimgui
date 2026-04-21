@@ -24,9 +24,7 @@ namespace UImGui.Editor
 		private SerializedProperty _cursorShapes;
 		private readonly StringBuilder _messages = new StringBuilder();
 
-		private bool usingImNodes = true;
-		private bool usingImGuizmo = true;
-		private bool usingImPlot = true;
+		private bool _showPluginFeatures = true;
 
 		public override void OnInspectorGUI()
 		{
@@ -82,29 +80,21 @@ namespace UImGui.Editor
 			_shaders = serializedObject.FindProperty("_shaders");
 			_style = serializedObject.FindProperty("_style");
 			_cursorShapes = serializedObject.FindProperty("_cursorShapes");
-
-#if UIMGUI_REMOVE_IMNODES
-			usingImNodes = false;
-#endif
-#if UIMGUI_REMOVE_IMGUIZMO
-			usingImGuizmo = false;
-#endif
-#if UIMGUI_REMOVE_IMPLOT
-			usingImPlot = false;
-#endif
 		}
 
 		private void CheckRequirements()
 		{
-			var textImGui = $"ImGUI: {ImGui.GetVersion()}";
-			var textImNodes = $"ImNodes: { (usingImNodes ? "0.4 - 2021-07-09" : "disabled") }";
-			var textImGuizmo = $"ImGuizmo: { (usingImGuizmo ? "?? - 2021-07-09" : "disabled") }";
-			var textImPlot = $"ImPlot: { (usingImPlot ? "0.10 - 2021-07-09" : "disabled") }";
-
-			EditorGUILayout.LabelField(textImGui);
-			EditorGUILayout.LabelField(textImNodes);
-			EditorGUILayout.LabelField(textImGuizmo);
-			EditorGUILayout.LabelField(textImPlot);
+			EditorGUILayout.LabelField($"ImGui: {ImGui.GetVersion()}");
+			_showPluginFeatures = EditorGUILayout.Foldout(_showPluginFeatures, "Plugin Features", true);
+			if (_showPluginFeatures)
+			{
+				EditorGUI.indentLevel++;
+				foreach (var feature in PluginFeatures.Features)
+				{
+					EditorGUILayout.LabelField(feature.Name, PluginFeatures.IsEnabled(feature) ? "Enabled" : "Disabled");
+				}
+				EditorGUI.indentLevel--;
+			}
 			EditorGUILayout.Space();
 
 			_messages.Clear();
@@ -118,22 +108,10 @@ namespace UImGui.Editor
 				_messages.AppendLine("Must assign a RenderFeature when using the URP.");
 			}
 
-#if !UNITY_2020_1_OR_NEWER
-			if ((RenderType)_renderer.enumValueIndex == RenderType.Mesh)
-			{
-				_messages.AppendLine("Unity 2019 can't use Mesh. Please select procedural.");
-			}
-#endif
-
 			SerializedProperty configFlags = _initialConfiguration.FindPropertyRelative("ImGuiConfig");
 			if (!PlatformUtility.IsAvailable((InputType)_platform.enumValueIndex))
 			{
 				_messages.AppendLine("Platform not available.");
-			}
-			else if ((InputType)_platform.enumValueIndex != InputType.InputSystem &&
-				(configFlags.intValue & (int)ImGuiConfigFlags.NavEnableSetMousePos) != 0)
-			{
-				_messages.AppendLine("Will not work NavEnableSetPos with InputManager.");
 			}
 
 			if ((configFlags.intValue & (int)ImGuiConfigFlags.ViewportsEnable) != 0)

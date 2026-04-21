@@ -18,6 +18,11 @@ namespace UImGui
 		{
 			Assert.IsNotNull(shaders, "Shaders not assigned.");
 
+#if UNITY_WEBGL
+			// SV_VertexID is not supported on WebGL/GLES 2.0 — force Mesh renderer.
+			type = RenderType.Mesh;
+#endif
+
 			switch (type)
 			{
 #if UNITY_2020_1_OR_NEWER
@@ -33,7 +38,7 @@ namespace UImGui
 
 		public static bool IsUsingURP()
 		{
-			RenderPipelineAsset currentRP = GraphicsSettings.currentRenderPipeline;
+			var currentRP = GraphicsSettings.currentRenderPipeline;
 #if HAS_URP
 			return currentRP is UniversalRenderPipelineAsset;
 #else
@@ -43,7 +48,7 @@ namespace UImGui
 
 		public static bool IsUsingHDRP()
 		{
-			RenderPipelineAsset currentRP = GraphicsSettings.currentRenderPipeline;
+			var currentRP = GraphicsSettings.currentRenderPipeline;
 
 #if HAS_HDRP
 			return currentRP is HDRenderPipelineAsset;

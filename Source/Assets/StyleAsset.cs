@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using UnityEngine;
 
 namespace UImGui.Assets
@@ -148,11 +148,11 @@ namespace UImGui.Assets
 		{
 			s.Alpha = Alpha;
 
-			s.WindowPadding = WindowPadding;
+			s.WindowPadding = WindowPadding.AsNumerics();
 			s.WindowRounding = WindowRounding;
 			s.WindowBorderSize = WindowBorderSize;
-			s.WindowMinSize = WindowMinSize;
-			s.WindowTitleAlign = WindowTitleAlign;
+			s.WindowMinSize = WindowMinSize.AsNumerics();
+			s.WindowTitleAlign = WindowTitleAlign.AsNumerics();
 			s.WindowMenuButtonPosition = WindowMenuButtonPosition;
 
 			s.ChildRounding = ChildRounding;
@@ -161,16 +161,16 @@ namespace UImGui.Assets
 			s.PopupRounding = PopupRounding;
 			s.PopupBorderSize = PopupBorderSize;
 
-			s.FramePadding = FramePadding;
+			s.FramePadding = FramePadding.AsNumerics();
 			s.FrameRounding = FrameRounding;
 			s.FrameBorderSize = FrameBorderSize;
 
-			s.ItemSpacing = ItemSpacing;
-			s.ItemInnerSpacing = ItemInnerSpacing;
+			s.ItemSpacing = ItemSpacing.AsNumerics();
+			s.ItemInnerSpacing = ItemInnerSpacing.AsNumerics();
 
-			s.CellPadding = CellPadding;
+			s.CellPadding = CellPadding.AsNumerics();
 
-			s.TouchExtraPadding = TouchExtraPadding;
+			s.TouchExtraPadding = TouchExtraPadding.AsNumerics();
 
 			s.IndentSpacing = IndentSpacing;
 
@@ -189,12 +189,12 @@ namespace UImGui.Assets
 
 			s.ColorButtonPosition = ColorButtonPosition;
 
-			s.ButtonTextAlign = ButtonTextAlign;
+			s.ButtonTextAlign = ButtonTextAlign.AsNumerics();
 
-			s.SelectableTextAlign = SelectableTextAlign;
+			s.SelectableTextAlign = SelectableTextAlign.AsNumerics();
 
-			s.DisplayWindowPadding = DisplayWindowPadding;
-			s.DisplaySafeAreaPadding = DisplaySafeAreaPadding;
+			s.DisplayWindowPadding = DisplayWindowPadding.AsNumerics();
+			s.DisplaySafeAreaPadding = DisplaySafeAreaPadding.AsNumerics();
 
 			s.MouseCursorScale = MouseCursorScale;
 
@@ -207,7 +207,7 @@ namespace UImGui.Assets
 
 			for (int colorIndex = 0; colorIndex < Colors.Length; ++colorIndex)
 			{
-				s.Colors[colorIndex] = Colors[colorIndex];
+				s.Colors[colorIndex] = Colors[colorIndex].AsNumerics();
 			}
 		}
 
@@ -215,11 +215,14 @@ namespace UImGui.Assets
 		{
 			Alpha = s.Alpha;
 
-			WindowPadding = s.WindowPadding;
+			var windowPadding = s.WindowPadding;
+			WindowPadding = windowPadding.AsUnity();
 			WindowRounding = s.WindowRounding;
 			WindowBorderSize = s.WindowBorderSize;
-			WindowMinSize = s.WindowMinSize;
-			WindowTitleAlign = s.WindowTitleAlign;
+			var windowMinSize = s.WindowMinSize;
+			WindowMinSize = windowMinSize.AsUnity();
+			var windowTitleAlign = s.WindowTitleAlign;
+			WindowTitleAlign = windowTitleAlign.AsUnity();
 			WindowMenuButtonPosition = s.WindowMenuButtonPosition;
 
 			ChildRounding = s.ChildRounding;
@@ -228,16 +231,21 @@ namespace UImGui.Assets
 			PopupRounding = s.PopupRounding;
 			PopupBorderSize = s.PopupBorderSize;
 
-			FramePadding = s.FramePadding;
+			var framePadding = s.FramePadding;
+			FramePadding = framePadding.AsUnity();
 			FrameRounding = s.FrameRounding;
 			FrameBorderSize = s.FrameBorderSize;
 
-			ItemSpacing = s.ItemSpacing;
-			ItemInnerSpacing = s.ItemInnerSpacing;
+			var itemSpacing = s.ItemSpacing;
+			ItemSpacing = itemSpacing.AsUnity();
+			var itemInnerSpacing = s.ItemInnerSpacing;
+			ItemInnerSpacing = itemInnerSpacing.AsUnity();
 
-			CellPadding = s.CellPadding;
+			var cellPadding = s.CellPadding;
+			CellPadding = cellPadding.AsUnity();
 
-			TouchExtraPadding = s.TouchExtraPadding;
+			var touchExtraPadding = s.TouchExtraPadding;
+			TouchExtraPadding = touchExtraPadding.AsUnity();
 
 			IndentSpacing = s.IndentSpacing;
 
@@ -256,12 +264,16 @@ namespace UImGui.Assets
 
 			ColorButtonPosition = s.ColorButtonPosition;
 
-			ButtonTextAlign = s.ButtonTextAlign;
+			var buttonTextAlign = s.ButtonTextAlign;
+			ButtonTextAlign = buttonTextAlign.AsUnity();
 
-			SelectableTextAlign = s.SelectableTextAlign;
+			var selectableTextAlign = s.SelectableTextAlign;
+			SelectableTextAlign = selectableTextAlign.AsUnity();
 
-			DisplayWindowPadding = s.DisplayWindowPadding;
-			DisplaySafeAreaPadding = s.DisplaySafeAreaPadding;
+			var displayWindowPadding = s.DisplayWindowPadding;
+			DisplayWindowPadding = displayWindowPadding.AsUnity();
+			var displaySafeAreaPadding = s.DisplaySafeAreaPadding;
+			DisplaySafeAreaPadding = displaySafeAreaPadding.AsUnity();
 
 			MouseCursorScale = s.MouseCursorScale;
 
@@ -274,13 +286,14 @@ namespace UImGui.Assets
 
 			for (int colorIndex = 0; colorIndex < Colors.Length; ++colorIndex)
 			{
-				Colors[colorIndex] = s.Colors[colorIndex];
+				var color = s.Colors[colorIndex];
+				Colors[colorIndex] = color.AsColor();
 			}
 		}
 
 		public void SetDefault()
 		{
-			System.IntPtr context = ImGui.CreateContext();
+			var context = ImGui.CreateContext();
 			ImGui.SetCurrentContext(context);
 			SetFrom(ImGui.GetStyle());
 			ImGui.DestroyContext(context);

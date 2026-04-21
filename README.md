@@ -6,7 +6,7 @@ UImGui (Unity ImGui) is an UPM package for the immediate mode GUI library using 
 This project is based on [RG.ImGui](https://github.com/realgamessoftware/dear-imgui-unity) project. 
 This project use [FreeType](https://github.com/ocornut/imgui/tree/master/misc/freetype) as default renderer.
 
-**Using imgui 1.90.1**
+**Using imgui 1.92.7**
 
 ----
 
@@ -23,26 +23,32 @@ To update (using ImGui.Net.dll) easier and often.
 
 ## Features
 
-| Feature                                                   |         RG         |      UImGui        | 
-| -----------------                                         | ------------------ | ------------------ |
-| IL2CPP                                                    | :x:                | :heavy_check_mark: |
-| Windows                                                   | :heavy_check_mark: | :heavy_check_mark: |
-| Linux                                                     | :heavy_check_mark: | :heavy_check_mark: |
-| MacOS                                                     | :heavy_check_mark: | :heavy_check_mark: |
-| Custom Assert                                             | :heavy_check_mark: | :x: 		          |
-| Unity Input Manager                                       | :heavy_check_mark: | :heavy_check_mark: |
-| Unity Input System                                        | :heavy_check_mark: | :heavy_check_mark: |
-| Docking                                                   | :x:                | :heavy_check_mark: |
-| RenderPipeline Built in                                   | :heavy_check_mark: | :heavy_check_mark: |
-| RenderPipeline URP                                        | :x:                | :heavy_check_mark: |
-| RenderPipeline HDRP                                       | :x:                | :heavy_check_mark: |
-| Renderer Mesh                                             | :heavy_check_mark: | :heavy_check_mark: |
-| Renderer Procedural                                       | ~                  | :heavy_check_mark: |
-| FreeType                                                  | ~                  | WIP |
-| Image / Texture                                           | :x:				 | :heavy_check_mark: |
-| [ImNodes](https://github.com/Nelarius/imnodes)       		| :x:				 | WIP                |
-| [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)   | :x:				 | WIP                |
-| [ImPlot](https://github.com/epezent/implot)      		 	| :x:				 | WIP                |
+| Feature                                                                              |         RG         |      UImGui        | 
+| ------------------------------------------------------------------------------------ | ------------------ | ------------------ |
+| IL2CPP                                                                               | :x:                | :heavy_check_mark: |
+| Windows x64                                                                          | :heavy_check_mark: | :heavy_check_mark: |
+| Windows x86                                                                          | :x:                | :heavy_check_mark: |
+| Windows arm64                                                                        | :x:                | :heavy_check_mark: |
+| Linux                                                                                | :heavy_check_mark: | :heavy_check_mark: |
+| MacOS                                                                                | :heavy_check_mark: | :heavy_check_mark: |
+| Custom Assert                                                                        | :heavy_check_mark: | :x:                |
+| Unity Input Manager                                                                  | :heavy_check_mark: | :heavy_check_mark: |
+| Unity Input System                                                                   | :heavy_check_mark: | :heavy_check_mark: |
+| Docking                                                                              | :x:                | :heavy_check_mark: |
+| RenderPipeline Built in                                                              | :heavy_check_mark: | :heavy_check_mark: |
+| RenderPipeline URP (single & multiple renderers)                                     | :x:                | :heavy_check_mark: |
+| RenderPipeline HDRP                                                                  | :x:                | :heavy_check_mark: |
+| Renderer Mesh                                                                        | :heavy_check_mark: | :heavy_check_mark: |
+| Renderer Procedural                                                                  | ~                  | :heavy_check_mark: |
+| FreeType                                                                             | ~                  | WIP                |
+| Image / Texture                                                                      | :x:                | :heavy_check_mark: |
+| [ImNodes](https://github.com/Nelarius/imnodes)                                       | :x:                | :heavy_check_mark: |
+| [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)                              | :x:                | :heavy_check_mark: |
+| [ImPlot](https://github.com/epezent/implot)                                          | :x:                | :heavy_check_mark: |
+| [ImPlot3D](https://github.com/brenocq/implot3d)                                      | :x:                | :heavy_check_mark: |
+| [ImNodes-R](https://github.com/rokups/imgui-nodes) (renzo fork)                      | :x:                | :heavy_check_mark: |
+| [ImGuizmo Quat](https://github.com/BrutPitt/imGuIZMO.quat)                          | :x:                | :heavy_check_mark: |
+| [CimCTE](https://github.com/nicktarnold/CimCTE) (code text editor)                  | :x:                | :heavy_check_mark: |
 
 Usage
 -------
@@ -51,7 +57,7 @@ Usage
 - (Optional) Set `Platform Type` to `Input System` if you're using the new [input system](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html) the `SampleDemoWindow` object on the scene the following properties:
 - If you're using **URP** check [Using URP](https://github.com/psydack/uimgui#using-urp) section, for **HDRP** [Using HDRP](https://github.com/psydack/uimgui#using-hdrp) section, for **built in** check [Using Built in](https://github.com/psydack/uimgui#using-hdrp) section.
 - You're ready. Look [Samples section](https://github.com/psydack/uimgui#samples) for more usage samples.  
-- To use [ImNodes](https://github.com/Nelarius/imnodes), [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) or [ImPlot](https://github.com/epezent/implot)   check the sample script. If you won't use, [you can disable using directives](https://github.com/psydack/uimgui#directives)  
+- Optional libs (ImPlot, ImNodes, ImGuizmo, ImPlot3D, ImNodes-R, ImGuizmoQuat, CimCTE) are **opt-in** — none are loaded by default. Enable each one with its define symbol (see [Directives](https://github.com/psydack/uimgui#directives)). The `ShowDemoWindow` sample demonstrates all of them.  
 - (optional) You can build your ImGui.NET using my custom repo: [ImGui.NET](https://github.com/psydack/ImGui.NET) and [ImGui.NET-nativebuild](https://github.com/psydack/ImGui.NET-nativebuild)
 
 Samples
@@ -329,9 +335,10 @@ You can [see more samples here](https://pthom.github.io/imgui_manual_online/manu
 
 Using URP
 -------
-- Add a `Render Im Gui Feature` render feature to the renderer asset. 
-- Assign it to the `render feature` field of the DearImGui component.
-- Check this [issue](https://github.com/psydack/uimgui/issues/14) which I describe how to make it work step by step.
+- Use the menu **Tools > UImGui > Add Render Feature to URP** to automatically add `RenderImGui` to **all** renderer assets in your active URP pipeline asset (PC renderer, Mobile renderer, etc.).
+- Assign the generated `RenderImGui` asset to the `Render Feature` field of the UImGui component.
+- If you add a new renderer later, run the menu item again or manually add `RenderImGui` to it.
+- Check this [issue](https://github.com/psydack/uimgui/issues/14) for step-by-step details.
 
 Using HDRP
 -------
@@ -346,21 +353,101 @@ Using Built in
 -------
 No special sets.
 
+Renderer Types
+-------
+Two renderers are available, selectable on the UImGui component via the `Renderer` field:
+
+| Renderer | How it works | When to use |
+|----------|-------------|-------------|
+| **Mesh** (default) | Uploads vertex/index data to a Unity `Mesh` each frame | All platforms including WebGL and mobile. Safe choice. |
+| **Procedural** | GPU-resident `GraphicsBuffer` with `DrawProceduralIndirect` | Desktop/console only. Requires Shader Model 4.5+. More efficient for large or complex UIs. Not supported on WebGL. |
+
+If you are unsure, use Mesh.
+
+IL2CPP Notes
+-------
+- `allowUnsafeCode = true` is already set in the package's assembly definition.
+- To avoid managed code stripping, add a `link.xml` to your project's `Assets/` folder preserving the ImGui assemblies:
+```xml
+<linker>
+  <assembly fullname="ImGuiNET" preserve="all"/>
+  <assembly fullname="ImPlotNET" preserve="all"/>
+  <assembly fullname="imnodesNET" preserve="all"/>
+  <!-- add other enabled lib assemblies here -->
+</linker>
+```
+- Start with **Managed Stripping Level: Minimal** and increase only once the build is verified stable.
+
 Directives
 -------
-- ``UIMGUI_REMOVE_IMPLOT``: don't load implot lib and sources.  
-- ``UIMGUI_REMOVE_IMNODES``: don't load imnodes lib and sources.  
-- ``UIMGUI_REMOVE_IMGUIZMO``: don't load imguizmo lib and sources.  
+Optional libraries are **disabled by default**. Add the corresponding symbol to *Project Settings > Player > Other Settings > Script Define Symbols* to enable each one:
 
-Known issues
+| Symbol                          | Library                                                               |
+| ------------------------------- | --------------------------------------------------------------------- |
+| `UIMGUI_ENABLE_IMPLOT`          | [ImPlot](https://github.com/epezent/implot) — 2D plotting            |
+| `UIMGUI_ENABLE_IMNODES`         | [ImNodes](https://github.com/Nelarius/imnodes) — node editor         |
+| `UIMGUI_ENABLE_IMGUIZMO`        | [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) — gizmos     |
+| `UIMGUI_ENABLE_IMPLOT3D`        | [ImPlot3D](https://github.com/brenocq/implot3d) — 3D plotting        |
+| `UIMGUI_ENABLE_IMNODES_R`       | [ImNodes-R](https://github.com/rokups/imgui-nodes) — node editor (renzo fork) |
+| `UIMGUI_ENABLE_IMGUIZMO_QUAT`   | [imGuIZMO.quat](https://github.com/BrutPitt/imGuIZMO.quat) — quaternion gizmo |
+| `UIMGUI_ENABLE_CIMCTE`          | [CimCTE](https://github.com/nicktarnold/CimCTE) — code text editor   |
+
+Other symbols:
+
+- `UIMGUI_REMOVE_UNSAFE_DLL`: exclude the bundled `System.Runtime.CompilerServices.Unsafe.dll` when your project already ships one (avoids the *multiple assemblies with the same name* error).
+
+VectorExtensions
+-------
+`UImGui.VectorExtensions` provides zero-cost conversions between `UnityEngine` and `System.Numerics` vector types via `Unsafe.As<>`. Useful when writing plugins that mix Unity vectors with ImGui/ImPlot APIs.
+
+Use the bridge only at the Unity boundary:
+
+```cs
+using UImGui;
+
+UnityEngine.Vector2 pos = transform.position;
+System.Numerics.Vector2 imguiPos = pos.ToNumerics();
+ImGui.SetNextWindowPos(imguiPos);
+
+System.Numerics.Vector2 numPos = ...;
+UnityEngine.Vector2 unityPos = numPos.ToUnity();
+```
+
+Prefer the zero-copy ref form where the target API accepts the value by `ref` or where you already have a local variable:
+
+```cs
+UnityEngine.Vector2 pos = transform.position;
+ImGui.SetNextWindowPos(pos.AsNumerics());
+```
+
+Supported: `Vector2`, `Vector3`, `Vector4`, `Color` <-> `System.Numerics.Vector4`.
+Troubleshooting
 -------
 
-Issue: Already using ``System.Runtime.CompilerServices.Unsafe.dll`` will cause the following error: ``Multiple precompiled assemblies with the same name System.Runtime.CompilerServices.Unsafe.dll included or the current platform Only one assembly with the same name is allowed per platform.
-Resolution: add ``UIMGUI_REMOVE_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.  
-  
-Issue: ImPlot isn't work right. 
-  
-Issue: Font atlas crash. There's no fix. Use callback for custom font instead
+**`EntryPointNotFoundException: igGetIO_Nil` on Play**  
+The native `cimgui.dll` is not loading. Most common causes:
+- The `.meta` file for `Plugins/imgui/win-x64/cimgui.dll` has a stale `defineConstraints` entry — open it and set `defineConstraints: []`.
+- The DLL was locked by the Editor during a previous update attempt — close Unity, recopy the DLL, reopen.
+
+**`Multiple precompiled assemblies with the same name System.Runtime.CompilerServices.Unsafe.dll`**  
+Another package already ships this DLL. Add `UIMGUI_REMOVE_UNSAFE_DLL` to *Project Settings → Player → Script Define Symbols* and restart the Editor.
+
+**`RenderGraph Execution error` (URP)**  
+Expand the error in the Console — it usually wraps an `EntryPointNotFoundException`. Fix the native DLL issue above.
+
+**ImGui renders nothing / black screen (URP)**  
+The `RenderImGui` feature is missing or not assigned:
+1. Run *Tools → UImGui → Add Render Feature to URP*.
+2. Assign the `RenderImGui.asset` to the `Render Feature` field on the UImGui component.
+
+**Inspector shows "Platform not available"**  
+The selected `Platform Type` requires a Unity package that is not installed (e.g. Input System). Install `com.unity.inputsystem` or switch to Input Manager.
+
+**Font atlas crash**  
+No fix. Always configure fonts via the `Font Custom Initializer` callback instead of loading them directly.
+
+**ImPlot rendering issues**  
+ImPlot has known intermittent rendering problems. See open issues on the repository.
 
 Credits
 -------

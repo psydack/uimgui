@@ -2,11 +2,18 @@
     "name": "UImGui",
     "rootNamespace": "",
     "references": [
-        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
-        "GUID:15fc0a57446b3144c949da3e2b9737a9",
-        "GUID:457756d89b35d2941b3e7b37b4ece6f1",
-        "GUID:e0cd26848372d4e5c891c569017e11f1",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:27a62d5358735d64dbe4d43f0a81e5bf",
+        "GUID:255dc83b4dd3e8b47a8ce3e56eb9b0e8",
+        "GUID:c5c22601fec243b49af3c3f40c2b6078",
+        "GUID:3621991b6c0a8d54caa1abc46ab78bb0",
+        "GUID:8403672225bbb954f825d5a3265d21e5",
+        "GUID:5219e8fbac0a4bbba84ca2a9a2017185",
+        "GUID:fde65bb14fa746fabc8393d25c15360e",
+        "GUID:c2a61f6a21bc4bbf80f9557c39a49776",
+        "GUID:21b78e49fbaa4acfbdceaa84fbc1b034",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -25,6 +32,11 @@
             "name": "com.unity.render-pipelines.universal",
             "expression": "7.0.0",
             "define": "HAS_URP"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "17.0.0",
+            "define": "HAS_URP_17"
         },
         {
             "name": "com.unity.inputsystem",

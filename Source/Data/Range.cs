@@ -3,7 +3,7 @@
 namespace UImGui
 {
 	[Serializable]
-	internal struct Range
+	public struct Range
 	{
 		public ushort Start;
 		public ushort End;

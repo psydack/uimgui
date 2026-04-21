@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace UImGui.Assets
 {
-	// TODO: Ability to save to asset, in player prefs with custom key, custom ini file, etc
 	/// <summary>
-	/// Used to store ImGui Ini settings in an asset instead of the default imgui.ini file
+	/// Used to store ImGui Ini settings in an asset instead of the default imgui.ini file.
+	/// Optionally persists to PlayerPrefs when a key is provided.
 	/// </summary>
 	[CreateAssetMenu(menuName = "Dear ImGui/Ini Settings")]
 	internal sealed class IniSettingsAsset : ScriptableObject
@@ -13,26 +13,28 @@ namespace UImGui.Assets
 		[SerializeField]
 		private string _data;
 
-		//private string _iniPath;
+		[Tooltip("When set, settings are saved/loaded from PlayerPrefs using this key instead of the asset field.")]
+		[SerializeField]
+		private string _playerPrefsKey;
 
 		public void Save(string data)
 		{
 			_data = data;
+			if (!string.IsNullOrEmpty(_playerPrefsKey))
+			{
+				PlayerPrefs.SetString(_playerPrefsKey, data);
+				PlayerPrefs.Save();
+			}
 		}
 
 		public string Load()
 		{
+			if (!string.IsNullOrEmpty(_playerPrefsKey) && PlayerPrefs.HasKey(_playerPrefsKey))
+			{
+				return PlayerPrefs.GetString(_playerPrefsKey);
+			}
+
 			return _data;
 		}
-
-		//public void SaveToDisk()
-		//{
-		//	ImGuiNET.ImGui.SaveIniSettingsToDisk(_iniPath);
-		//}
-
-		//public void LoadFromDisk()
-		//{
-		//	ImGuiNET.ImGui.LoadIniSettingsFromDisk(_iniPath)
-		//}
 	}
 }

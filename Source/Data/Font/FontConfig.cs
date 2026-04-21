@@ -1,11 +1,11 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UImGui
 {
 	[System.Serializable]
-	internal struct FontConfig
+	public struct FontConfig
 	{
 		[Tooltip("TTF/OTF data ownership taken by the container ImFontAtlas (will delete memory itself). (default=true)")]
 		public bool FontDataOwnedByAtlas;
@@ -74,17 +74,17 @@ namespace UImGui
 		public void ApplyTo(ImFontConfigPtr im)
 		{
 			im.FontDataOwnedByAtlas = FontDataOwnedByAtlas;
-			im.FontNo = FontNo;
+			im.FontNo = (uint)FontNo;
 			im.SizePixels = SizeInPixels;
-			im.OversampleH = OversampleH;
-			im.OversampleV = OversampleV;
+			im.OversampleH = (sbyte)OversampleH;
+			im.OversampleV = (sbyte)OversampleV;
 			im.PixelSnapH = PixelSnapH;
-			im.GlyphExtraSpacing = GlyphExtraSpacing;
-			im.GlyphOffset = GlyphOffset;
+			im.GlyphExtraAdvanceX = GlyphExtraSpacing.x;
+			im.GlyphOffset = GlyphOffset.AsNumerics();
 			im.GlyphMinAdvanceX = GlyphMinAdvanceX;
 			im.GlyphMaxAdvanceX = GlyphMaxAdvanceX;
 			im.MergeMode = MergeMode;
-			im.FontBuilderFlags = FontBuilderFlags;
+			im.FontLoaderFlags = FontBuilderFlags;
 			im.RasterizerMultiply = RasterizerMultiply;
 			im.EllipsisChar = EllipsisChar;
 
@@ -96,17 +96,18 @@ namespace UImGui
 		public void SetFrom(ImFontConfigPtr im)
 		{
 			FontDataOwnedByAtlas = im.FontDataOwnedByAtlas;
-			FontNo = im.FontNo;
+			FontNo = (int)im.FontNo;
 			SizeInPixels = im.SizePixels;
 			OversampleH = im.OversampleH;
 			OversampleV = im.OversampleV;
 			PixelSnapH = im.PixelSnapH;
-			GlyphExtraSpacing = im.GlyphExtraSpacing;
-			GlyphOffset = im.GlyphOffset;
+			GlyphExtraSpacing = new Vector2(im.GlyphExtraAdvanceX, 0f);
+			var glyphOffset = im.GlyphOffset;
+			GlyphOffset = glyphOffset.AsUnity();
 			GlyphMinAdvanceX = im.GlyphMinAdvanceX;
 			GlyphMaxAdvanceX = im.GlyphMaxAdvanceX;
 			MergeMode = im.MergeMode;
-			FontBuilderFlags = im.FontBuilderFlags;
+			FontBuilderFlags = im.FontLoaderFlags;
 			RasterizerMultiply = im.RasterizerMultiply;
 			EllipsisChar = (char)im.EllipsisChar;
 
@@ -116,7 +117,7 @@ namespace UImGui
 		public unsafe List<ushort> BuildRanges()
 		{
 			ImFontAtlas* atlas = null;
-			List<ushort> ranges = new List<ushort>();
+			var ranges = new List<ushort>();
 
 			void AddRangePtr(ushort* r)
 			{
@@ -126,44 +127,9 @@ namespace UImGui
 				}
 			};
 
-			if ((GlyphRanges & ScriptGlyphRanges.Default) != 0)
+			if ((GlyphRanges & ~ScriptGlyphRanges.Custom) != 0)
 			{
 				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesDefault(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.Cyrillic) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesCyrillic(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.Japanese) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesJapanese(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.Korean) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesKorean(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.Thai) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesThai(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.Vietnamese) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesVietnamese(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.ChineseSimplified) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(atlas));
-			}
-
-			if ((GlyphRanges & ScriptGlyphRanges.ChineseFull) != 0)
-			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesChineseFull(atlas));
 			}
 
 			if ((GlyphRanges & ScriptGlyphRanges.Custom) != 0)
