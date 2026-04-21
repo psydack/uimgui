@@ -15,6 +15,7 @@ namespace UImGui.Texture
 	public class TextureManager
 	{
 		private Texture2D _atlasTexture;
+		private IntPtr _fontTextureId;
 
 		private readonly Dictionary<IntPtr, UTexture> _textures = new Dictionary<IntPtr, UTexture>();
 		private readonly Dictionary<UTexture, IntPtr> _textureIds = new Dictionary<UTexture, IntPtr>();
@@ -22,12 +23,11 @@ namespace UImGui.Texture
 
 		private readonly HashSet<IntPtr> _allocatedGlyphRangeArrays = new HashSet<IntPtr>();
 
-		public bool HasValidAtlas => _atlasTexture != null;
+		public bool HasValidAtlas => _atlasTexture != null && _fontTextureId != IntPtr.Zero;
 
-		public unsafe void Initialize(ImGuiIOPtr io)
+		private unsafe void Initialize(ImGuiIOPtr io)
 		{
 			var atlasPtr = io.Fonts;
-			atlasPtr.RendererHasTextures = true;
 			var texData = atlasPtr.TexData;
 			byte* pixels = (byte*)texData.Pixels;
 			int width = texData.Width;
@@ -50,15 +50,46 @@ namespace UImGui.Texture
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 			NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref srcData, AtomicSafetyHandle.GetTempMemoryHandle());
 #endif
-			// Invert y while copying the atlas texture.
 			var dstData = _atlasTexture.GetRawTextureData<byte>();
-			int stride = width * bytesPerPixel;
-			for (int y = 0; y < height; ++y)
+
+			if (bytesPerPixel == 4)
 			{
-				NativeArray<byte>.Copy(srcData, y * stride, dstData, (height - y - 1) * stride, stride);
+				int stride = width * bytesPerPixel;
+				for (int y = 0; y < height; ++y)
+				{
+					NativeArray<byte>.Copy(srcData, y * stride, dstData, (height - y - 1) * stride, stride);
+				}
+			}
+			else if (bytesPerPixel == 1)
+			{
+				// ImGui may build the default font atlas as a single-channel bitmap.
+				// Expand it into RGBA so the existing shaders can sample alpha correctly.
+				for (int y = 0; y < height; ++y)
+				{
+					int srcRow = y * width;
+					int dstRow = (height - y - 1) * width * 4;
+					for (int x = 0; x < width; ++x)
+					{
+						byte alpha = srcData[srcRow + x];
+						int dstIndex = dstRow + (x * 4);
+						dstData[dstIndex + 0] = 255;
+						dstData[dstIndex + 1] = 255;
+						dstData[dstIndex + 2] = 255;
+						dstData[dstIndex + 3] = alpha;
+					}
+				}
+			}
+			else
+			{
+				Debug.LogError($"[UImGui] Unsupported font atlas pixel format. BytesPerPixel={bytesPerPixel}.");
+				UnityEngine.Object.Destroy(_atlasTexture);
+				_atlasTexture = null;
+				return;
 			}
 
 			_atlasTexture.Apply();
+			_fontTextureId = RegisterTexture(_atlasTexture);
+			BindFontTexture(io, texData, _fontTextureId);
 		}
 
 		public void Shutdown()
@@ -68,6 +99,7 @@ namespace UImGui.Texture
 			_textures.Clear();
 			_textureIds.Clear();
 			_spriteData.Clear();
+			_fontTextureId = IntPtr.Zero;
 
 			if (_atlasTexture != null)
 			{
@@ -76,22 +108,23 @@ namespace UImGui.Texture
 			}
 		}
 
-		public void PrepareFrame(ImGuiIOPtr io)
+		public unsafe void PrepareFrame(ImGuiIOPtr io)
 		{
-			if (_atlasTexture == null)
+			io.Fonts.RendererHasTextures = true;
+
+			var texData = io.Fonts.TexData;
+			if (texData.NativePtr == null)
+				return;
+
+			if (texData.Status == ImTextureStatus.WantCreate)
 			{
 				Initialize(io);
 			}
 
-			if (_atlasTexture == null)
-			{
+			if (_atlasTexture == null || _fontTextureId == IntPtr.Zero)
 				return;
-			}
 
-			io.Fonts.RendererHasTextures = true;
-			IntPtr id = RegisterTexture(_atlasTexture);
-			io.Fonts.TexData.SetTexID(id);
-			io.Fonts.TexData.SetStatus(ImTextureStatus.OK);
+			io.Fonts.TexIsBuilt = true;
 		}
 
 		public bool TryGetTexture(IntPtr id, out UTexture texture)
@@ -153,6 +186,8 @@ namespace UImGui.Texture
 				DestroyFontAtlas(io);
 			}
 
+			io.Fonts.RendererHasTextures = true;
+
 			if (!io.MouseDrawCursor)
 			{
 				io.Fonts.Flags |= ImFontAtlasFlags.NoMouseCursors;
@@ -164,9 +199,10 @@ namespace UImGui.Texture
 				{
 					custom.Invoke(io);
 				}
-				else
+
+				if (io.Fonts.Fonts.Size == 0)
 				{
-					io.Fonts.AddFontDefaultBitmap();
+					io.Fonts.AddFontDefault();
 				}
 
 				return;
@@ -204,7 +240,7 @@ namespace UImGui.Texture
 
 			if (io.Fonts.Fonts.Size == 0)
 			{
-				io.Fonts.AddFontDefaultBitmap();
+				io.Fonts.AddFontDefault();
 			}
 
 		}
@@ -215,6 +251,16 @@ namespace UImGui.Texture
 
 			io.Fonts.Clear(); // Previous FontDefault reference no longer valid.
 			io.NativePtr->FontDefault = default; // NULL uses Fonts[0].
+			_fontTextureId = IntPtr.Zero;
+		}
+
+		private static unsafe void BindFontTexture(ImGuiIOPtr io, ImTextureDataPtr texData, IntPtr textureId)
+		{
+			io.Fonts.TexRef._TexID = textureId;
+			io.Fonts.TexRef._TexData = texData.NativePtr;
+			texData.SetTexID(textureId);
+			texData.SetStatus(ImTextureStatus.OK);
+			io.Fonts.TexIsBuilt = true;
 		}
 
 		private unsafe IntPtr AllocateGlyphRangeArray(in FontConfig fontConfig)

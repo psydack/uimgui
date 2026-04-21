@@ -189,7 +189,6 @@ namespace UImGui
 			_style?.ApplyTo(ImGui.GetStyle());
 
 			_context.TextureManager.BuildFontAtlas(io, _fontAtlasConfiguration, _fontCustomInitializer);
-			_context.TextureManager.Initialize(io);
 
 			IPlatform platform = PlatformUtility.Create(_platformType, _cursorShapes, _iniSettings);
 			SetPlatform(platform, io);
@@ -261,6 +260,14 @@ namespace UImGui
 		{
 			if (RenderUtility.IsUsingHDRP())
 				return; // skip update call in hdrp
+
+#if HAS_URP_17 && HAS_URP
+			if (RenderUtility.IsUsingURP())
+			{
+				DoUpdate(null);
+				return;
+			}
+#endif
 			DoUpdate(this.CommandBuffer);
 		}
 
@@ -297,6 +304,27 @@ namespace UImGui
 				Constants.LayoutMarker.End();
 			}
 
+			if (buffer != null)
+			{
+				RenderDrawData(buffer);
+			}
+
+			if (_isChangingCamera)
+			{
+				_isChangingCamera = false;
+				Reload();
+			}
+		}
+
+		internal void RenderDrawData(CommandBuffer buffer)
+		{
+			if (buffer == null || _renderer == null)
+			{
+				return;
+			}
+
+			UImGuiUtility.SetCurrentContext(_context);
+
 			Constants.DrawListMarker.Begin(this);
 			if (buffer == _renderCommandBuffer)
 			{
@@ -304,12 +332,6 @@ namespace UImGui
 			}
 			_renderer.RenderDrawLists(buffer, ImGui.GetDrawData());
 			Constants.DrawListMarker.End();
-
-			if (_isChangingCamera)
-			{
-				_isChangingCamera = false;
-				Reload();
-			}
 		}
 
 		private void SetRenderer(IRenderer renderer, ImGuiIOPtr io)
