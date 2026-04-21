@@ -1,8 +1,9 @@
-﻿# UImGui â€” Maintenance & Architecture Guide
+﻿# UImGui — Maintenance & Architecture Guide
 
 > Living document. Update this file after every Unity, URP, Dear ImGui, ImGui.NET, or native plugin upgrade.
-> Branch `feat/new-architecture` is the next evolution. See Â§11 for its plan.
-
+> Branch `feat/new-architecture` is the next evolution. See §11 for its plan.
+> Target release: 7.0.0 (follow Claude.md Versioning policy)
+> Execution branch: `feat/new-architecture`
 ---
 
 ## Table of Contents
@@ -46,10 +47,10 @@
 Survive any future Unity or ImGui upgrade by keeping these absolute.
 
 - `cimgui` and `ImGui.NET.dll` must be updated as a matched pair.
-- **Unity must be closed before copying native DLL/SO/DYLIB on Windows** â€” the editor shadow-loads binaries and the old version stays in memory until restart.
+- **Unity must be closed before copying native DLL/SO/DYLIB on Windows** — the editor shadow-loads binaries and the old version stays in memory until restart.
 - `ImGui.NewFrame()` must happen before any layout code.
 - `ImGui.Render()` must be called in a `finally` block so a failing layout callback cannot leave ImGui mid-frame.
-- `TextureManager.UpdateTextures(ImGui.GetDrawData())` must run after `Render()` and before `RenderDrawData()` â€” even on URP 17+ where rendering is deferred to the render graph pass.
+- `TextureManager.UpdateTextures(ImGui.GetDrawData())` must run after `Render()` and before `RenderDrawData()` — even on URP 17+ where rendering is deferred to the render graph pass.
 - `ImGuiBackendFlags.RendererHasTextures` must be set in every renderer's `Initialize()` or `NewFrame()` will not generate `WantCreate` texture events.
 - `ImFontAtlasFlags.NoBakedLines` must be set before `NewFrame()` builds the atlas.
 - External user textures registered via `GetTextureId()` must never be destroyed by `DestroyTexture()`.
@@ -62,31 +63,31 @@ Survive any future Unity or ImGui upgrade by keeping these absolute.
 
 ```
 UImGui (MonoBehaviour)
-â”‚
-â”œâ”€â”€ Context
-â”‚     ImGuiContext (IntPtr)
-â”‚     ImPlotContext / ImNodesContext / â€¦ (optional, IntPtr)
-â”‚     TextureManager
-â”‚
-â”œâ”€â”€ IPlatform â”€â”€â”€â”€â”€â”€â”€â”€ InputManagerPlatform | InputSystemPlatform
-â”‚     PrepareFrame(io, pixelRect)
-â”‚
-â”œâ”€â”€ IRenderer â”€â”€â”€â”€â”€â”€â”€â”€ RendererMesh | RendererProcedural
-â”‚     Initialize(io)  â†’  sets BackendFlags.RendererHasTextures
-â”‚     RenderDrawLists(CommandBuffer, drawData)
-â”‚
-â””â”€â”€ RenderPipeline â”€â”€â”€â”€ CommandBuffer injected per-pipeline
+│
+├── Context
+│     ImGuiContext (IntPtr)
+│     ImPlotContext / ImNodesContext / … (optional, IntPtr)
+│     TextureManager
+│
+├── IPlatform ──────── InputManagerPlatform | InputSystemPlatform
+│     PrepareFrame(io, pixelRect)
+│
+├── IRenderer ──────── RendererMesh | RendererProcedural
+│     Initialize(io)  →  sets BackendFlags.RendererHasTextures
+│     RenderDrawLists(CommandBuffer, drawData)
+│
+└── RenderPipeline ──── CommandBuffer injected per-pipeline
       Built-in:   Camera.AddCommandBuffer(AfterEverything)
       URP < 17:   ScriptableRenderPass.Execute
-      URP â‰¥ 17:   RecordRenderGraph unsafe pass
+      URP ≥ 17:   RecordRenderGraph unsafe pass
       HDRP:       CustomPass.Execute
 ```
 
 ### Key design rules
 
 - Composition, not inheritance: `UImGui` owns and coordinates; subsystems (`TextureManager`, `IRenderer`, `IPlatform`) do their own job behind interfaces.
-- ScriptableObjects for all data assets (`ShaderResourcesAsset`, `StyleAsset`, etc.) â€” no MonoBehaviour overhead for config.
-- Events (`Layout`, `OnInitialize`, `OnDeinitialize`) use C# `Action<UImGui>` â€” lower overhead than `UnityEvent`.
+- ScriptableObjects for all data assets (`ShaderResourcesAsset`, `StyleAsset`, etc.) — no MonoBehaviour overhead for config.
+- Events (`Layout`, `OnInitialize`, `OnDeinitialize`) use C# `Action<UImGui>` — lower overhead than `UnityEvent`.
 - `UImGuiUtility.Context` is the single static entry point for user code. All public API goes through it.
 
 ---
@@ -107,8 +108,8 @@ Order is critical. Never reorder these steps.
 
 ### URP 17+ split
 
-`Update()` calls `DoUpdate(null)` â€” steps 1â€“6 run but step 7 is skipped.
-The render graph pass calls `RenderDrawData(nativeCommandBuffer)` â€” step 7 only.
+`Update()` calls `DoUpdate(null)` — steps 1–6 run but step 7 is skipped.
+The render graph pass calls `RenderDrawData(nativeCommandBuffer)` — step 7 only.
 `UpdateTextures` must run in step 6 even when step 7 is deferred; otherwise the font texture is never created.
 
 ---
@@ -120,12 +121,12 @@ The render graph pass calls `RenderDrawData(nativeCommandBuffer)` â€” step 
 ### Status machine
 
 ```
-ImGui sets WantCreate  â†’  UploadTexture: create Texture2D, Y-flip copy, Apply, RegisterTexture, SetTexID, SetStatus(OK)
-ImGui sets WantUpdates â†’  UpdateTexture: re-upload pixels to existing Texture2D, Apply, SetStatus(OK)
-ImGui sets WantDestroy â†’  DestroyTexture ONLY if UnusedFrames > 0 (prevents current-frame use-after-free)
+ImGui sets WantCreate  →  UploadTexture: create Texture2D, Y-flip copy, Apply, RegisterTexture, SetTexID, SetStatus(OK)
+ImGui sets WantUpdates →  UpdateTexture: re-upload pixels to existing Texture2D, Apply, SetStatus(OK)
+ImGui sets WantDestroy →  DestroyTexture ONLY if UnusedFrames > 0 (prevents current-frame use-after-free)
 ```
 
-### Ownership split (current risk â€” tracked for hardening)
+### Ownership split (current risk — tracked for hardening)
 
 Backend-created textures (font atlas, emoji, etc.) and user-registered textures (`GetTextureId`) live in the same `_textures` / `_textureIds` dictionaries.
 A future hardening pass must separate them so `DestroyTexture` can never accidentally destroy a user texture.
@@ -152,14 +153,14 @@ if (!io.MouseDrawCursor)
 
 | Pipeline | Entry Point | Notes |
 |----------|-------------|-------|
-| Built-in | `Camera.AddCommandBuffer(AfterEverything)` | `DoUpdate(CommandBuffer)` â€” update + render in one step |
+| Built-in | `Camera.AddCommandBuffer(AfterEverything)` | `DoUpdate(CommandBuffer)` — update + render in one step |
 | URP < 17 | `ScriptableRenderPass.Execute` | Execute prepared `CommandBuffer` |
-| URP â‰¥ 17 | `RecordRenderGraph` unsafe pass | `DoUpdate(null)` + deferred `RenderDrawData(nativeCmd)` |
+| URP ≥ 17 | `RecordRenderGraph` unsafe pass | `DoUpdate(null)` + deferred `RenderDrawData(nativeCmd)` |
 | HDRP | `CustomPass.Execute` | `DoUpdate(context.cmd)` per UImGui instance |
 
 ### URP 17+ hardening rules
 
-- Use `UniversalResourceData.activeColorTexture` â€” not private fields.
+- Use `UniversalResourceData.activeColorTexture` — not private fields.
 - Always wrap render func: `builder.AllowPassCulling(false)`.
 - `CommandBufferHelpers.GetNativeCommandBuffer(ctx.cmd)` bridges render graph to legacy renderer code.
 - Filter by camera: `if (Camera != renderingData.cameraData.camera) return;` in `AddRenderPasses`.
@@ -190,25 +191,25 @@ if (!io.MouseDrawCursor)
 | `UIMGUI_ENABLE_IMGUIZMO_QUAT` | ImGuizmoQuat | No | Enable after core is stable |
 | `UIMGUI_ENABLE_CIMCTE` | CimCTE | No | Enable after core is stable |
 
-### Adding a new optional plugin â€” 8-step checklist
+### Adding a new optional plugin — 8-step checklist
 
 **1. Choose define symbol**: `UIMGUI_ENABLE_LIBFOO`
 
 **2. Create plugin folder**:
 ```
 Plugins/libfoo/
-  LibFoo.NET.dll            â† managed wrapper
-  LibFoo.NET.dll.meta       â† defineConstraints: [UIMGUI_ENABLE_LIBFOO]
-  win-x64/cifoo.dll + .meta â† defineConstraints: [UIMGUI_ENABLE_LIBFOO]
-  win-x86/  win-arm64/  linux-x64/  osx/  â† same pattern
+  LibFoo.NET.dll            ← managed wrapper
+  LibFoo.NET.dll.meta       ← defineConstraints: [UIMGUI_ENABLE_LIBFOO]
+  win-x64/cifoo.dll + .meta ← defineConstraints: [UIMGUI_ENABLE_LIBFOO]
+  win-x86/  win-arm64/  linux-x64/  osx/  ← same pattern
 ```
 
-**3. Context.cs** â€” only if library has `CreateContext`/`DestroyContext`:
+**3. Context.cs** — only if library has `CreateContext`/`DestroyContext`:
 ```csharp
 public IntPtr LibFooContext;
 ```
 
-**4. UImGuiUtility.cs** â€” three blocks:
+**4. UImGuiUtility.cs** — three blocks:
 ```csharp
 // CreateContext:
 #if UIMGUI_ENABLE_LIBFOO
@@ -226,7 +227,7 @@ public IntPtr LibFooContext;
 #endif
 ```
 
-**5. UImGuiEditor.cs** â€” `CheckRequirements()`:
+**5. UImGuiEditor.cs** — `CheckRequirements()`:
 ```csharp
 #if UIMGUI_ENABLE_LIBFOO
     EditorGUILayout.LabelField("LibFoo: enabled");
@@ -235,11 +236,11 @@ public IntPtr LibFooContext;
 #endif
 ```
 
-**6. ShowDemoWindow.cs** â€” add a demo block under the existing ones.
+**6. ShowDemoWindow.cs** — add a demo block under the existing ones.
 
-**7. README.md** â€” add row to Features table and Directives table.
+**7. README.md** — add row to Features table and Directives table.
 
-**8. PlanToUpdate.md** â€” add row to the Optional Plugins table above.
+**8. PlanToUpdate.md** — add row to the Optional Plugins table above.
 
 ### Removing a plugin
 
@@ -263,7 +264,7 @@ Reverse of the above. Delete the `Plugins/<libname>/` folder and all four code b
 
 1. **Close Unity completely** (Windows locks native DLLs).
 2. Pull `../ImGui.NET.4Unity` source.
-3. Copy `ImGui.NET.dll` â†’ `Plugins/imgui/ImGui.NET.dll`.
+3. Copy `ImGui.NET.dll` → `Plugins/imgui/ImGui.NET.dll`.
 4. Copy native binaries to all platform folders.
 5. Verify file sizes changed.
 6. Reopen Unity. Check `ImGui.GetVersion()` in inspector.
@@ -295,7 +296,7 @@ Reverse of the above. Delete the `Plugins/<libname>/` folder and all four code b
 
 Goal: every future Unity or ImGui upgrade hits a failing test first, not a crash in production.
 
-### Layer 1 â€” Compile gates
+### Layer 1 — Compile gates
 
 Each define combination must compile cleanly.
 
@@ -309,7 +310,7 @@ Run with:
 Unity -batchmode -quit -projectPath <project> -runTests -testPlatform editmode
 ```
 
-### Layer 2 â€” EditMode unit tests
+### Layer 2 — EditMode unit tests
 
 Location: `Tests/Editor/`
 
@@ -323,7 +324,7 @@ Location: `Tests/Editor/`
 // Same for Vector3, Vector4, Color
 ```
 
-**TextureManager â€” external registration stability**
+**TextureManager — external registration stability**
 ```csharp
 [Test] void RegisterSameTexture_ReturnsSameId() {
     var mgr = new TextureManager();
@@ -357,14 +358,14 @@ Location: `Tests/Editor/`
 }
 ```
 
-**Context â€” null safety**
+**Context — null safety**
 ```csharp
 [Test] void SetCurrentContext_Null_DoesNotThrow() {
     Assert.DoesNotThrow(() => UImGuiUtility.SetCurrentContext(null));
 }
 ```
 
-### Layer 3 â€” PlayMode smoke tests
+### Layer 3 — PlayMode smoke tests
 
 Location: `Tests/PlayMode/`
 
@@ -388,7 +389,7 @@ Assert.IsTrue(drawData.CmdListsCount > 0);
 Assert.IsTrue(uimgui.Context.TextureManager.HasCreatedBackendTextures);
 ```
 
-### Layer 4 â€” Pipeline-specific tests
+### Layer 4 — Pipeline-specific tests
 
 Run the same smoke test with project settings switched per pipeline:
 - Built-in
@@ -398,11 +399,11 @@ Run the same smoke test with project settings switched per pipeline:
 
 Each should pass with the same layout callback producing visible output.
 
-### Layer 5 â€” Regression guards for known past failures
+### Layer 5 — Regression guards for known past failures
 
 | Known failure | Test |
 |--------------|------|
-| `NoBakedLines` not set â†’ atlas rebuild loop | Assert `io.Fonts.Flags` contains `NoBakedLines` after `BuildFontAtlas` |
+| `NoBakedLines` not set → atlas rebuild loop | Assert `io.Fonts.Flags` contains `NoBakedLines` after `BuildFontAtlas` |
 | `UpdateTextures` skipped on URP 17+ | Assert font texture id is non-zero after first `DoUpdate(null)` call |
 | Old cimgui DLL loaded after copy | Assert `ImGui.GetVersion()` contains "1.92.7" |
 | `WantDestroy` before `UnusedFrames > 0` | Assert destroyed texture id is not referenced in draw data same frame |
@@ -422,8 +423,8 @@ Tests/
     SmokeTest_URP.cs
     SmokeTest_HDRP.cs
     RegressionTests.cs
-  Tests.asmdef           â† references UImGui + UImGui.Editor
-  Tests.Editor.asmdef    â† EditorOnly=true
+  Tests.asmdef           ← references UImGui + UImGui.Editor
+  Tests.Editor.asmdef    ← EditorOnly=true
 ```
 
 ---
@@ -432,19 +433,19 @@ Tests/
 
 ### Short term (no API change)
 
-- Pre-allocate `List<SubMeshDescriptor>` as a field in `RendererMesh` â€” currently `new List<>` each frame in `UpdateMesh`.
+- Pre-allocate `List<SubMeshDescriptor>` as a field in `RendererMesh` — currently `new List<>` each frame in `UpdateMesh`.
 - Cache consecutive-same-texture lookups in `CreateDrawCommands` to skip repeated `TryGetTexture` dictionary hits.
-- Remove per-frame `Debug.LogError` paths in texture upload from inner-loop â€” they cannot trigger in steady state but add branch pressure.
+- Remove per-frame `Debug.LogError` paths in texture upload from inner-loop — they cannot trigger in steady state but add branch pressure.
 
 ### Medium term (internal refactor only)
 
-- Extract `UploadPixels(byte*, int, int, int, NativeArray<byte>)` as a static utility â€” enables unit testing and potential Burst jobs for the Y-flip copy.
-- Separate owned backend textures into `_backendTextures` set vs user textures in `_textureIds` â€” unblocks safe bulk-destroy and prevents accidental user texture deletion.
-- Add `TextureManager.Diagnostics` struct exposing `CreatedCount`, `DestroyedCount`, `UpdateCount` without allocating strings â€” drives test assertions and Profiler counters.
+- Extract `UploadPixels(byte*, int, int, int, NativeArray<byte>)` as a static utility — enables unit testing and potential Burst jobs for the Y-flip copy.
+- Separate owned backend textures into `_backendTextures` set vs user textures in `_textureIds` — unblocks safe bulk-destroy and prevents accidental user texture deletion.
+- Add `TextureManager.Diagnostics` struct exposing `CreatedCount`, `DestroyedCount`, `UpdateCount` without allocating strings — drives test assertions and Profiler counters.
 
 ### Long term (interface change, target `feat/new-architecture`)
 
-- Evaluate `RendererProcedural` as the primary path on SM4.5+ â€” fewer SetPass calls than Mesh on GPU-bound projects.
+- Evaluate `RendererProcedural` as the primary path on SM4.5+ — fewer SetPass calls than Mesh on GPU-bound projects.
 - Add backend format detection: if `GraphicsFormat.R8G8B8A8_UNorm` is unsupported (e.g. certain mobile GPUs), fall back gracefully.
 - Consider `UnsafeUtility.MemCpy` for the 4bpp Y-flip instead of `NativeArray.Copy` loop.
 - Async texture upload path for large atlases (custom fonts) via `AsyncGPUReadback` inverse.
@@ -470,7 +471,7 @@ Establish a layered architecture that:
 - Makes optional plugin hooks explicit and discoverable.
 - Prevents the three most common crash types at the code level.
 
-### Phase A â€” Test infrastructure (prerequisite, no behavior change)
+### Phase A — Test infrastructure (prerequisite, no behavior change)
 
 **A1.** Create `Tests/Editor/` assembly with `VectorExtensionsTests`, `TextureManagerTests`, `ContextTests`.  
 **A2.** Create `Tests/PlayMode/` assembly with `SmokeTest_URP.cs` asserting 3-frame render with no errors.  
@@ -479,9 +480,9 @@ Establish a layered architecture that:
 
 Commit: `test: add layer 1+2 tests and diagnostics struct`
 
-### Phase B â€” TextureManager hardening
+### Phase B — TextureManager hardening
 
-**B1.** Add `HashSet<IntPtr> _backendOwnedIds` â€” populated only by `UploadTexture`, never by `RegisterTexture`.  
+**B1.** Add `HashSet<IntPtr> _backendOwnedIds` — populated only by `UploadTexture`, never by `RegisterTexture`.  
 **B2.** Guard `DestroyTexture` to only destroy if id is in `_backendOwnedIds`.  
 **B3.** Rename `UploadTexture`'s pixel copy block to `CopyPixelsToTexture2D` static method for test isolation.  
 **B4.** Add size-change handling to `UpdateTexture`: destroy + recreate if `width != tex2d.width || height != tex2d.height`.  
@@ -489,9 +490,9 @@ Commit: `test: add layer 1+2 tests and diagnostics struct`
 
 Commit: `refactor(texture): separate owned vs external textures, harden update path`
 
-### Phase C â€” Crash resilience
+### Phase C — Crash resilience
 
-**C1.** Wrap `DoUpdate` body in `try/catch(Exception e)` â€” on catch, log error + `enabled = false`. Prevents cascading per-frame crash spam.  
+**C1.** Wrap `DoUpdate` body in `try/catch(Exception e)` — on catch, log error + `enabled = false`. Prevents cascading per-frame crash spam.  
 ```csharp
 internal void DoUpdate(CommandBuffer buffer)
 {
@@ -513,11 +514,11 @@ if (!version.Contains("1.92"))
     Debug.LogWarning($"[UImGui] Expected ImGui 1.92.x, got {version}. Close Unity and recopy cimgui.dll.");
 #endif
 ```
-**C4.** Add `UImGuiUtility.SetCurrentContext(null)` null guard â€” already present but make explicit test for it.
+**C4.** Add `UImGuiUtility.SetCurrentContext(null)` null guard — already present but make explicit test for it.
 
-Commit: `feat: crash resilience â€” self-disable on exception, DLL version warning`
+Commit: `feat: crash resilience — self-disable on exception, DLL version warning`
 
-### Phase D â€” Plugin system refactor
+### Phase D — Plugin system refactor
 
 Replace the scattered `#if UIMGUI_ENABLE_*` blocks in `UImGuiUtility.cs` with a registration pattern:
 
@@ -559,13 +560,13 @@ Benefits:
 
 Commit: `refactor: plugin registration pattern replaces scattered #if blocks`
 
-### Phase E â€” README + Samples
+### Phase E — README + Samples
 
-See Â§12 and Â§13. Update README.md and add sample scenes after architecture is stable.
+See §12 and §13. Update README.md and add sample scenes after architecture is stable.
 
-### Phase F â€” Performance pass
+### Phase F — Performance pass
 
-Apply short/medium-term items from Â§10 after all tests are green.
+Apply short/medium-term items from §10 after all tests are green.
 
 ### Branch merge criteria
 
@@ -584,7 +585,7 @@ After any architecture or API change, update these README sections:
 | Section | Trigger |
 |---------|---------|
 | Feature snapshot table | New optional library added or changed |
-| Quick start â€” URP setup | `EnsureRenderFeatureRegistered` behavior changes |
+| Quick start — URP setup | `EnsureRenderFeatureRegistered` behavior changes |
 | Optional integrations | Any `UIMGUI_ENABLE_*` define added, removed, or status change |
 | Textures and images | `GetTextureId` / `GetSpriteInfo` API changes |
 | Render pipeline setup | URP version breakpoints added |
@@ -597,7 +598,7 @@ After any architecture or API change, update these README sections:
 - [ ] Document `VectorExtensions` usage and when to use `AsNumerics()` / `AsUnity()`.
 - [ ] Keep `Font Atlas` marked as WIP until dedicated sample + validation is complete.
 - [ ] Add troubleshooting entry: "Close Unity before copying native DLLs on Windows."
-- [ ] Add note: `FontAtlasConfigAsset` is optional â€” default font renders without it.
+- [ ] Add note: `FontAtlasConfigAsset` is optional — default font renders without it.
 - [ ] Update optional library versions in features table.
 - [ ] Add `feat/new-architecture` migration notes once merged.
 - [ ] Add cimgui ecosystem link: `https://github.com/orgs/cimgui/repositories`.
@@ -611,13 +612,13 @@ All samples live in `Sample/`. Each must be self-contained and enable/disable cl
 
 ### Existing
 
-- `ShowDemoWindow.cs` â€” calls `ImGui.ShowDemoWindow()` and demonstrates each optional library.
+- `ShowDemoWindow.cs` — calls `ImGui.ShowDemoWindow()` and demonstrates each optional library.
 
 ### Add
 
 | Sample | Class name | What it demonstrates |
 |--------|------------|----------------------|
-| Basic window | `SampleBasicWindow.cs` | `Begin`/`End`, text, button, checkbox, slider â€” zero optional deps |
+| Basic window | `SampleBasicWindow.cs` | `Begin`/`End`, text, button, checkbox, slider — zero optional deps |
 | Texture display | `SampleTexture.cs` | `UImGuiUtility.GetTextureId`, `ImGui.Image`, `ImGui.ImageButton` |
 | Custom font | `SampleCustomFont.cs` | `FontCustomInitializer` event, `AddFontFromFileTTF` pattern |
 | Font atlas (WIP) | `SampleFontAtlasNewClearMincho.cs` | Font atlas flow using `NewClear-mincho.ttf` with graceful missing-file warning |
@@ -636,7 +637,7 @@ void OnDisable() => UImGuiUtility.Layout -= OnLayout;
 void OnLayout(UImGui _) { /* ImGui calls here */ }
 ```
 
-No scene setup logic in `Awake`/`Start` â€” samples wire themselves to the global layout event.
+No scene setup logic in `Awake`/`Start` — samples wire themselves to the global layout event.
 
 ### ShowDemoWindow coverage rule
 
@@ -652,7 +653,7 @@ Loaded `cimgui.dll` is missing the expected symbol.
 
 | Cause | Fix |
 |-------|-----|
-| Old DLL cached â€” copied while Unity was open | Close Unity, recopy, reopen |
+| Old DLL cached — copied while Unity was open | Close Unity, recopy, reopen |
 | `defineConstraints` on meta blocks the DLL | Reset `defineConstraints: []` in meta |
 | Version mismatch between managed and native | Verify file sizes; update matched pair |
 
@@ -660,9 +661,9 @@ Loaded `cimgui.dll` is missing the expected symbol.
 
 Wrapper around an inner exception. Expand in Console or `Editor.log`.
 
-- If inner = `EntryPointNotFoundException` â†’ fix native DLL.
-- If inner = texture-not-found Assert â†’ verify `UpdateTextures` runs before `RenderDrawData`.
-- If inner = `NullReferenceException` in render func â†’ verify camera is assigned and not null.
+- If inner = `EntryPointNotFoundException` → fix native DLL.
+- If inner = texture-not-found Assert → verify `UpdateTextures` runs before `RenderDrawData`.
+- If inner = `NullReferenceException` in render func → verify camera is assigned and not null.
 
 ### Text missing, widgets visible
 
@@ -674,7 +675,7 @@ Wrapper around an inner exception. Expand in Console or `Editor.log`.
 
 ### Crash inside `igNewFrame` / `igWindowRectRelToAbs`
 
-DLL ABI mismatch â€” almost always wrong native binary in memory.
+DLL ABI mismatch — almost always wrong native binary in memory.
 
 1. Disable all optional plugins.
 2. Close Unity completely.

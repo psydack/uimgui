@@ -93,6 +93,7 @@ namespace UImGui
 		private bool _isChangingCamera = false;
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
+		public Camera Camera => _camera;
 
 		#region Events
 		public event System.Action<UImGui> Layout;

@@ -11,12 +11,18 @@ namespace UImGui.Renderer
 
 		protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
 		{
-			_uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
+			_uimguis = null;
 		}
 
 		protected override void Execute(CustomPassContext context)
 		{
 			if (!Application.isPlaying) return;
+
+			if (_uimguis == null || _uimguis.Length == 0)
+			{
+				_uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
+			}
+
 			if (_uimguis == null) return;
 
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
@@ -24,22 +30,18 @@ namespace UImGui.Renderer
 				var uimgui = _uimguis[uindex];
 
 				if (!uimgui || !uimgui.enabled) continue;
+				if (uimgui.Camera != context.hdCamera.camera) continue;
 
 				uimgui.DoUpdate(context.cmd);
-
-#if UNITY_EDITOR
-				// Only draw gizmos when NOT in Game view to avoid leaking into final output (issues #67, #54)
-				if (context.hdCamera.camera.cameraType != CameraType.Game)
-				{
-					context.renderContext.DrawGizmos(context.hdCamera.camera, GizmoSubset.PostImageEffects);
-				}
-#endif
 			}
 		}
 
 		protected override bool executeInSceneView => false;
 
-		protected override void Cleanup() { }
+		protected override void Cleanup()
+		{
+			_uimguis = null;
+		}
 	}
 }
 #endif

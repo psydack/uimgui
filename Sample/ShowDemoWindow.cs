@@ -21,6 +21,15 @@ namespace UImGui
 {
 	public class ShowDemoWindow : MonoBehaviour
 	{
+		[SerializeField]
+		private bool _showHdrpStatus = true;
+		[SerializeField]
+		private bool _showHdrpSetupHelp = true;
+		[SerializeField]
+		private bool _showHdrpMotionBlurCheck = true;
+		[SerializeField]
+		private bool _showFontAtlasWip = true;
+
 #if UIMGUI_ENABLE_IMPLOT
 		[SerializeField]
 		float[] _barValues = Enumerable.Range(1, 10).Select(x => (x * x) * 1.0f).ToArray();
@@ -71,6 +80,11 @@ namespace UImGui
 
 		private void OnLayout(UImGui uImGui)
 		{
+			DrawHdrpStatusSnippet();
+			DrawHdrpSetupSnippet();
+			DrawHdrpMotionBlurSnippet();
+			DrawFontAtlasWipSnippet();
+
 #if UIMGUI_ENABLE_IMPLOT
 			if (ImGui.Begin("Plot Window Sample"))
 			{
@@ -172,6 +186,63 @@ namespace UImGui
 #endif
 
 			ImGui.ShowDemoWindow();
+		}
+
+		private void DrawHdrpStatusSnippet()
+		{
+			if (!ImGui.Begin("HDRP Status", ref _showHdrpStatus))
+			{
+				ImGui.End();
+				return;
+			}
+
+#if HAS_HDRP
+			ImGui.Text("HDRP support: enabled in this build.");
+#else
+			ImGui.Text("HDRP support: not enabled in this build.");
+#endif
+			ImGui.Text("Expected: no duplicate UI across HDRP cameras.");
+			ImGui.End();
+		}
+
+		private void DrawHdrpSetupSnippet()
+		{
+			if (!ImGui.Begin("HDRP Setup Help", ref _showHdrpSetupHelp))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.BulletText("1. Add a Custom Pass Volume.");
+			ImGui.BulletText("2. Add DearImGuiPass.");
+			ImGui.BulletText("3. Assign the target camera on UImGui.");
+			ImGui.End();
+		}
+
+		private void DrawHdrpMotionBlurSnippet()
+		{
+			if (!ImGui.Begin("HDRP Motion Blur Check", ref _showHdrpMotionBlurCheck))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.Text("Enable motion blur and confirm no ImGui ghost lines.");
+			ImGui.End();
+		}
+
+		private void DrawFontAtlasWipSnippet()
+		{
+			if (!ImGui.Begin("Font Atlas (WIP)", ref _showFontAtlasWip))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.Text("Example font: NewClear-mincho.ttf");
+			ImGui.Text("Path: Assets/StreamingAssets/NewClear-mincho.ttf");
+			ImGui.Text("Status: WIP, still under stabilization.");
+			ImGui.End();
 		}
 
 #if UIMGUI_ENABLE_IMGUIZMO

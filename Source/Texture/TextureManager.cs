@@ -277,7 +277,7 @@ namespace UImGui.Texture
 				string fontPath = System.IO.Path.Combine(Application.streamingAssetsPath, fontDefinition.Path);
 				if (!System.IO.File.Exists(fontPath))
 				{
-					Debug.Log($"Font file not found: {fontPath}");
+					Debug.LogWarning($"[UImGui] Font file not found: {fontPath}. Check that the file is in StreamingAssets.");
 					continue;
 				}
 

@@ -5,6 +5,7 @@ namespace UImGui
 	[Flags]
 	public enum ScriptGlyphRanges
 	{
+		None = 0,
 		Default = 1 << 0,
 		Cyrillic = 1 << 1,
 		Japanese = 1 << 2,
