@@ -1,4 +1,4 @@
-﻿using UnityEngine.Rendering;
+using UnityEngine.Rendering;
 #if HAS_URP
 using UnityEngine.Rendering.Universal;
 using UnityEngine;
@@ -21,21 +21,20 @@ namespace UImGui.Renderer
 #if HAS_URP_17
 			public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
 			{
-				if (uImGui == null) return;
+				if (commandBuffer == null) return;
 
 				using var builder = renderGraph.AddUnsafePass<PassData>("UImGui CommandBuffer Pass", out var passData);
-				passData.UImGui = uImGui;
+				passData.CommandBuffer = commandBuffer;
 				builder.AllowPassCulling(false);
 				builder.SetRenderFunc((PassData data, UnsafeGraphContext ctx) =>
 				{
-					var nativeCommandBuffer = CommandBufferHelpers.GetNativeCommandBuffer(ctx.cmd);
-					data.UImGui.DoUpdate(nativeCommandBuffer);
+					Graphics.ExecuteCommandBuffer(data.CommandBuffer);
 				});
 			}
 
 			private class PassData
 			{
-				public global::UImGui.UImGui UImGui;
+				public CommandBuffer CommandBuffer;
 			}
 #else
 			public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)

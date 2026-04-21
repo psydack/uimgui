@@ -373,20 +373,29 @@ Other symbols:
 
 VectorExtensions
 -------
-`UImGui.VectorExtensions` provides zero-cost `ref` conversions between `UnityEngine` and `System.Numerics` vector types via `Unsafe.As<>`. Useful when writing plugins that mix Unity vectors with ImGui/ImPlot APIs:
+`UImGui.VectorExtensions` provides zero-cost conversions between `UnityEngine` and `System.Numerics` vector types via `Unsafe.As<>`. Useful when writing plugins that mix Unity vectors with ImGui/ImPlot APIs.
+
+Use the bridge only at the Unity boundary:
 
 ```cs
 using UImGui;
 
 UnityEngine.Vector2 pos = transform.position;
-ImGui.SetNextWindowPos(ref pos.AsNumerics());
+System.Numerics.Vector2 imguiPos = pos.ToNumerics();
+ImGui.SetNextWindowPos(imguiPos);
 
 System.Numerics.Vector2 numPos = ...;
-UnityEngine.Vector2 unityPos = ref numPos.AsUnity();
+UnityEngine.Vector2 unityPos = numPos.ToUnity();
 ```
 
-Supported: `Vector2`, `Vector3`, `Vector4`, `Color` ↔ `System.Numerics.Vector4`.
+Prefer the zero-copy ref form where the target API accepts the value by `ref` or where you already have a local variable:
 
+```cs
+UnityEngine.Vector2 pos = transform.position;
+ImGui.SetNextWindowPos(pos.AsNumerics());
+```
+
+Supported: `Vector2`, `Vector3`, `Vector4`, `Color` <-> `System.Numerics.Vector4`.
 Known issues
 -------
 

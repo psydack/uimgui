@@ -63,10 +63,11 @@ namespace UImGui
 #if UIMGUI_ENABLE_IMPLOT
 			if (ImGui.Begin("Plot Window Sample"))
 			{
-				ImGui.SetNextWindowSize(Vector2.one * 200, ImGuiCond.Once);
+				var initialWindowSize = UnityEngine.Vector2.one * 200;
+				ImGui.SetNextWindowSize(initialWindowSize.AsNumerics(), ImGuiCond.Once);
 				ImPlot.BeginPlot("Plot test");
 				ImPlot.PlotBars("My Bar Plot", ref _barValues[0], _barValues.Length + 1);
-				ImPlot.PlotLine("My Line Plot", ref _xValues[0], ref _yValues[0], _xValues.Length, 0, 0);
+				ImPlot.PlotLine("My Line Plot", ref _yValues[0], _yValues.Length);
 				ImPlot.EndPlot();
 
 				ImGui.End();
@@ -76,7 +77,8 @@ namespace UImGui
 #if UIMGUI_ENABLE_IMNODES
 			if (ImGui.Begin("Nodes Window Sample"))
 			{
-				ImGui.SetNextWindowSize(Vector2.one * 300, ImGuiCond.Once);
+				var initialWindowSize = UnityEngine.Vector2.one * 300;
+				ImGui.SetNextWindowSize(initialWindowSize.AsNumerics(), ImGuiCond.Once);
 				imnodes.BeginNodeEditor();
 				imnodes.BeginNode(1);
 

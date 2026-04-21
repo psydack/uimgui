@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
+using Num = System.Numerics;
 
 namespace UImGui.Renderer
 {
@@ -51,8 +52,8 @@ namespace UImGui.Renderer
 		public void Initialize(ImGuiIOPtr io)
 		{
 			io.SetBackendRendererName("Unity Mesh");
-			// Supports ImDrawCmd::VtxOffset to output large meshes while still using 16-bits indices.
-			io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+			// Supports large meshes and the explicit texture backend expected by current ImGui.NET/cimgui.
+			io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset | ImGuiBackendFlags.RendererHasTextures;
 
 			_material = new Material(_shader)
 			{
@@ -85,7 +86,7 @@ namespace UImGui.Renderer
 
 		public void RenderDrawLists(CommandBuffer commandBuffer, ImDrawDataPtr drawData)
 		{
-			var framebufferOutputSize = drawData.DisplaySize * drawData.FramebufferScale;
+			var framebufferOutputSize = (drawData.DisplaySize * drawData.FramebufferScale).ToUnity();
 
 			// Avoid rendering when minimized.
 			if (framebufferOutputSize.x <= 0f || framebufferOutputSize.y <= 0f || drawData.TotalVtxCount == 0) return;
@@ -173,10 +174,10 @@ namespace UImGui.Renderer
 		private void CreateDrawCommands(CommandBuffer commandBuffer, ImDrawDataPtr drawData, Vector2 framebufferOutputSize)
 		{
 			IntPtr prevTextureId = IntPtr.Zero;
-			var clipOffset = new Vector4(drawData.DisplayPos.x, drawData.DisplayPos.y,
-				drawData.DisplayPos.x, drawData.DisplayPos.y);
-			var clipScale = new Vector4(drawData.FramebufferScale.x, drawData.FramebufferScale.y,
-				drawData.FramebufferScale.x, drawData.FramebufferScale.y);
+			var clipOffset = new Num.Vector4(drawData.DisplayPos.X, drawData.DisplayPos.Y,
+				drawData.DisplayPos.X, drawData.DisplayPos.Y);
+			var clipScale = new Num.Vector4(drawData.FramebufferScale.X, drawData.FramebufferScale.Y,
+				drawData.FramebufferScale.X, drawData.FramebufferScale.Y);
 
 			commandBuffer.SetViewport(new Rect(0f, 0f, framebufferOutputSize.x, framebufferOutputSize.y));
 			commandBuffer.SetViewProjectionMatrices(
@@ -198,14 +199,19 @@ namespace UImGui.Renderer
 					else
 					{
 						// Project scissor rectangle into framebuffer space and skip if fully outside.
-						var clipSize = drawCmd.ClipRect - clipOffset;
-						var clip = Vector4.Scale(clipSize, clipScale);
+						var clipRect = drawCmd.ClipRect;
+						var clip = new Num.Vector4(
+							(clipRect.X - clipOffset.X) * clipScale.X,
+							(clipRect.Y - clipOffset.Y) * clipScale.Y,
+							(clipRect.Z - clipOffset.Z) * clipScale.Z,
+							(clipRect.W - clipOffset.W) * clipScale.W);
 
-						if (clip.x >= framebufferOutputSize.x || clip.y >= framebufferOutputSize.y || clip.z < 0f || clip.w < 0f) continue;
+						if (clip.X >= framebufferOutputSize.x || clip.Y >= framebufferOutputSize.y || clip.Z < 0f || clip.W < 0f) continue;
 
-						if (prevTextureId != drawCmd.TextureId)
+						var textureId = drawCmd.GetTexID();
+						if (prevTextureId != textureId)
 						{
-							prevTextureId = drawCmd.TextureId;
+							prevTextureId = textureId;
 
 							// TODO: Implement ImDrawCmdPtr.GetTexID().
 							bool hasTexture = _textureManager.TryGetTexture(prevTextureId, out UnityEngine.Texture texture);
@@ -214,7 +220,7 @@ namespace UImGui.Renderer
 							_materialProperties.SetTexture(_textureID, texture);
 						}
 
-						commandBuffer.EnableScissorRect(new Rect(clip.x, framebufferOutputSize.y - clip.w, clip.z - clip.x, clip.w - clip.y)); // Invert y.
+						commandBuffer.EnableScissorRect(new Rect(clip.X, framebufferOutputSize.y - clip.W, clip.Z - clip.X, clip.W - clip.Y)); // Invert y.
 						commandBuffer.DrawMesh(_mesh, Matrix4x4.identity, _material, subMeshOffset, -1, _materialProperties);
 					}
 				}

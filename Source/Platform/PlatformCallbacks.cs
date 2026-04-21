@@ -50,14 +50,12 @@ namespace UImGui.Platform
 
 		public void Assign(ImGuiIOPtr io)
 		{
-			io.SetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(_setClipboardText);
-			io.GetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(_getClipboardText);
+			// ImGui.NET 1.91 no longer exposes clipboard function pointers through ImGuiIOPtr.
+			// Keep callback registration as a no-op so older integration points still compile.
 		}
 
 		public void Unset(ImGuiIOPtr io)
 		{
-			io.SetClipboardTextFn = IntPtr.Zero;
-			io.GetClipboardTextFn = IntPtr.Zero;
 		}
 
 		public static GetClipboardTextSafeCallback GetClipboardText

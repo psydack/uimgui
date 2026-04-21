@@ -24,9 +24,7 @@ namespace UImGui.Editor
 		private SerializedProperty _cursorShapes;
 		private readonly StringBuilder _messages = new StringBuilder();
 
-		private bool _isUsingImNodes = true;
-		private bool _isUsingImGuizmo = true;
-		private bool _isUsingImPlot = true;
+		private bool _showPluginFeatures = true;
 
 		public override void OnInspectorGUI()
 		{
@@ -82,29 +80,21 @@ namespace UImGui.Editor
 			_shaders = serializedObject.FindProperty("_shaders");
 			_style = serializedObject.FindProperty("_style");
 			_cursorShapes = serializedObject.FindProperty("_cursorShapes");
-
-#if UIMGUI_REMOVE_IMNODES
-			_isUsingImNodes = false;
-#endif
-#if UIMGUI_REMOVE_IMGUIZMO
-			_isUsingImGuizmo = false;
-#endif
-#if UIMGUI_REMOVE_IMPLOT
-			_isUsingImPlot = false;
-#endif
 		}
 
 		private void CheckRequirements()
 		{
-			string textImGui = $"ImGUI: {ImGui.GetVersion()}";
-			string textImNodes = $"ImNodes: { (_isUsingImNodes ? "0.4 - 2021-07-09" : "disabled") }";
-			string textImGuizmo = $"ImGuizmo: { (_isUsingImGuizmo ? "?? - 2021-07-09" : "disabled") }";
-			string textImPlot = $"ImPlot: { (_isUsingImPlot ? "0.10 - 2021-07-09" : "disabled") }";
-
-			EditorGUILayout.LabelField(textImGui);
-			EditorGUILayout.LabelField(textImNodes);
-			EditorGUILayout.LabelField(textImGuizmo);
-			EditorGUILayout.LabelField(textImPlot);
+			EditorGUILayout.LabelField($"ImGui: {ImGui.GetVersion()}");
+			_showPluginFeatures = EditorGUILayout.Foldout(_showPluginFeatures, "Plugin Features", true);
+			if (_showPluginFeatures)
+			{
+				EditorGUI.indentLevel++;
+				foreach (var feature in PluginFeatures.Features)
+				{
+					EditorGUILayout.LabelField(feature.Name, PluginFeatures.IsEnabled(feature) ? "Enabled" : "Disabled");
+				}
+				EditorGUI.indentLevel--;
+			}
 			EditorGUILayout.Space();
 
 			_messages.Clear();
@@ -122,11 +112,6 @@ namespace UImGui.Editor
 			if (!PlatformUtility.IsAvailable((InputType)_platform.enumValueIndex))
 			{
 				_messages.AppendLine("Platform not available.");
-			}
-			else if ((InputType)_platform.enumValueIndex != InputType.InputSystem &&
-				(configFlags.intValue & (int)ImGuiConfigFlags.NavEnableSetMousePos) != 0)
-			{
-				_messages.AppendLine("Will not work NavEnableSetPos with InputManager.");
 			}
 
 			if ((configFlags.intValue & (int)ImGuiConfigFlags.ViewportsEnable) != 0)

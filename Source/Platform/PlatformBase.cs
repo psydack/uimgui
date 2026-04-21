@@ -1,8 +1,7 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System;
 using UImGui.Assets;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 #if HAS_URP
 using UnityEngine.Rendering.Universal;
@@ -33,7 +32,7 @@ namespace UImGui.Platform
 			io.SetBackendPlatformName("Unity Input System");
 			io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors;
 
-			if ((config.ImGuiConfig & ImGuiConfigFlags.NavEnableSetMousePos) != 0)
+			if (io.ConfigNavMoveSetMousePos)
 			{
 				io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
 				io.WantSetMousePos = true;
@@ -50,7 +49,6 @@ namespace UImGui.Platform
 			}
 
 			_callbacks.Assign(io);
-			io.ClipboardUserData = IntPtr.Zero;
 
 			if (_iniSettings != null)
 			{
@@ -63,8 +61,6 @@ namespace UImGui.Platform
 
 		public virtual void PrepareFrame(ImGuiIOPtr io, Rect displayRect)
 		{
-			Assert.IsTrue(io.Fonts.IsBuilt(), "Font atlas not built! Generally built by the renderer. Missing call to renderer NewFrame() function?");
-
 			float framebufferScale = 1f;
 #if HAS_URP
 			if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urpAsset)
@@ -72,8 +68,10 @@ namespace UImGui.Platform
 				framebufferScale = urpAsset.renderScale;
 			}
 #endif
-			io.DisplaySize = displayRect.size;
-			io.DisplayFramebufferScale = Vector2.one * framebufferScale; // accounts for URP render scale
+			var displaySize = displayRect.size;
+			var framebufferScaleVector = Vector2.one * framebufferScale;
+			io.DisplaySize = displaySize.AsNumerics();
+			io.DisplayFramebufferScale = framebufferScaleVector.AsNumerics(); // accounts for URP render scale
 
 			io.DeltaTime = Time.unscaledDeltaTime;
 

@@ -34,7 +34,7 @@ namespace UImGui
 				ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext(),
 #endif
 #if UIMGUI_ENABLE_IMNODES
-				ImNodesContext = new IntPtr(imnodesNET.imnodes.CreateContext()),
+				ImNodesContext = imnodesNET.imnodes.CreateContext(),
 #endif
 #if UIMGUI_ENABLE_IMNODES_R
 				ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext(),

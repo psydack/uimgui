@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System;
 using UnityEngine;
 
@@ -92,10 +92,9 @@ namespace UImGui
 			io.KeyRepeatDelay = KeyRepeatDelay;
 			io.KeyRepeatRate = KeyRepeatRate;
 
-			io.FontGlobalScale = FontGlobalScale;
 			io.FontAllowUserScaling = FontAllowUserScaling;
 
-			io.DisplayFramebufferScale = DisplayFramebufferScale;
+			io.DisplayFramebufferScale = DisplayFramebufferScale.AsNumerics();
 			io.MouseDrawCursor = MouseDrawCursor;
 
 			io.ConfigDockingNoSplit = ConfigDockingNoSplit;
@@ -121,10 +120,11 @@ namespace UImGui
 			KeyRepeatDelay = io.KeyRepeatDelay;
 			KeyRepeatRate = io.KeyRepeatRate;
 
-			FontGlobalScale = io.FontGlobalScale;
+			FontGlobalScale = 1f;
 			FontAllowUserScaling = io.FontAllowUserScaling;
 
-			DisplayFramebufferScale = io.DisplayFramebufferScale;
+			var displayFramebufferScale = io.DisplayFramebufferScale;
+			DisplayFramebufferScale = displayFramebufferScale.AsUnity();
 			MouseDrawCursor = io.MouseDrawCursor;
 
 			ConfigDockingNoSplit = io.ConfigDockingNoSplit;

@@ -46,7 +46,7 @@ namespace UImGui.Platform
                 mouse.WarpCursorPosition(Utils.ImGuiToScreen(io.MousePos));
             }
 
-            io.MousePos = Utils.ScreenToImGui(mouse.position.ReadValue());
+            io.MousePos = Utils.ScreenToImGuiNumerics(mouse.position.ReadValue());
 
             var mouseScroll = mouse.scroll.ReadValue();
             io.MouseWheel = mouseScroll.y;

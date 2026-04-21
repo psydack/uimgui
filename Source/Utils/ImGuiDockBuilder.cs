@@ -34,10 +34,10 @@ namespace UImGui
 			=> igDockBuilderRemoveNode(nodeId);
 
 		public static void SetNodePos(uint nodeId, Vector2 pos)
-			=> igDockBuilderSetNodePos(nodeId, new System.Numerics.Vector2(pos.x, pos.y));
+			=> igDockBuilderSetNodePos(nodeId, pos.AsNumerics());
 
 		public static void SetNodeSize(uint nodeId, Vector2 size)
-			=> igDockBuilderSetNodeSize(nodeId, new System.Numerics.Vector2(size.x, size.y));
+			=> igDockBuilderSetNodeSize(nodeId, size.AsNumerics());
 
 		public static uint SplitNode(uint nodeId, ImGuiDir splitDir, float sizeRatioForDir, out uint outIdAtDir, out uint outIdAtOppositeDir)
 		{

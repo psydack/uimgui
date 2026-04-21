@@ -22,10 +22,23 @@ namespace UImGui.Texture
 
 		private readonly HashSet<IntPtr> _allocatedGlyphRangeArrays = new HashSet<IntPtr>();
 
+		public bool HasValidAtlas => _atlasTexture != null;
+
 		public unsafe void Initialize(ImGuiIOPtr io)
 		{
 			var atlasPtr = io.Fonts;
-			atlasPtr.GetTexDataAsRGBA32(out byte* pixels, out int width, out int height, out int bytesPerPixel);
+			atlasPtr.RendererHasTextures = true;
+			var texData = atlasPtr.TexData;
+			byte* pixels = (byte*)texData.Pixels;
+			int width = texData.Width;
+			int height = texData.Height;
+			int bytesPerPixel = texData.BytesPerPixel;
+
+			if (pixels == null || width <= 0 || height <= 0 || bytesPerPixel <= 0)
+			{
+				Debug.LogError("[UImGui] Font atlas texture data is invalid. ImGui font atlas was not built.");
+				return;
+			}
 
 			_atlasTexture = new Texture2D(width, height, TextureFormat.RGBA32, false, false)
 			{
@@ -65,8 +78,20 @@ namespace UImGui.Texture
 
 		public void PrepareFrame(ImGuiIOPtr io)
 		{
+			if (_atlasTexture == null)
+			{
+				Initialize(io);
+			}
+
+			if (_atlasTexture == null)
+			{
+				return;
+			}
+
+			io.Fonts.RendererHasTextures = true;
 			IntPtr id = RegisterTexture(_atlasTexture);
-			io.Fonts.SetTexID(id);
+			io.Fonts.TexData.SetTexID(id);
+			io.Fonts.TexData.SetStatus(ImTextureStatus.OK);
 		}
 
 		public bool TryGetTexture(IntPtr id, out UTexture texture)
@@ -123,7 +148,7 @@ namespace UImGui.Texture
 
 		public void BuildFontAtlas(ImGuiIOPtr io, in FontAtlasConfigAsset settings, FontInitializerEvent custom)
 		{
-			if (io.Fonts.IsBuilt())
+			if (io.Fonts.TexIsBuilt)
 			{
 				DestroyFontAtlas(io);
 			}
@@ -141,10 +166,9 @@ namespace UImGui.Texture
 				}
 				else
 				{
-					io.Fonts.AddFontDefault();
+					io.Fonts.AddFontDefaultBitmap();
 				}
 
-				io.Fonts.Build();
 				return;
 			}
 
@@ -180,10 +204,9 @@ namespace UImGui.Texture
 
 			if (io.Fonts.Fonts.Size == 0)
 			{
-				io.Fonts.AddFontDefault();
+				io.Fonts.AddFontDefaultBitmap();
 			}
 
-			io.Fonts.Build();
 		}
 
 		public unsafe void DestroyFontAtlas(ImGuiIOPtr io)

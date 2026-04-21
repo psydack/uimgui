@@ -261,10 +261,6 @@ namespace UImGui
 		{
 			if (RenderUtility.IsUsingHDRP())
 				return; // skip update call in hdrp
-#if HAS_URP_17 && HAS_URP
-			if (RenderUtility.IsUsingURP())
-				return; // URP RenderGraph records and renders from RenderImGui.RecordRenderGraph.
-#endif
 			DoUpdate(this.CommandBuffer);
 		}
 
@@ -275,11 +271,14 @@ namespace UImGui
 
 			Constants.PrepareFrameMarker.Begin(this);
 			_context.TextureManager.PrepareFrame(io);
+			if (!_context.TextureManager.HasValidAtlas)
+			{
+				Debug.LogError("[UImGui] Skipping frame because the font atlas texture is invalid.");
+				Constants.PrepareFrameMarker.End();
+				return;
+			}
 			_platform.PrepareFrame(io, _camera.pixelRect);
 			ImGui.NewFrame();
-#if UIMGUI_ENABLE_IMGUIZMO
-			ImGuizmoNET.ImGuizmo.BeginFrame();
-#endif
 			Constants.PrepareFrameMarker.End();
 
 			Constants.LayoutMarker.Begin(this);
