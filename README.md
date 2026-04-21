@@ -325,38 +325,77 @@ For UImGui users, the practical interpretation is simple:
 - **Docking is supported**
 - **Multi-viewports are not supported in the current Unity integration**
 
-### Mental model
+---
 
-The easiest way to evaluate the package is to think in three layers:
+## Layered mental model
 
-1. **Unity integration layer**
-   - render pipelines
-   - input backends
-   - IL2CPP
-   - renderer choice
-   - texture bridge
+The easiest way to evaluate UImGui is as a layered package:
 
-2. **Dear ImGui core layer**
-   - windows
-   - layout
-   - widgets
-   - menus
-   - tables
-   - drag and drop
-   - draw API
-   - fonts
-   - docking
+- **Unity integration** at the base, responsible for engine-specific rendering and platform concerns.
+- **Dear ImGui core** in the middle, providing the immediate-mode UI model and main runtime features.
+- **Optional extensions** on top, enabled only when your project needs them.
 
-3. **Optional extension layer**
-   - ImPlot
-   - ImNodes
-   - ImGuizmo
-   - ImPlot3D
-   - ImNodes-R
-   - imGuIZMO.quat
-   - CimCTE
+```mermaid
+%%{init: {
+  "theme": "base",
+  "flowchart": {
+    "htmlLabels": true,
+    "nodeSpacing": 22,
+    "rankSpacing": 26,
+    "curve": "linear"
+  }
+}}%%
 
-That is clearer than comparing the package against an older Unity integration.
+flowchart TB
+
+    subgraph EXT["Optional extensions"]
+        direction LR
+        IP["ImPlot"]
+        IN["ImNodes"]
+        IG["ImGuizmo"]
+        IP3["ImPlot3D"]
+        INR["ImNodes-R"]
+        IQ["imGuIZMO.quat"]
+        CT["CimCTE"]
+    end
+
+    subgraph CORE["Dear ImGui core"]
+        direction LR
+        W["Windows"]
+        L["Layout"]
+        WG["Widgets"]
+        M["Menus and popups"]
+        T["Tables"]
+        DD["Drag and drop"]
+        DA["Draw API"]
+        F["Fonts"]
+        DK["Docking"]
+    end
+
+    subgraph UNITY["Unity integration"]
+        direction LR
+        RP["Render pipelines<br/>URP, HDRP, Built-in (legacy)"]
+        IB["Input backends<br/>Input Manager, Input System"]
+        IL["IL2CPP"]
+        RC["Renderer choice<br/>Mesh, Procedural"]
+        TB["Texture bridge"]
+    end
+
+    EXT --> CORE
+    CORE --> UNITY
+
+    style EXT fill:#16a6c9,stroke:#0f7f9a,stroke-width:2px,color:#ffffff
+    style CORE fill:#7dbb42,stroke:#5f9530,stroke-width:2px,color:#ffffff
+    style UNITY fill:#f28c28,stroke:#c96d12,stroke-width:2px,color:#ffffff
+
+    classDef ext fill:#1189a6,stroke:#1189a6,color:#ffffff
+    classDef core fill:#679e35,stroke:#679e35,color:#ffffff
+    classDef unity fill:#d97611,stroke:#d97611,color:#ffffff
+
+    class IP,IN,IG,IP3,INR,IQ,CT ext
+    class W,L,WG,M,T,DD,DA,F,DK core
+    class RP,IB,IL,RC,TB unity
+```
 
 ---
 
