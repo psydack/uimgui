@@ -1,4 +1,4 @@
-﻿using Unity.Profiling;
+using Unity.Profiling;
 
 namespace UImGui
 {
@@ -19,5 +19,9 @@ namespace UImGui
 		internal static readonly ProfilerMarker CreateDrawCommandsProceduralMarker = new ProfilerMarker("UImGui.RendererProcedural.CreateDrawCommands");
 
 		internal static readonly string ExecuteDrawCommandsMarker = "UImGui.ExecuteDrawCommands";
+
+		internal static readonly ProfilerMarker TextureUploadMarker = new ProfilerMarker("UImGui.TextureManager.UploadTexture");
+		internal static readonly ProfilerMarker TextureUpdateMarker = new ProfilerMarker("UImGui.TextureManager.UpdateTexture");
+		internal static readonly ProfilerMarker TextureDestroyMarker = new ProfilerMarker("UImGui.TextureManager.DestroyTexture");
 	}
 }

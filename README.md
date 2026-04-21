@@ -403,29 +403,46 @@ flowchart TB
 
 UImGui uses **FreeType** as the default font loading path.
 
-You can customize the font atlas through the font initializer callback and your own font configuration.
-
 > Font atlas status: **WIP**.  
 > The workflow is usable, but still under stabilization and sample hardening.
 
+### Option A — FontAtlasConfigAsset (recommended)
+
+Create a `FontAtlasConfigAsset` via **Assets → Create → Dear ImGui → Font Atlas Configuration**, add font entries, and assign it to the `UImGui` component's **Font Atlas Configuration** field.
+
+Font paths in the asset are **relative to `Application.streamingAssetsPath`**. Copy your `.ttf` / `.otf` files to `Assets/StreamingAssets/` in your project.
+
+**Quick start with the bundled sample font:**
+
+1. Copy `NewClear-mincho.ttf` from the package `Resources/` folder to your project's `Assets/StreamingAssets/`.
+2. Assign the `Sample/FontAtlasNewClearMincho` asset (included in the package) to the **Font Atlas Configuration** field on your `UImGui` component.
+3. Enter Play mode — the font atlas is built automatically with Default + Japanese glyph ranges.
+
+### Option B — Custom initializer callback
+
+Wire a method to the **Font Custom Initializer** field on the `UImGui` component:
+
 ```csharp
 using ImGuiNET;
+using UnityEngine;
 
 public static class MyFonts
 {
     public static unsafe void AddFonts(ImGuiIOPtr io)
     {
         io.Fonts.AddFontDefault();
-        io.Fonts.AddFontFromFileTTF("Assets/Fonts/NewClear-mincho.ttf", 18.0f);
+        // Path must be absolute or use Application.streamingAssetsPath at runtime.
+        string path = System.IO.Path.Combine(Application.streamingAssetsPath, "NewClear-mincho.ttf");
+        io.Fonts.AddFontFromFileTTF(path, 18.0f);
     }
 }
 ```
 
 Recommended approach:
 
-- keep font loading centralized
-- build the atlas at initialization time
-- avoid ad hoc runtime font mutations unless you know the lifecycle implications
+- keep font loading centralized in one initializer
+- build the atlas at initialization time, not during layout
+- avoid ad hoc runtime font mutations unless you understand the lifecycle implications
 - use `NewClear-mincho.ttf` as the reference sample font in this repository
 
 ---

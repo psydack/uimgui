@@ -18,12 +18,11 @@ namespace UImGui.Renderer
 		{
 			if (!Application.isPlaying) return;
 
-			if (_uimguis == null || _uimguis.Length == 0)
-			{
+			// Cache once per session; Cleanup() resets so the next Play re-discovers.
+			if (_uimguis == null)
 				_uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
-			}
 
-			if (_uimguis == null) return;
+			if (_uimguis == null || _uimguis.Length == 0) return;
 
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
 			{

@@ -39,7 +39,8 @@ namespace UImGui.Renderer
 		private readonly TextureManager _textureManager;
 		private readonly MaterialPropertyBlock _materialProperties;
 
-		private int _prevSubMeshCount = 1;  // number of sub meshes used previously
+		private int _prevSubMeshCount = 1;
+		private readonly List<SubMeshDescriptor> _subMeshDescriptors = new List<SubMeshDescriptor>(64);
 
 		public RendererMesh(ShaderResourcesAsset resources, TextureManager texManager)
 		{
@@ -122,10 +123,10 @@ namespace UImGui.Renderer
 			_mesh.SetVertexBufferParams(drawData.TotalVtxCount, _vertexAttributes);
 			_mesh.SetIndexBufferParams(drawData.TotalIdxCount, IndexFormat.UInt16);
 
-			//  Upload data into mesh.
 			int vertexOffset = 0;
 			int indexOffset = 0;
-			var descriptors = new List<SubMeshDescriptor>();
+			_subMeshDescriptors.Clear();
+			var descriptors = _subMeshDescriptors;
 
 			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
 			{

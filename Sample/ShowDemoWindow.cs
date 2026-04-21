@@ -22,11 +22,11 @@ namespace UImGui
 	public class ShowDemoWindow : MonoBehaviour
 	{
 		[SerializeField]
-		private bool _showHdrpStatus = true;
+		private bool _showHdrpStatus = false;
 		[SerializeField]
-		private bool _showHdrpSetupHelp = true;
+		private bool _showHdrpSetupHelp = false;
 		[SerializeField]
-		private bool _showHdrpMotionBlurCheck = true;
+		private bool _showHdrpMotionBlurCheck = false;
 		[SerializeField]
 		private bool _showFontAtlasWip = true;
 
@@ -240,7 +240,29 @@ namespace UImGui
 			}
 
 			ImGui.Text("Example font: NewClear-mincho.ttf");
-			ImGui.Text("Path: Assets/StreamingAssets/NewClear-mincho.ttf");
+			ImGui.Separator();
+
+			string fontPath = System.IO.Path.Combine(
+				UnityEngine.Application.streamingAssetsPath, "NewClear-mincho.ttf");
+			bool fontReady = System.IO.File.Exists(fontPath);
+
+			if (fontReady)
+			{
+				ImGui.TextColored(new System.Numerics.Vector4(0.2f, 1f, 0.2f, 1f), "Font found in StreamingAssets.");
+			}
+			else
+			{
+				ImGui.TextColored(new System.Numerics.Vector4(1f, 0.4f, 0.1f, 1f), "Font NOT found in StreamingAssets!");
+				ImGui.Spacing();
+				ImGui.TextWrapped("To enable the NewClear-mincho sample:");
+				ImGui.BulletText("1. Copy NewClear-mincho.ttf from the package Resources/ folder");
+				ImGui.BulletText("   to your project's Assets/StreamingAssets/ folder.");
+				ImGui.BulletText("2. Assign the FontAtlasNewClearMincho asset to the");
+				ImGui.BulletText("   UImGui component's Font Atlas Configuration field.");
+				ImGui.BulletText("3. Re-enter Play mode.");
+			}
+
+			ImGui.Spacing();
 			ImGui.Text("Status: WIP, still under stabilization.");
 			ImGui.End();
 		}

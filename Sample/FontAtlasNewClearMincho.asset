@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d229fe961e90a478d5b37aad1d4bdf, type: 3}
+  m_Name: FontAtlasNewClearMincho
+  m_EditorClassIdentifier:
+  RasterizerFlags: 0
+  Fonts:
+  - _fontAsset: {fileID: 0}
+    Path: NewClear-mincho.ttf
+    Config:
+      FontDataOwnedByAtlas: 1
+      FontNo: 0
+      SizeInPixels: 16
+      OversampleH: 3
+      OversampleV: 1
+      PixelSnapH: 0
+      GlyphExtraSpacing: {x: 0, y: 0}
+      GlyphOffset: {x: 0, y: 0}
+      GlyphMinAdvanceX: 0
+      GlyphMaxAdvanceX: 0
+      MergeMode: 0
+      FontBuilderFlags: 0
+      RasterizerMultiply: 1
+      EllipsisChar: "\0"
+      GlyphRanges: 5
+      CustomGlyphRanges: []

@@ -148,7 +148,7 @@ namespace UImGui
 				AddUnicodeRange(0x3040, 0x30FF);
 				AddUnicodeRange(0x31F0, 0x31FF);
 				AddUnicodeRange(0xFF66, 0xFF9F);
-				AddUnicodeRange(0x4E00, 0x9FFF);
+				AddUnicodeRange(0x4E00, 0x9FFF); // CJK base
 			}
 
 			if ((GlyphRanges & ScriptGlyphRanges.Korean) != 0)
@@ -172,18 +172,21 @@ namespace UImGui
 				AddUnicodeRange(0x1EA0, 0x1EF9);
 			}
 
+			// Chinese: only add CJK base if Japanese didn't already include it.
+			bool hasCjkBase = (GlyphRanges & ScriptGlyphRanges.Japanese) != 0;
+
 			if ((GlyphRanges & ScriptGlyphRanges.ChineseSimplified) != 0)
 			{
 				AddUnicodeRange(0x3000, 0x303F);
 				AddUnicodeRange(0x3400, 0x4DBF);
-				AddUnicodeRange(0x4E00, 0x9FFF);
+				if (!hasCjkBase) AddUnicodeRange(0x4E00, 0x9FFF);
 			}
 
 			if ((GlyphRanges & ScriptGlyphRanges.ChineseFull) != 0)
 			{
-				AddUnicodeRange(0x3000, 0x303F);
-				AddUnicodeRange(0x3400, 0x4DBF);
-				AddUnicodeRange(0x4E00, 0x9FFF);
+				if (!hasCjkBase) AddUnicodeRange(0x3000, 0x303F);
+				if ((GlyphRanges & ScriptGlyphRanges.ChineseSimplified) == 0) AddUnicodeRange(0x3400, 0x4DBF);
+				if (!hasCjkBase) AddUnicodeRange(0x4E00, 0x9FFF);
 				AddUnicodeRange(0xF900, 0xFAFF);
 			}
 
