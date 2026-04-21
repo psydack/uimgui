@@ -1,3 +1,54 @@
+#### 6.0.0 (2026-04-21)
+
+##### Build System / Dependencies
+
+*  update package version to 6.0.0 and refresh package metadata
+*  update Dear ImGui native/runtime binaries to 1.92.7
+*  add multi-platform native binaries (win-x86, win-x64, win-arm64, linux-x64, osx) for optional modules
+
+##### New Features
+
+*  add optional modules: ImPlot3D, ImNodes-R, ImGuizmoQuat, and CimCTE
+*  add `VectorExtensions` helpers for zero-copy Unity <-> `System.Numerics` conversions
+*  add `ImGuiDockBuilder` utility
+*  add sample `RenderImGui` and `SampleIni` assets
+*  add URP helper workflow for registering `RenderImGui` feature across renderers
+
+##### Bug Fixes
+
+*  fix Unity 6 compile issues
+*  fix Input Manager and Input System integration paths
+*  fix URP render pass flow (`RenderPassEvent`) and improve texture lifecycle/status handling
+*  fix frame bootstrap order by running `NewFrame` before atlas validation
+*  fix ImGuizmo and ImNodes-R integration details
+
+##### Documentation Changes
+
+*  expand README with directives, renderer guidance, vector conversion guidance, troubleshooting, and optional libs setup
+
+##### Commit List (origin/main..update/1.92.7)
+
+*  af2a454 remove unecessary files
+*  feb9442 fix imnodes_r
+*  e174516 fix ImGuizmo
+*  9f80345 fix: update RenderPassEvent and improve texture management in UImGui Working URP
+*  66df96f fix: call NewFrame before HasValidAtlas check to unblock atlas build
+*  59d542f fix: update cimgui.dll and align texture status flow with ImGui 1.92.7 API
+*  8664922 docs: add PlanToUpdate.md maintenance guide and expand README
+*  3844c44 Refactor UImGui to improve vector handling and add new features
+*  1b0b82c docs: update README for new libs, opt-in directives, multi-renderer URP, VectorExtensions
+*  bd27e52 feat: add demos for ImPlot3D, ImNodesR, ImGuizmoQuat, CimCTE; add VectorExtensions; update context and plugins for new libs
+*  1933798 fix: update RenderImGui to use UImGui instance in CommandBufferPass and ensure render feature registration in editor
+*  0069954 feat: add sample ini settings and renderImGui
+*  0048299 fix input manager and input system
+*  877f4e4 Enhance UImGui integration by enabling ImGuiZMO, ImPlot, and ImNodes features; update assembly definitions and add RenderImGui asset
+*  9c0a938 Fix Unity 6 compile issues
+*  ac805a1 Add metadata files for CLAUDE, CsharpConventions, and ImGuiDockBuilder
+*  55ec4c6 Remove PlanToUpdate.md as part of repository cleanup
+*  3e70c43 Update ImGui integration changes
+*  a1bf5a1 Improve package manifest metadata
+*  2d36e47 Update ImGui version to 1.92.7
+
 #### 5.0.0 (2024-03-15)
 
 ##### New Features
