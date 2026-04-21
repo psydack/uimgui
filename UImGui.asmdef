@@ -13,6 +13,7 @@
         "GUID:21b78e49fbaa4acfbdceaa84fbc1b034",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
         "Unity.InputSystem"
     ],
     "includePlatforms": [],
