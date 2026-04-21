@@ -21,20 +21,26 @@ namespace UImGui.Renderer
 #if HAS_URP_17
 			public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
 			{
-				if (commandBuffer == null) return;
+				if (uImGui == null) return;
 
 				using var builder = renderGraph.AddUnsafePass<PassData>("UImGui CommandBuffer Pass", out var passData);
-				passData.CommandBuffer = commandBuffer;
+				var resourceData = frameData.Get<UniversalResourceData>();
+				passData.ColorTarget = resourceData.activeColorTexture;
+				passData.UImGui = uImGui;
+				builder.UseTexture(passData.ColorTarget, AccessFlags.Write);
 				builder.AllowPassCulling(false);
 				builder.SetRenderFunc((PassData data, UnsafeGraphContext ctx) =>
 				{
-					Graphics.ExecuteCommandBuffer(data.CommandBuffer);
+					ctx.cmd.SetRenderTarget(data.ColorTarget);
+					var nativeCommandBuffer = CommandBufferHelpers.GetNativeCommandBuffer(ctx.cmd);
+					data.UImGui.RenderDrawData(nativeCommandBuffer);
 				});
 			}
 
 			private class PassData
 			{
-				public CommandBuffer CommandBuffer;
+				public TextureHandle ColorTarget;
+				public global::UImGui.UImGui UImGui;
 			}
 #else
 			public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)

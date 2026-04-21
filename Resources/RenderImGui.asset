@@ -15,4 +15,4 @@ MonoBehaviour:
   m_Active: 1
   Camera: {fileID: 0}
   UImGui: {fileID: 0}
-  RenderPassEvent: 1000
+  RenderPassEvent: 500

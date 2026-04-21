@@ -277,18 +277,9 @@ namespace UImGui
 			ImGuiIOPtr io = ImGui.GetIO();
 
 			Constants.PrepareFrameMarker.Begin(this);
-			_context.TextureManager.PrepareFrame(io);
 			_platform.PrepareFrame(io, _camera.pixelRect);
 			ImGui.NewFrame();
-			_context.TextureManager.PrepareFrame(io); // catch WantCreate set by NewFrame
 			Constants.PrepareFrameMarker.End();
-
-			if (!_context.TextureManager.HasValidAtlas)
-			{
-				Debug.LogWarning("[UImGui] Font atlas not ready yet, skipping render.");
-				ImGui.EndFrame();
-				return;
-			}
 
 			Constants.LayoutMarker.Begin(this);
 			try
@@ -306,6 +297,7 @@ namespace UImGui
 				Constants.LayoutMarker.End();
 			}
 
+			_context.TextureManager.UpdateTextures(ImGui.GetDrawData());
 			if (buffer != null)
 			{
 				RenderDrawData(buffer);
