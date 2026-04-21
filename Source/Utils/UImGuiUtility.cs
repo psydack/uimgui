@@ -24,7 +24,7 @@ namespace UImGui
 
 		public static unsafe Context CreateContext()
 		{
-			return new Context
+			var context = new Context
 			{
 				ImGuiContext = ImGui.CreateContext(),
 #if UIMGUI_ENABLE_IMPLOT
@@ -41,11 +41,19 @@ namespace UImGui
 #endif
 				TextureManager = new TextureManager()
 			};
+
+#if UIMGUI_ENABLE_IMNODES_R
+			ImNodesRNET.ImNodesR.SetImGuiContext(context.ImGuiContext);
+			ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
+#endif
+
+			return context;
 		}
 
 		public static void DestroyContext(Context context)
 		{
-			ImGui.DestroyContext(context.ImGuiContext);
+			if (context == null)
+				return;
 
 #if UIMGUI_ENABLE_IMPLOT
 			ImPlotNET.ImPlot.DestroyContext(context.ImPlotContext);
@@ -56,6 +64,13 @@ namespace UImGui
 #if UIMGUI_ENABLE_IMNODES
 			imnodesNET.imnodes.DestroyContext(context.ImNodesContext);
 #endif
+#if UIMGUI_ENABLE_IMNODES_R
+			ImNodesRNET.ImNodesR.SetContext(IntPtr.Zero);
+			ImNodesRNET.ImNodesR.SetImGuiContext(IntPtr.Zero);
+			ImNodesRNET.ImNodesR.FreeContext(context.ImNodesRContext);
+#endif
+
+			ImGui.DestroyContext(context.ImGuiContext);
 		}
 
 		public static void SetCurrentContext(Context context)
@@ -80,6 +95,7 @@ namespace UImGui
 #endif
 #if UIMGUI_ENABLE_IMNODES_R
 			ImNodesRNET.ImNodesR.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
+			ImNodesRNET.ImNodesR.SetContext(context?.ImNodesRContext ?? IntPtr.Zero);
 #endif
 #if UIMGUI_ENABLE_CIMCTE
 			CimCTENET.CimCTE.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);

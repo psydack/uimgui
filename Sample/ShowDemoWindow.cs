@@ -14,7 +14,6 @@ using ImPlot3DNET;
 #endif
 #if UIMGUI_ENABLE_IMNODES_R
 using ImNodesRNET;
-using System;
 #endif
 using UnityEngine;
 
@@ -38,14 +37,26 @@ namespace UImGui
 #endif
 
 #if UIMGUI_ENABLE_IMNODES_R
-		CanvasState _canvas;
 		System.Numerics.Vector2 _nodePos = new System.Numerics.Vector2(50, 50);
 		bool _nodeSelected;
+#endif
+
+#if UIMGUI_ENABLE_IMGUIZMO
+		private readonly float[] _gizmoView = new float[16];
+		private readonly float[] _gizmoProjection = new float[16];
+		private readonly float[] _gizmoMatrix = new float[16];
 #endif
 
 #if UIMGUI_ENABLE_IMGUIZMO_QUAT
 		// x,y,z,w quaternion — identity
 		System.Numerics.Vector4 _rotation = new System.Numerics.Vector4(0, 0, 0, 1);
+#endif
+
+#if UIMGUI_ENABLE_IMGUIZMO
+		private void Awake()
+		{
+			InitGizmoMatrices();
+		}
 #endif
 
 		private void OnEnable()
@@ -113,25 +124,27 @@ namespace UImGui
 			}
 #endif
 
+#if UIMGUI_ENABLE_IMGUIZMO
+			if (ImGui.Begin("ImGuizmo Demo"))
+			{
+				ImGuizmo.BeginFrame();
+				var pos = ImGui.GetWindowPos();
+				var size = ImGui.GetWindowSize();
+				ImGuizmo.SetRect(pos.X, pos.Y, size.X, size.Y);
+				ImGuizmo.Manipulate(ref _gizmoView[0], ref _gizmoProjection[0], OPERATION.TRANSLATE, MODE.LOCAL, ref _gizmoMatrix[0]);
+				ImGuizmo.DrawGrid(ref _gizmoView[0], ref _gizmoProjection[0], ref _gizmoMatrix[0], 10f);
+				ImGui.End();
+			}
+#endif
+
 #if UIMGUI_ENABLE_IMNODES_R
-			// CanvasState._Impl is initialized lazily by the library on first BeginCanvas.
 			if (ImGui.Begin("Nodes R Sample"))
 			{
-				ImNodesR.BeginCanvas(ref _canvas);
-				var nodeId = new IntPtr(1);
-				if (ImNodesR.BeginNode(nodeId, "My Node", ref _nodePos, ref _nodeSelected))
+				ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
+				ImNodesR.BeginCanvas();
+				if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
 				{
-					if (ImNodesR.BeginInputSlot("Input", 1))
-					{
-						ImGui.Text("in");
-						ImNodesR.EndSlot();
-					}
-					if (ImNodesR.BeginOutputSlot("Output", 1))
-					{
-						ImGui.Indent(40);
-						ImGui.Text("out");
-						ImNodesR.EndSlot();
-					}
+					ImGui.TextUnformatted("cimnodes_r smoke node");
 					ImNodesR.EndNode();
 				}
 				ImNodesR.EndCanvas();
@@ -160,5 +173,50 @@ namespace UImGui
 
 			ImGui.ShowDemoWindow();
 		}
+
+#if UIMGUI_ENABLE_IMGUIZMO
+		private void InitGizmoMatrices()
+		{
+			_gizmoMatrix[0] = 1f;
+			_gizmoMatrix[5] = 1f;
+			_gizmoMatrix[10] = 1f;
+			_gizmoMatrix[15] = 1f;
+
+			var eye = new System.Numerics.Vector3(2f, 2f, 5f);
+			var center = System.Numerics.Vector3.Zero;
+			var up = System.Numerics.Vector3.UnitY;
+			var z = System.Numerics.Vector3.Normalize(eye - center);
+			var x = System.Numerics.Vector3.Normalize(System.Numerics.Vector3.Cross(up, z));
+			var y = System.Numerics.Vector3.Cross(z, x);
+
+			_gizmoView[0] = x.X;
+			_gizmoView[1] = y.X;
+			_gizmoView[2] = z.X;
+			_gizmoView[3] = 0f;
+			_gizmoView[4] = x.Y;
+			_gizmoView[5] = y.Y;
+			_gizmoView[6] = z.Y;
+			_gizmoView[7] = 0f;
+			_gizmoView[8] = x.Z;
+			_gizmoView[9] = y.Z;
+			_gizmoView[10] = z.Z;
+			_gizmoView[11] = 0f;
+			_gizmoView[12] = -System.Numerics.Vector3.Dot(x, eye);
+			_gizmoView[13] = -System.Numerics.Vector3.Dot(y, eye);
+			_gizmoView[14] = -System.Numerics.Vector3.Dot(z, eye);
+			_gizmoView[15] = 1f;
+
+			float fovY = (float)(System.Math.PI / 4.0);
+			float aspect = 1280f / 720f;
+			float near = 0.1f;
+			float far = 100f;
+			float f = 1f / (float)System.Math.Tan(fovY / 2f);
+			_gizmoProjection[0] = f / aspect;
+			_gizmoProjection[5] = f;
+			_gizmoProjection[10] = (far + near) / (near - far);
+			_gizmoProjection[11] = -1f;
+			_gizmoProjection[14] = (2f * far * near) / (near - far);
+		}
+#endif
 	}
 }
