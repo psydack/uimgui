@@ -353,6 +353,31 @@ Using Built in
 -------
 No special sets.
 
+Renderer Types
+-------
+Two renderers are available, selectable on the UImGui component via the `Renderer` field:
+
+| Renderer | How it works | When to use |
+|----------|-------------|-------------|
+| **Mesh** (default) | Uploads vertex/index data to a Unity `Mesh` each frame | All platforms including WebGL and mobile. Safe choice. |
+| **Procedural** | GPU-resident `GraphicsBuffer` with `DrawProceduralIndirect` | Desktop/console only. Requires Shader Model 4.5+. More efficient for large or complex UIs. Not supported on WebGL. |
+
+If you are unsure, use Mesh.
+
+IL2CPP Notes
+-------
+- `allowUnsafeCode = true` is already set in the package's assembly definition.
+- To avoid managed code stripping, add a `link.xml` to your project's `Assets/` folder preserving the ImGui assemblies:
+```xml
+<linker>
+  <assembly fullname="ImGuiNET" preserve="all"/>
+  <assembly fullname="ImPlotNET" preserve="all"/>
+  <assembly fullname="imnodesNET" preserve="all"/>
+  <!-- add other enabled lib assemblies here -->
+</linker>
+```
+- Start with **Managed Stripping Level: Minimal** and increase only once the build is verified stable.
+
 Directives
 -------
 Optional libraries are **disabled by default**. Add the corresponding symbol to *Project Settings > Player > Other Settings > Script Define Symbols* to enable each one:
@@ -396,15 +421,33 @@ ImGui.SetNextWindowPos(pos.AsNumerics());
 ```
 
 Supported: `Vector2`, `Vector3`, `Vector4`, `Color` <-> `System.Numerics.Vector4`.
-Known issues
+Troubleshooting
 -------
 
-Issue: Already using ``System.Runtime.CompilerServices.Unsafe.dll`` will cause the following error: ``Multiple precompiled assemblies with the same name System.Runtime.CompilerServices.Unsafe.dll included or the current platform Only one assembly with the same name is allowed per platform.
-Resolution: add ``UIMGUI_REMOVE_UNSAFE_DLL`` on Project Settings > Player > Other Settings >  Script define symbols > Apply > Restart Unity Editor.  
-  
-Issue: ImPlot isn't work right. 
-  
-Issue: Font atlas crash. There's no fix. Use callback for custom font instead
+**`EntryPointNotFoundException: igGetIO_Nil` on Play**  
+The native `cimgui.dll` is not loading. Most common causes:
+- The `.meta` file for `Plugins/imgui/win-x64/cimgui.dll` has a stale `defineConstraints` entry — open it and set `defineConstraints: []`.
+- The DLL was locked by the Editor during a previous update attempt — close Unity, recopy the DLL, reopen.
+
+**`Multiple precompiled assemblies with the same name System.Runtime.CompilerServices.Unsafe.dll`**  
+Another package already ships this DLL. Add `UIMGUI_REMOVE_UNSAFE_DLL` to *Project Settings → Player → Script Define Symbols* and restart the Editor.
+
+**`RenderGraph Execution error` (URP)**  
+Expand the error in the Console — it usually wraps an `EntryPointNotFoundException`. Fix the native DLL issue above.
+
+**ImGui renders nothing / black screen (URP)**  
+The `RenderImGui` feature is missing or not assigned:
+1. Run *Tools → UImGui → Add Render Feature to URP*.
+2. Assign the `RenderImGui.asset` to the `Render Feature` field on the UImGui component.
+
+**Inspector shows "Platform not available"**  
+The selected `Platform Type` requires a Unity package that is not installed (e.g. Input System). Install `com.unity.inputsystem` or switch to Input Manager.
+
+**Font atlas crash**  
+No fix. Always configure fonts via the `Font Custom Initializer` callback instead of loading them directly.
+
+**ImPlot rendering issues**  
+ImPlot has known intermittent rendering problems. See open issues on the repository.
 
 Credits
 -------
