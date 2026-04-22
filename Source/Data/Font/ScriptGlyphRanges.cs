@@ -15,5 +15,6 @@ namespace UImGui
 		ChineseSimplified = 1 << 6,
 		ChineseFull = 1 << 7,
 		Custom = 1 << 8,
+		Everything = Default | Cyrillic | Japanese | Korean | Thai | Vietnamese | ChineseSimplified | ChineseFull | Custom,
 	}
 }

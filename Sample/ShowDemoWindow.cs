@@ -21,6 +21,9 @@ namespace UImGui
 {
 	public class ShowDemoWindow : MonoBehaviour
 	{
+		private bool _isQuitting;
+		private bool _disableImNodesRDemo;
+
 		[SerializeField]
 		private bool _showHdrpStatus = false;
 		[SerializeField]
@@ -78,8 +81,18 @@ namespace UImGui
 			UImGuiUtility.Layout -= OnLayout;
 		}
 
+		private void OnApplicationQuit()
+		{
+			_isQuitting = true;
+		}
+
 		private void OnLayout(UImGui uImGui)
 		{
+			if (_isQuitting)
+			{
+				return;
+			}
+
 			DrawHdrpStatusSnippet();
 			DrawHdrpSetupSnippet();
 			DrawHdrpMotionBlurSnippet();
@@ -152,16 +165,24 @@ namespace UImGui
 #endif
 
 #if UIMGUI_ENABLE_IMNODES_R
-			if (ImGui.Begin("Nodes R Sample"))
+			if (!_disableImNodesRDemo && UImGuiUtility.Context?.ImNodesRContext != System.IntPtr.Zero && ImGui.Begin("Nodes R Sample"))
 			{
-				ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
-				ImNodesR.BeginCanvas();
-				if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+				try
 				{
-					ImGui.TextUnformatted("cimnodes_r smoke node");
-					ImNodesR.EndNode();
+					ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
+					ImNodesR.BeginCanvas();
+					if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+					{
+						ImGui.TextUnformatted("cimnodes_r smoke node");
+						ImNodesR.EndNode();
+					}
+					ImNodesR.EndCanvas();
 				}
-				ImNodesR.EndCanvas();
+				catch (System.Exception ex)
+				{
+					_disableImNodesRDemo = true;
+					UnityEngine.Debug.LogWarning($"Nodes R sample disabled after runtime error: {ex.GetType().Name} - {ex.Message}");
+				}
 				ImGui.End();
 			}
 #endif

@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b5d229fe961e90a478d5b37aad1d4bdf, type: 3}
   m_Name: FontAtlasNewClearMincho
-  m_EditorClassIdentifier:
-  RasterizerFlags: 0
+  m_EditorClassIdentifier: 
+  RasterizerFlags: 512
   Fonts:
-  - _fontAsset: {fileID: 0}
-    Path: NewClear-mincho.ttf
+  - _fontAsset: {fileID: 12800000, guid: 944cd5004248d8b43ac87ac8b0828a8f, type: 3}
+    Path: 
     Config:
       FontDataOwnedByAtlas: 1
       FontNo: 0
@@ -25,11 +25,11 @@ MonoBehaviour:
       PixelSnapH: 0
       GlyphExtraSpacing: {x: 0, y: 0}
       GlyphOffset: {x: 0, y: 0}
+      GlyphRanges: 5
       GlyphMinAdvanceX: 0
       GlyphMaxAdvanceX: 0
       MergeMode: 0
       FontBuilderFlags: 0
       RasterizerMultiply: 1
-      EllipsisChar: "\0"
-      GlyphRanges: 5
+      EllipsisChar: 0
       CustomGlyphRanges: []

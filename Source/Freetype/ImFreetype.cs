@@ -5,6 +5,8 @@ namespace UImGui
 {
 	public static unsafe partial class ImFreetype
 	{
+		internal const uint BuilderFlagsMask = (uint)BuilderFlags.Everything;
+
 		// Hinting greatly impacts visuals (and glyph sizes).
 		// - By default, hinting is enabled and the font's native hinter is preferred over the auto-hinter.
 		// - When disabled, FreeType generates blurrier glyphs, more or less matches the stb_truetype.h
@@ -12,8 +14,10 @@ namespace UImGui
 		// - The Light hinting mode generates fuzzier glyphs but better matches Microsoft's rasterizer.
 		// You can set those flags globaly in ImFontAtlas::FontBuilderFlags
 		// You can set those flags on a per font basis in ImFontConfig::FontBuilderFlags
-		internal enum BuilderFlags // RasterizerFlags
+		[Flags]
+		internal enum BuilderFlags : uint // RasterizerFlags
 		{
+			None = 0,
 			NoHinting = 1 << 0,   // Disable hinting. This generally generates 'blurrier' bitmap glyphs when the glyph are rendered in any of the anti-aliased modes.
 			NoAutoHint = 1 << 1,   // Disable auto-hinter.
 			ForceAutoHint = 1 << 2,   // Indicates that the auto-hinter is preferred over the font's native hinter.
@@ -23,8 +27,14 @@ namespace UImGui
 			Oblique = 1 << 6,   // Styling: Should we slant the font, emulating italic style?
 			Monochrome = 1 << 7,   // Disable anti-aliasing. Combine this with MonoHinting for best results!
 			LoadColor = 1 << 8,   // Enable FreeType color-layered glyphs
-			Bitmap = 1 << 9    // Enable FreeType bitmap glyphs
+			Bitmap = 1 << 9,   // Enable FreeType bitmap glyphs
+			Everything = NoHinting | NoAutoHint | ForceAutoHint | LightHinting | MonoHinting | Bold | Oblique | Monochrome | LoadColor | Bitmap
 		};
+
+		internal static uint SanitizeBuilderFlags(uint rawFlags)
+		{
+			return rawFlags & BuilderFlagsMask;
+		}
 
 		// This is automatically assigned when using '#define IMGUI_ENABLE_FREETYPE'.
 		// If you need to dynamically select between multiple builders:

@@ -1,3 +1,23 @@
+#### 6.1.1 (2026-04-22)
+
+##### Bug Fixes
+
+*  `ImFreetype.BuilderFlags` — add `[Flags]` attribute, `None`/`Everything` sentinel values, `BuilderFlagsMask` constant, and `SanitizeBuilderFlags` helper; editor now sanitizes raw flags before storing them to the asset
+*  `TextureManager.UploadFontAtlas` — properly propagate `RasterizerFlags` from `FontAtlasConfigAsset` into each font's `FontLoaderFlags`; also pass flags to the fallback `AddFontDefault` call
+*  `FontAtlasConfigAssetEditor` — use `SanitizeBuilderFlags` to strip invalid bits before writing to the serialized property
+*  `FontConfig.BuildRanges` — operate on a local `selected` variable that masks `GlyphRanges` against `ScriptGlyphRanges.Everything` so serialized assets with stale bits don't produce out-of-range ranges
+*  `ScriptGlyphRanges` — add `Everything` aggregate flag for use as a valid-bit mask
+*  `ShowDemoWindow` — guard `OnLayout` against calls during application quit (`_isQuitting` flag set in `OnApplicationQuit`)
+*  `ShowDemoWindow` — make ImNodes-R demo resilient: check `ImNodesRContext != IntPtr.Zero` before entering, wrap in `try/catch`, disable demo on first exception instead of re-throwing every frame
+*  `FontAtlasNewClearMincho` asset — switch from path-based font loading to direct font asset reference; set `RasterizerFlags` to `512` (FreeType `LoadColor`)
+*  Remove `PlanToUpdate.md` planning artifact from the package
+
+##### Commit List (6.1.0..6.1.1)
+
+*  cc56b01 fix: address Codex review — dedup plugin registration, CJK punctuation range
+
+---
+
 #### 6.1.0 (2026-04-22)
 
 ##### Architecture
