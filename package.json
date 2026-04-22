@@ -39,7 +39,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/psydack/uimgui.git",
-    "revision": "feat/new-architecture-exec"
+    "revision": "main"
   },
   "bugs": {
     "url": "https://github.com/psydack/uimgui/issues"
