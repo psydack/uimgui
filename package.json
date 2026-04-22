@@ -1,7 +1,7 @@
 {
   "name": "com.psydack.uimgui",
   "displayName": "UImGui",
-  "version": "6.1.1",
+  "version": "7.0.0",
   "description": "Dear ImGui integration for Unity using ImGui.NET, with support for Built-in, URP, HDRP, Unity Input Manager, Unity Input System, FreeType, textures, docking, ImPlot, ImNodes, and ImGuizmo.",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/psydack/uimgui#readme",

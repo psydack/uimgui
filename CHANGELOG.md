@@ -1,3 +1,17 @@
+#### 7.0.0 (2026-04-22)
+
+##### Release
+
+*  bump package version to `7.0.0`
+*  update README version marker and sample references for the v7 release
+*  keep `FontAtlasConfigAsset` documented as WIP while shipping the NewClear-mincho sample flow
+
+##### Bug Fixes
+
+*  initialize fallback `ImFontConfig` from native ImGui defaults before applying atlas-level FreeType rasterizer flags
+
+---
+
 #### 6.1.1 (2026-04-22)
 
 ##### Bug Fixes
@@ -524,4 +538,3 @@
 *  move uimguiutility to utils folder ([449a8299](https://github.com/psydack/uimgui/commit/449a829957cd8654988937c6c9e0ce0f1cf3dd81))
 *  mover uiconfig to data folder ([b44bc08b](https://github.com/psydack/uimgui/commit/b44bc08b1f4ba753b7f01ff6542bca186b21303d))
 *  move assets to inside source folder ([45743010](https://github.com/psydack/uimgui/commit/457430102c38d58f0581f6261b7e0823dd8a8b23))
-

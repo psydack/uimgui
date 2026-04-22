@@ -6,7 +6,7 @@ namespace UImGui.Renderer
 	/// <summary>
 	/// TODO: Write
 	/// </summary>
-	internal interface IRenderer
+	public interface IRenderer
 	{
 		/// <summary>
 		/// 
