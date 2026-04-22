@@ -1,3 +1,29 @@
+#### 7.0.0 (2026-04-22)
+
+##### Bug Fixes
+
+* fix font atlas script glyph ranges so selected scripts and `Everything` build the expected ranges
+* fix FreeType rasterizer `Everything` handling and apply atlas-level rasterizer flags to configured fonts
+* fix fallback default font config by initializing `ImFontConfig` from native defaults
+* harden `UImGui` disable/shutdown/update paths to avoid follow-up frame crashes
+* normalize Input System mouse wheel deltas to Dear ImGui wheel units
+* move the URP render pass default after post-processing for FXAA-safe rendering
+* remove HDRP custom pass gizmo drawing from the ImGui render path
+* restore optional plugin registration files expected by the Unity project
+
+##### New Features
+
+* add `NewClear-mincho.ttf` font atlas sample asset and sample script
+* add ShowDemoWindow diagnostics for font atlas ranges, plugins, URP/HDRP, docking, and closable windows
+* expose platform and renderer utility interfaces for extension points
+* expand `ImGuiDockBuilder` helper coverage
+
+##### Documentation Changes
+
+* document package version `7.0.0`
+* add ImGui.NET.4Unity fork link to motivation
+* mark font atlas sample files in README
+
 #### 6.0.0 (2026-04-21)
 
 ##### Build System / Dependencies
@@ -446,4 +472,3 @@
 *  move uimguiutility to utils folder ([449a8299](https://github.com/psydack/uimgui/commit/449a829957cd8654988937c6c9e0ce0f1cf3dd81))
 *  mover uiconfig to data folder ([b44bc08b](https://github.com/psydack/uimgui/commit/b44bc08b1f4ba753b7f01ff6542bca186b21303d))
 *  move assets to inside source folder ([45743010](https://github.com/psydack/uimgui/commit/457430102c38d58f0581f6261b7e0823dd8a8b23))
-

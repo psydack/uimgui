@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d229fe961e90a478d5b37aad1d4bdf, type: 3}
+  m_Name: SampleFontAtlas
+  m_EditorClassIdentifier: UImGui::UImGui.Assets.FontAtlasConfigAsset
+  RasterizerFlags: 1023
+  Fonts:
+  - _fontAsset: {fileID: 102900000, guid: e73e228aeb718074da4f0394cff70a56, type: 3}
+    Path: NewClear-mincho.ttf
+    Config:
+      FontDataOwnedByAtlas: 1
+      FontNo: 0
+      SizeInPixels: 18
+      OversampleH: 3
+      OversampleV: 1
+      PixelSnapH: 0
+      GlyphExtraSpacing: {x: 0, y: 0}
+      GlyphOffset: {x: 0, y: 0}
+      GlyphRanges: 511
+      GlyphMinAdvanceX: 0
+      GlyphMaxAdvanceX: 3.4028235e+38
+      MergeMode: 0
+      FontBuilderFlags: 0
+      RasterizerMultiply: 1
+      EllipsisChar: 0
+      CustomGlyphRanges: []

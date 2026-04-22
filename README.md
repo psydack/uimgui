@@ -17,6 +17,7 @@
 
 <p align="center">
   <strong>Dear ImGui for Unity</strong><br>
+  Current package version: <strong>7.0.0</strong><br>
   Built on <a href="https://github.com/mellinoe/ImGui.NET">ImGui.NET</a>, ready for <strong>URP</strong>, <strong>HDRP</strong>, <strong>Built-in</strong>, <strong>IL2CPP</strong>, <strong>docking</strong>, <strong>FreeType</strong>, and opt-in integrations like <strong>ImPlot</strong>, <strong>ImNodes</strong>, and <strong>ImGuizmo</strong>.
 </p>
 
@@ -513,6 +514,8 @@ Useful starting points:
 
 - **Demo Window** sample
 - `ShowDemoWindow.cs`
+- `SampleFontAtlas.asset`
+- `SampleFontAtlasNewClearMincho.cs`
 - optional integrations toggled through define symbols
 
 ---
@@ -575,6 +578,10 @@ If an optional integration misbehaves:
 The practical goal of UImGui is straightforward:
 
 **make Dear ImGui in Unity easier to install, easier to maintain, and easier to evolve.**
+
+That includes maintaining a Unity-focused fork of the main managed bindings when the package needs Unity-specific native/runtime alignment:
+
+- ImGui.NET.4Unity: <https://github.com/psydack/ImGui.NET.4Unity>
 
 ---
 

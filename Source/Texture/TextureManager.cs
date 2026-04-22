@@ -307,10 +307,17 @@ namespace UImGui.Texture
 			{
 				unsafe
 				{
-					ImFontConfig fontConfig = default;
-					var fontConfigPtr = new ImFontConfigPtr(&fontConfig);
-					fontConfigPtr.FontLoaderFlags = rasterizerFlags;
-					io.Fonts.AddFontDefault(fontConfigPtr);
+					ImFontConfig* fontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+					try
+					{
+						var fontConfigPtr = new ImFontConfigPtr(fontConfig);
+						fontConfigPtr.FontLoaderFlags = rasterizerFlags;
+						io.Fonts.AddFontDefault(fontConfigPtr);
+					}
+					finally
+					{
+						ImGuiNative.ImFontConfig_destroy(fontConfig);
+					}
 				}
 			}
 		}
