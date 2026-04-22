@@ -153,6 +153,7 @@ namespace UImGui
 
 			if ((selected & ScriptGlyphRanges.Japanese) != 0)
 			{
+				AddUnicodeRange(0x3000, 0x303F); // CJK punctuation (、。…)
 				AddUnicodeRange(0x3040, 0x30FF);
 				AddUnicodeRange(0x31F0, 0x31FF);
 				AddUnicodeRange(0xFF66, 0xFF9F);

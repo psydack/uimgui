@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RasterizerFlags: 512
   Fonts:
-  - _fontAsset: {fileID: 12800000, guid: 944cd5004248d8b43ac87ac8b0828a8f, type: 3}
-    Path: 
+  - _fontAsset: {fileID: 0}
+    Path: NewClear-mincho.ttf
     Config:
       FontDataOwnedByAtlas: 1
       FontNo: 0
