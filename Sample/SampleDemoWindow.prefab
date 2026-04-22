@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1024104415388363069}
   - component: {fileID: 5187045405267620860}
   - component: {fileID: 7100641311238782667}
+  - component: {fileID: 7090198172891830996}
   m_Layer: 0
   m_Name: SampleDemoWindow
   m_TagString: Untagged
@@ -88,3 +89,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7e55d54eede42459ec52fabbd53824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _showHdrpStatus: 0
+  _showHdrpSetupHelp: 0
+  _showHdrpMotionBlurCheck: 0
+  _showFontAtlasWip: 1
+  _barValues:
+  - 1
+  - 4
+  - 9
+  - 16
+  - 25
+  - 36
+  - 49
+  - 64
+  - 81
+  - 100
+  _xValues:
+  - 1
+  - 4
+  - 9
+  - 16
+  - 25
+  - 36
+  - 49
+  - 64
+  - 81
+  - 100
+  _yValues:
+  - 1
+  - 4
+  - 9
+  - 16
+  - 25
+  - 36
+  - 49
+  - 64
+  - 81
+  - 100
+--- !u!114 &7090198172891830996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5338779034653158535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee4f4e1a53a4d13bf6024d6f13d211f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UImGui::UImGui.SampleFontAtlasNewClearMincho
+  _isOpen: 1
