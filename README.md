@@ -17,7 +17,7 @@
 
 <p align="center">
   <strong>Dear ImGui for Unity</strong><br>
-  Current package version: <strong>7.0.0</strong><br>
+  Current package version: <strong>7.1.0</strong><br>
   Built on <a href="https://github.com/mellinoe/ImGui.NET">ImGui.NET</a>, ready for <strong>URP</strong>, <strong>HDRP</strong>, <strong>Built-in</strong>, <strong>IL2CPP</strong>, <strong>docking</strong>, <strong>FreeType</strong>, and opt-in integrations like <strong>ImPlot</strong>, <strong>ImNodes</strong>, and <strong>ImGuizmo</strong>.
 </p>
 

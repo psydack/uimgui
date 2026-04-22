@@ -6,9 +6,11 @@ using UImGui.Platform;
 using UImGui.Renderer;
 using UnityEngine;
 using UnityEngine.Rendering;
+#if HAS_URP
+using UnityEngine.Rendering.Universal;
+#endif
 #if UNITY_EDITOR && HAS_URP
 using UnityEditor;
-using UnityEngine.Rendering.Universal;
 #endif
 
 
@@ -132,6 +134,18 @@ namespace UImGui
 			_isChangingCamera = true;
 		}
 
+		public void SetRenderFeature(RenderImGui renderFeature)
+		{
+			_renderFeature = renderFeature;
+		}
+
+#if HAS_URP
+		public void SetRenderFeature(ScriptableRendererFeature renderFeature)
+		{
+			_renderFeature = renderFeature as RenderImGui;
+		}
+#endif
+
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
@@ -160,6 +174,17 @@ namespace UImGui
 			{
 				Fail(nameof(_camera));
 			}
+
+#if HAS_URP
+			if (_renderFeature == null && RenderUtility.IsUsingURP())
+			{
+				_renderFeature = RenderUtility.FindRenderFeatureInCurrentPipeline();
+				if (_renderFeature == null)
+				{
+					Debug.LogWarning("[UImGui] RenderImGui feature not found in the active URP pipeline. If this component was loaded dynamically, call SetRenderFeature() after instantiation.", this);
+				}
+			}
+#endif
 
 			if (_renderFeature == null && RenderUtility.IsUsingURP())
 			{

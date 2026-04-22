@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System;
+using System.Text;
 using UImGui.Texture;
 using UnityEngine;
 using UTexture = UnityEngine.Texture;
@@ -21,6 +22,19 @@ namespace UImGui
 		internal static void DoOnInitialize(UImGui uimgui) => OnInitialize?.Invoke(uimgui);
 		internal static void DoOnDeinitialize(UImGui uimgui) => OnDeinitialize?.Invoke(uimgui);
 		#endregion
+
+		public static unsafe bool BeginTabItem(string label, ImGuiTabItemFlags flags = ImGuiTabItemFlags.None)
+		{
+			if (label == null)
+				throw new ArgumentNullException(nameof(label));
+
+			int byteCount = Encoding.UTF8.GetByteCount(label);
+			byte* nativeLabel = stackalloc byte[byteCount + 1];
+			int written = Utils.GetUtf8(label, nativeLabel, byteCount);
+			nativeLabel[written] = 0;
+
+			return ImGuiNative.igBeginTabItem(nativeLabel, null, flags) != 0;
+		}
 
 		public static unsafe Context CreateContext()
 		{

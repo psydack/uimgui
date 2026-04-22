@@ -4,6 +4,8 @@ using UImGui.Texture;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 #if HAS_URP
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine.Rendering.Universal;
 #endif
 #if HAS_HDRP
@@ -45,6 +47,43 @@ namespace UImGui
 			return false;
 #endif
 		}
+
+#if HAS_URP
+		public static RenderImGui FindRenderFeatureInCurrentPipeline()
+		{
+			if (GraphicsSettings.currentRenderPipeline is not UniversalRenderPipelineAsset pipeline)
+				return null;
+
+			var rendererDataListField = typeof(UniversalRenderPipelineAsset).GetField(
+				"m_RendererDataList",
+				BindingFlags.Instance | BindingFlags.NonPublic);
+			if (rendererDataListField?.GetValue(pipeline) is not ScriptableRendererData[] rendererDataList)
+				return null;
+
+			var rendererFeaturesField = typeof(ScriptableRendererData).GetField(
+				"m_RendererFeatures",
+				BindingFlags.Instance | BindingFlags.NonPublic);
+			if (rendererFeaturesField == null)
+				return null;
+
+			foreach (var rendererData in rendererDataList)
+			{
+				if (rendererData == null)
+					continue;
+
+				if (rendererFeaturesField.GetValue(rendererData) is not List<ScriptableRendererFeature> rendererFeatures)
+					continue;
+
+				foreach (var feature in rendererFeatures)
+				{
+					if (feature is RenderImGui renderImGui)
+						return renderImGui;
+				}
+			}
+
+			return null;
+		}
+#endif
 
 		public static bool IsUsingHDRP()
 		{

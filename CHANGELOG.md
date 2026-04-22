@@ -1,3 +1,17 @@
+#### 7.1.0 (2026-04-22)
+
+##### Features
+
+*  `UImGui.SetRenderFeature(...)` - allow dynamically instantiated UImGui prefabs to receive their URP `RenderImGui` feature at runtime.
+*  URP Addressables support - auto-discover the first `RenderImGui` feature in the active URP pipeline when the serialized reference is missing.
+*  `UImGuiUtility.BeginTabItem(string, ImGuiTabItemFlags)` - expose a helper for Dear ImGui tab items without a `p_open` close-button parameter.
+
+##### Documentation
+
+*  Replace `fix.md` with a clean issue roadmap for recently fixed, planned, and out-of-scope GitHub issues.
+
+---
+
 #### 7.0.0 (2026-04-22)
 
 ##### Release
