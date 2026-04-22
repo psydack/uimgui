@@ -337,14 +337,27 @@ namespace UImGui.Texture
 
 				unsafe
 				{
-					ImFontConfig fontConfig = default;
-					var fontConfigPtr = new ImFontConfigPtr(&fontConfig);
+					ImFontConfig* fontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+					try
+					{
+						var fontConfigPtr = new ImFontConfigPtr(fontConfig);
 
-					fontDefinition.Config.ApplyTo(fontConfigPtr);
-					fontConfigPtr.FontLoaderFlags |= rasterizerFlags;
-					fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
+						fontDefinition.Config.ApplyTo(fontConfigPtr);
+						fontConfigPtr.FontLoaderFlags = ImFreetype.SanitizeBuilderFlags(fontConfigPtr.FontLoaderFlags | rasterizerFlags);
+						fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
 
-					io.Fonts.AddFontFromFileTTF(fontPath, fontDefinition.Config.SizeInPixels, fontConfigPtr);
+						if (fontConfigPtr.MergeMode && io.Fonts.Fonts.Size == 0)
+						{
+							Debug.LogWarning("[UImGui] Font MergeMode requires an existing base font. MergeMode was ignored for the first loaded font to prevent a native ImGui crash.");
+							fontConfigPtr.MergeMode = false;
+						}
+
+						io.Fonts.AddFontFromFileTTF(fontPath, fontDefinition.Config.SizeInPixels, fontConfigPtr);
+					}
+					finally
+					{
+						ImGuiNative.ImFontConfig_destroy(fontConfig);
+					}
 				}
 			}
 
