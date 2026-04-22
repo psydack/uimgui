@@ -184,7 +184,7 @@ namespace UImGui
 
 			if ((GlyphRanges & ScriptGlyphRanges.ChineseFull) != 0)
 			{
-				if (!hasCjkBase) AddUnicodeRange(0x3000, 0x303F);
+				AddUnicodeRange(0x3000, 0x303F);
 				if ((GlyphRanges & ScriptGlyphRanges.ChineseSimplified) == 0) AddUnicodeRange(0x3400, 0x4DBF);
 				if (!hasCjkBase) AddUnicodeRange(0x4E00, 0x9FFF);
 				AddUnicodeRange(0xF900, 0xFAFF);

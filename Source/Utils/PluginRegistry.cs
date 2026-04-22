@@ -6,7 +6,13 @@ namespace UImGui
 	{
 		static readonly List<IOptionalPlugin> _plugins = new List<IOptionalPlugin>(8);
 
-		internal static void Register(IOptionalPlugin plugin) => _plugins.Add(plugin);
+		internal static void Register(IOptionalPlugin plugin)
+		{
+			var type = plugin.GetType();
+			for (int i = 0; i < _plugins.Count; i++)
+				if (_plugins[i].GetType() == type) return;
+			_plugins.Add(plugin);
+		}
 
 		internal static void CreateContextAll(Context ctx)
 		{
