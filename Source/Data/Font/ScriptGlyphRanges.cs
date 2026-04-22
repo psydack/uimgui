@@ -5,6 +5,7 @@ namespace UImGui
 	[Flags]
 	public enum ScriptGlyphRanges
 	{
+		None = 0,
 		Default = 1 << 0,
 		Cyrillic = 1 << 1,
 		Japanese = 1 << 2,
@@ -14,5 +15,6 @@ namespace UImGui
 		ChineseSimplified = 1 << 6,
 		ChineseFull = 1 << 7,
 		Custom = 1 << 8,
+		Everything = Default | Cyrillic | Japanese | Korean | Thai | Vietnamese | ChineseSimplified | ChineseFull | Custom,
 	}
 }

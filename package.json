@@ -1,7 +1,7 @@
 {
   "name": "com.psydack.uimgui",
   "displayName": "UImGui",
-  "version": "6.0.0",
+  "version": "6.1.1",
   "description": "Dear ImGui integration for Unity using ImGui.NET, with support for Built-in, URP, HDRP, Unity Input Manager, Unity Input System, FreeType, textures, docking, ImPlot, ImNodes, and ImGuizmo.",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/psydack/uimgui#readme",
@@ -29,12 +29,17 @@
       "displayName": "Demo Window",
       "description": "A sample scene prefab and script that render the Dear ImGui demo window in Unity.",
       "path": "Sample"
+    },
+    {
+      "displayName": "Font Atlas NewClear-mincho (WIP)",
+      "description": "A sample script that demonstrates the WIP font atlas flow using NewClear-mincho.ttf.",
+      "path": "Sample"
     }
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/psydack/uimgui.git",
-    "revision": "update/1.92.7"
+    "revision": "main"
   },
   "bugs": {
     "url": "https://github.com/psydack/uimgui/issues"

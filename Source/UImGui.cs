@@ -93,6 +93,7 @@ namespace UImGui
 		private bool _isChangingCamera = false;
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
+		public Camera Camera => _camera;
 
 		#region Events
 		public event System.Action<UImGui> Layout;
@@ -134,6 +135,12 @@ namespace UImGui
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
+
+#if UNITY_EDITOR
+			var version = ImGui.GetVersion();
+			if (!version.Contains("1.92"))
+				Debug.LogWarning($"[UImGui] Expected ImGui 1.92.x, got {version}. Close Unity and recopy cimgui.dll.", this);
+#endif
 		}
 
 		private void OnDestroy()
@@ -272,6 +279,25 @@ namespace UImGui
 		}
 
 		internal void DoUpdate(CommandBuffer buffer)
+		{
+			if (_renderer == null || _platform == null)
+			{
+				Debug.LogWarning("[UImGui] DoUpdate called before renderer/platform are ready.", this);
+				return;
+			}
+
+			try
+			{
+				DoUpdateImpl(buffer);
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e, this);
+				enabled = false;
+			}
+		}
+
+		private void DoUpdateImpl(CommandBuffer buffer)
 		{
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();

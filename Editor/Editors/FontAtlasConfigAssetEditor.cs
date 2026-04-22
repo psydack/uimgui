@@ -64,12 +64,13 @@ namespace UImGui.Editor
 		private void DrawRasterizerFlagsProperty()
 		{
 			EditorGUI.BeginChangeCheck();
-			var value = (ImFreetype.BuilderFlags)EditorGUILayout.EnumFlagsField(
+			ImFreetype.BuilderFlags value = (ImFreetype.BuilderFlags)EditorGUILayout.EnumFlagsField(
 				Styles.rasterizerFlags,
 				(ImFreetype.BuilderFlags)_rasterizerFlags.intValue);
 			if (EditorGUI.EndChangeCheck())
 			{
-				_rasterizerFlags.intValue = (int)value;
+				uint sanitized = ImFreetype.SanitizeBuilderFlags((uint)value);
+				_rasterizerFlags.intValue = unchecked((int)sanitized);
 			}
 		}
 	}

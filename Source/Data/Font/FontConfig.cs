@@ -118,6 +118,12 @@ namespace UImGui
 		{
 			ImFontAtlas* atlas = null;
 			var ranges = new List<ushort>();
+			ScriptGlyphRanges selected = GlyphRanges & ScriptGlyphRanges.Everything;
+			// Stale serialized assets may have out-of-range bits that mask to zero;
+			// fall back to Default only in that case. An explicit None (GlyphRanges == 0)
+			// means "let the font decide its own ranges" and must be honoured.
+			if (selected == ScriptGlyphRanges.None && GlyphRanges != ScriptGlyphRanges.None)
+				selected = ScriptGlyphRanges.Default;
 
 			void AddRangePtr(ushort* r)
 			{
@@ -127,12 +133,73 @@ namespace UImGui
 				}
 			};
 
-			if ((GlyphRanges & ~ScriptGlyphRanges.Custom) != 0)
+			void AddUnicodeRange(ushort start, ushort end)
 			{
-				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesDefault(atlas));
+				ranges.Add(start);
+				ranges.Add(end);
 			}
 
-			if ((GlyphRanges & ScriptGlyphRanges.Custom) != 0)
+			// Always include default Latin/ASCII when any built-in script is selected
+			// (mirrors pre-6.1.1 behaviour — Custom-only is the one exception).
+			if ((selected & ~ScriptGlyphRanges.Custom) != 0)
+				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesDefault(atlas));
+
+			if ((selected & ScriptGlyphRanges.Cyrillic) != 0)
+			{
+				AddUnicodeRange(0x0400, 0x052F);
+				AddUnicodeRange(0x2DE0, 0x2DFF);
+				AddUnicodeRange(0xA640, 0xA69F);
+			}
+
+			if ((selected & ScriptGlyphRanges.Japanese) != 0)
+			{
+				AddUnicodeRange(0x3000, 0x303F); // CJK punctuation (、。…)
+				AddUnicodeRange(0x3040, 0x30FF);
+				AddUnicodeRange(0x31F0, 0x31FF);
+				AddUnicodeRange(0xFF66, 0xFF9F);
+				AddUnicodeRange(0x4E00, 0x9FFF); // CJK base
+			}
+
+			if ((selected & ScriptGlyphRanges.Korean) != 0)
+			{
+				AddUnicodeRange(0x1100, 0x11FF);
+				AddUnicodeRange(0x3130, 0x318F);
+				AddUnicodeRange(0xAC00, 0xD7AF);
+			}
+
+			if ((selected & ScriptGlyphRanges.Thai) != 0)
+				AddUnicodeRange(0x0E00, 0x0E7F);
+
+			if ((selected & ScriptGlyphRanges.Vietnamese) != 0)
+			{
+				AddUnicodeRange(0x0102, 0x0103);
+				AddUnicodeRange(0x0110, 0x0111);
+				AddUnicodeRange(0x0128, 0x0129);
+				AddUnicodeRange(0x0168, 0x0169);
+				AddUnicodeRange(0x01A0, 0x01A1);
+				AddUnicodeRange(0x01AF, 0x01B0);
+				AddUnicodeRange(0x1EA0, 0x1EF9);
+			}
+
+			// Chinese: only add CJK base if Japanese didn't already include it.
+			bool hasCjkBase = (selected & ScriptGlyphRanges.Japanese) != 0;
+
+			if ((selected & ScriptGlyphRanges.ChineseSimplified) != 0)
+			{
+				AddUnicodeRange(0x3000, 0x303F);
+				AddUnicodeRange(0x3400, 0x4DBF);
+				if (!hasCjkBase) AddUnicodeRange(0x4E00, 0x9FFF);
+			}
+
+			if ((selected & ScriptGlyphRanges.ChineseFull) != 0)
+			{
+				AddUnicodeRange(0x3000, 0x303F);
+				if ((selected & ScriptGlyphRanges.ChineseSimplified) == 0) AddUnicodeRange(0x3400, 0x4DBF);
+				if (!hasCjkBase) AddUnicodeRange(0x4E00, 0x9FFF);
+				AddUnicodeRange(0xF900, 0xFAFF);
+			}
+
+			if ((selected & ScriptGlyphRanges.Custom) != 0 && CustomGlyphRanges != null)
 			{
 				foreach (Range range in CustomGlyphRanges)
 				{

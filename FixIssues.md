@@ -2,7 +2,7 @@
 
 > Source: https://github.com/psydack/uimgui/issues  
 > Captured: 2026-04-21  
-> Target release: 7.0.0  
+> Target release: 7.0.0 (faz incremental baseado nas mudancas)  
 > Execution branch: `feat/new-architecture`
 
 ---

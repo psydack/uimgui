@@ -21,6 +21,18 @@ namespace UImGui
 {
 	public class ShowDemoWindow : MonoBehaviour
 	{
+		private bool _isQuitting;
+		private bool _disableImNodesRDemo;
+
+		[SerializeField]
+		private bool _showHdrpStatus = false;
+		[SerializeField]
+		private bool _showHdrpSetupHelp = false;
+		[SerializeField]
+		private bool _showHdrpMotionBlurCheck = false;
+		[SerializeField]
+		private bool _showFontAtlasWip = true;
+
 #if UIMGUI_ENABLE_IMPLOT
 		[SerializeField]
 		float[] _barValues = Enumerable.Range(1, 10).Select(x => (x * x) * 1.0f).ToArray();
@@ -69,8 +81,23 @@ namespace UImGui
 			UImGuiUtility.Layout -= OnLayout;
 		}
 
+		private void OnApplicationQuit()
+		{
+			_isQuitting = true;
+		}
+
 		private void OnLayout(UImGui uImGui)
 		{
+			if (_isQuitting)
+			{
+				return;
+			}
+
+			DrawHdrpStatusSnippet();
+			DrawHdrpSetupSnippet();
+			DrawHdrpMotionBlurSnippet();
+			DrawFontAtlasWipSnippet();
+
 #if UIMGUI_ENABLE_IMPLOT
 			if (ImGui.Begin("Plot Window Sample"))
 			{
@@ -138,16 +165,24 @@ namespace UImGui
 #endif
 
 #if UIMGUI_ENABLE_IMNODES_R
-			if (ImGui.Begin("Nodes R Sample"))
+			if (!_disableImNodesRDemo && UImGuiUtility.Context?.ImNodesRContext != System.IntPtr.Zero && ImGui.Begin("Nodes R Sample"))
 			{
-				ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
-				ImNodesR.BeginCanvas();
-				if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+				try
 				{
-					ImGui.TextUnformatted("cimnodes_r smoke node");
-					ImNodesR.EndNode();
+					ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
+					ImNodesR.BeginCanvas();
+					if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+					{
+						ImGui.TextUnformatted("cimnodes_r smoke node");
+						ImNodesR.EndNode();
+					}
+					ImNodesR.EndCanvas();
 				}
-				ImNodesR.EndCanvas();
+				catch (System.Exception ex)
+				{
+					_disableImNodesRDemo = true;
+					UnityEngine.Debug.LogWarning($"Nodes R sample disabled after runtime error: {ex.GetType().Name} - {ex.Message}");
+				}
 				ImGui.End();
 			}
 #endif
@@ -172,6 +207,85 @@ namespace UImGui
 #endif
 
 			ImGui.ShowDemoWindow();
+		}
+
+		private void DrawHdrpStatusSnippet()
+		{
+			if (!ImGui.Begin("HDRP Status", ref _showHdrpStatus))
+			{
+				ImGui.End();
+				return;
+			}
+
+#if HAS_HDRP
+			ImGui.Text("HDRP support: enabled in this build.");
+#else
+			ImGui.Text("HDRP support: not enabled in this build.");
+#endif
+			ImGui.Text("Expected: no duplicate UI across HDRP cameras.");
+			ImGui.End();
+		}
+
+		private void DrawHdrpSetupSnippet()
+		{
+			if (!ImGui.Begin("HDRP Setup Help", ref _showHdrpSetupHelp))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.BulletText("1. Add a Custom Pass Volume.");
+			ImGui.BulletText("2. Add DearImGuiPass.");
+			ImGui.BulletText("3. Assign the target camera on UImGui.");
+			ImGui.End();
+		}
+
+		private void DrawHdrpMotionBlurSnippet()
+		{
+			if (!ImGui.Begin("HDRP Motion Blur Check", ref _showHdrpMotionBlurCheck))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.Text("Enable motion blur and confirm no ImGui ghost lines.");
+			ImGui.End();
+		}
+
+		private void DrawFontAtlasWipSnippet()
+		{
+			if (!ImGui.Begin("Font Atlas (WIP)", ref _showFontAtlasWip))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.Text("Example font: NewClear-mincho.ttf");
+			ImGui.Separator();
+
+			string fontPath = System.IO.Path.Combine(
+				UnityEngine.Application.streamingAssetsPath, "NewClear-mincho.ttf");
+			bool fontReady = System.IO.File.Exists(fontPath);
+
+			if (fontReady)
+			{
+				ImGui.TextColored(new System.Numerics.Vector4(0.2f, 1f, 0.2f, 1f), "Font found in StreamingAssets.");
+			}
+			else
+			{
+				ImGui.TextColored(new System.Numerics.Vector4(1f, 0.4f, 0.1f, 1f), "Font NOT found in StreamingAssets!");
+				ImGui.Spacing();
+				ImGui.TextWrapped("To enable the NewClear-mincho sample:");
+				ImGui.BulletText("1. Copy NewClear-mincho.ttf from the package Resources/ folder");
+				ImGui.BulletText("   to your project's Assets/StreamingAssets/ folder.");
+				ImGui.BulletText("2. Assign the FontAtlasNewClearMincho asset to the");
+				ImGui.BulletText("   UImGui component's Font Atlas Configuration field.");
+				ImGui.BulletText("3. Re-enter Play mode.");
+			}
+
+			ImGui.Spacing();
+			ImGui.Text("Status: WIP, still under stabilization.");
+			ImGui.End();
 		}
 
 #if UIMGUI_ENABLE_IMGUIZMO

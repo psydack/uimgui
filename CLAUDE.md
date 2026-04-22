@@ -86,3 +86,12 @@ ImGui.Image(id, new Vector2(w, h));
 - Font atlas crash has no fix; always use the callback approach for custom fonts.
 - ImPlot is partially broken.
 - `allowUnsafeCode = true` is required by the assembly definition.
+
+## Versioning policy (required)
+
+Every delivered change must increment the version in `package.json` using SemVer based on the impact of the modification:
+- **MAJOR** (`X.0.0`): breaking API/behavior changes or compatibility breaks.
+- **MINOR** (`x.Y.0`): backward-compatible new features.
+- **PATCH** (`x.y.Z`): backward-compatible fixes, docs-only updates, and internal improvements.
+
+Do not ship changes without updating `package.json` version accordingly.
