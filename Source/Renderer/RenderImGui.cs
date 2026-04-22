@@ -55,7 +55,7 @@ namespace UImGui.Renderer
 		[HideInInspector]
 		public global::UImGui.UImGui UImGui;
 		public CommandBuffer CommandBuffer;
-		public RenderPassEvent RenderPassEvent = RenderPassEvent.AfterRenderingTransparents;
+		public RenderPassEvent RenderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
 
 		private CommandBufferPass _commandBufferPass;
 

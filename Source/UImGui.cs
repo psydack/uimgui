@@ -91,6 +91,7 @@ namespace UImGui
 		private bool _doGlobalEvents = true; // Do global/default Layout event too.
 
 		private bool _isChangingCamera = false;
+		private bool _isInitialized = false;
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
 
@@ -138,11 +139,18 @@ namespace UImGui
 
 		private void OnDestroy()
 		{
-			UImGuiUtility.DestroyContext(_context);
+			OnDisable();
+			if (_context != null)
+			{
+				UImGuiUtility.DestroyContext(_context);
+				_context = null;
+			}
 		}
 
 		private void OnEnable()
 		{
+			_isInitialized = false;
+
 			void Fail(string reason)
 			{
 				enabled = false;
@@ -208,17 +216,26 @@ namespace UImGui
 				UImGuiUtility.DoOnInitialize(this);
 			}
 			OnInitialize?.Invoke(this);
+			_isInitialized = true;
 		}
 
 		private void OnDisable()
 		{
+			if (_context == null)
+			{
+				return;
+			}
+
+			if (!_isInitialized && _renderCommandBuffer == null && _renderer == null && _platform == null)
+			{
+				return;
+			}
+
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
 
 			SetRenderer(null, io);
 			SetPlatform(null, io);
-
-			UImGuiUtility.SetCurrentContext(null);
 
 			_context.TextureManager.Shutdown();
 			_context.TextureManager.DestroyFontAtlas(io);
@@ -249,11 +266,16 @@ namespace UImGui
 
 			_renderCommandBuffer = null;
 
-			if (_doGlobalEvents)
+			if (_isInitialized && _doGlobalEvents)
 			{
 				UImGuiUtility.DoOnDeinitialize(this);
 			}
-			OnDeinitialize?.Invoke(this);
+			if (_isInitialized)
+			{
+				OnDeinitialize?.Invoke(this);
+			}
+			_isInitialized = false;
+			UImGuiUtility.SetCurrentContext(null);
 		}
 
 		private void Update()
@@ -273,6 +295,11 @@ namespace UImGui
 
 		internal void DoUpdate(CommandBuffer buffer)
 		{
+			if (!_isInitialized || _context == null || _platform == null || _camera == null)
+			{
+				return;
+			}
+
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
 
@@ -312,7 +339,7 @@ namespace UImGui
 
 		internal void RenderDrawData(CommandBuffer buffer)
 		{
-			if (buffer == null || _renderer == null)
+			if (!_isInitialized || buffer == null || _renderer == null || _context == null)
 			{
 				return;
 			}

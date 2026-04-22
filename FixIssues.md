@@ -3,7 +3,7 @@
 > Source: https://github.com/psydack/uimgui/issues  
 > Captured: 2026-04-21  
 > Target release: 7.0.0  
-> Execution branch: `feat/new-architecture`
+> Execution branch: `fix/fix-issues-v7`
 
 ---
 
@@ -27,16 +27,16 @@
 | NEW-C | Real HDRP support stabilization | DONE (WORKING) | P0 | L |
 | #81 | HDRP setup broken in Unity 6 | DONE (WORKING) | P0 | M |
 | #67/#54 | HDRP motion blur artifact (`DrawGizmos` interference) | DONE (WORKING) | P1 | S |
-| NEW-A | `FontConfig.BuildRanges` ignores selected scripts | CRITICAL | P0 | S |
-| NEW-B | "Support Everything" does not load expected ranges | CRITICAL | P0 | S |
-| #45/#44 | Font atlas and custom font flow instability | HIGH (WIP) | P1 | M |
-| #83 | Disabling `UImGui` can crash follow-up frames | CRITICAL | P0 | S |
-| #80/#61 | Optional plugin native mismatch causes Play crash | CRITICAL | P0 | S |
-| #63 | URP + FXAA render pass ordering issue | HIGH | P1 | M |
-| #69 | Input System mouse wheel scale too low | HIGH | P1 | S |
-| #77 | Docking helper API coverage gaps | REQUEST | P2 | S |
-| #64 | Utility interfaces are internal | REQUEST | P2 | S |
-| #71 | `p_open` usage confusion in docs/sample | DOCS | P2 | XS |
+| NEW-A | `FontConfig.BuildRanges` ignores selected scripts | DONE | P0 | S |
+| NEW-B | "Support Everything" does not load expected ranges | DONE | P0 | S |
+| #45/#44 | Font atlas and custom font flow instability | WIP SAMPLE ADDED | P1 | M |
+| #83 | Disabling `UImGui` can crash follow-up frames | DONE | P0 | S |
+| #80/#61 | Optional plugin native mismatch causes Play crash | DONE | P0 | S |
+| #63 | URP + FXAA render pass ordering issue | DONE | P1 | M |
+| #69 | Input System mouse wheel scale too low | DONE | P1 | S |
+| #77 | Docking helper API coverage gaps | DONE | P2 | S |
+| #64 | Utility interfaces are internal | DONE | P2 | S |
+| #71 | `p_open` usage confusion in docs/sample | DONE | P2 | XS |
 | #59 | `ActivateItemByID` missing | OUT OF SCOPE | - | - |
 | #34 | `BeginTabItem` overload gap | OUT OF SCOPE | - | - |
 
@@ -279,23 +279,23 @@ private void DrawNewClearMinchoSample()
 
 ## Implementation Order
 
-### Sprint 1 - HDRP critical path (`feat/new-architecture`)
+### Sprint 1 - HDRP critical path (`fix/fix-issues-v7`)
 1. NEW-C
 2. #81
 3. #67/#54
 
-### Sprint 2 - Font atlas WIP hardening (`feat/new-architecture`)
+### Sprint 2 - Font atlas WIP hardening (`fix/fix-issues-v7`)
 4. NEW-A
 5. NEW-B
 6. #45/#44 (keep WIP label until validated)
 
-### Sprint 3 - Crash resilience and platform safety (`feat/new-architecture`)
+### Sprint 3 - Crash resilience and platform safety (`fix/fix-issues-v7`)
 7. #83
 8. #80/#61
 9. #63
 10. #69
 
-### Sprint 4 - API and docs completion (`feat/new-architecture`)
+### Sprint 4 - API and docs completion (`fix/fix-issues-v7`)
 11. #77
 12. #64
 13. #71

@@ -26,14 +26,6 @@ namespace UImGui.Renderer
 				if (!uimgui || !uimgui.enabled) continue;
 
 				uimgui.DoUpdate(context.cmd);
-
-#if UNITY_EDITOR
-				// Only draw gizmos when NOT in Game view to avoid leaking into final output (issues #67, #54)
-				if (context.hdCamera.camera.cameraType != CameraType.Game)
-				{
-					context.renderContext.DrawGizmos(context.hdCamera.camera, GizmoSubset.PostImageEffects);
-				}
-#endif
 			}
 		}
 

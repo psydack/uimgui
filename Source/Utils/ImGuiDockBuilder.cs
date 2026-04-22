@@ -13,6 +13,12 @@ namespace UImGui
 		private static extern void igDockBuilderRemoveNode(uint nodeId);
 
 		[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+		private static extern void igDockBuilderRemoveNodeChildNodes(uint nodeId);
+
+		[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+		private static extern void igDockBuilderRemoveNodeDockedWindows(uint nodeId, bool clearSettingsRefs);
+
+		[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
 		private static extern void igDockBuilderSetNodePos(uint nodeId, System.Numerics.Vector2 pos);
 
 		[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
@@ -33,11 +39,23 @@ namespace UImGui
 		public static void RemoveNode(uint nodeId)
 			=> igDockBuilderRemoveNode(nodeId);
 
+		public static void RemoveNodeChildNodes(uint nodeId)
+			=> igDockBuilderRemoveNodeChildNodes(nodeId);
+
+		public static void RemoveNodeDockedWindows(uint nodeId, bool clearSettingsRefs = true)
+			=> igDockBuilderRemoveNodeDockedWindows(nodeId, clearSettingsRefs);
+
 		public static void SetNodePos(uint nodeId, Vector2 pos)
 			=> igDockBuilderSetNodePos(nodeId, pos.AsNumerics());
 
 		public static void SetNodeSize(uint nodeId, Vector2 size)
 			=> igDockBuilderSetNodeSize(nodeId, size.AsNumerics());
+
+		public static void SetNodePosSize(uint nodeId, Vector2 pos, Vector2 size)
+		{
+			SetNodePos(nodeId, pos);
+			SetNodeSize(nodeId, size);
+		}
 
 		public static uint SplitNode(uint nodeId, ImGuiDir splitDir, float sizeRatioForDir, out uint outIdAtDir, out uint outIdAtOppositeDir)
 		{

@@ -21,6 +21,12 @@ namespace UImGui
 {
 	public class ShowDemoWindow : MonoBehaviour
 	{
+		private bool _isQuitting;
+		private bool _disableImNodesRDemo;
+		private bool _showFixIssuesDiagnostics = true;
+		private bool _showClosableWindow = true;
+		private bool _showDockingQuickDemo = true;
+
 #if UIMGUI_ENABLE_IMPLOT
 		[SerializeField]
 		float[] _barValues = Enumerable.Range(1, 10).Select(x => (x * x) * 1.0f).ToArray();
@@ -69,8 +75,22 @@ namespace UImGui
 			UImGuiUtility.Layout -= OnLayout;
 		}
 
+		private void OnApplicationQuit()
+		{
+			_isQuitting = true;
+		}
+
 		private void OnLayout(UImGui uImGui)
 		{
+			if (_isQuitting)
+			{
+				return;
+			}
+
+			DrawFixIssuesDiagnostics(uImGui);
+			DrawClosableWindowExample();
+			DrawDockingQuickDemo();
+
 #if UIMGUI_ENABLE_IMPLOT
 			if (ImGui.Begin("Plot Window Sample"))
 			{
@@ -138,16 +158,24 @@ namespace UImGui
 #endif
 
 #if UIMGUI_ENABLE_IMNODES_R
-			if (ImGui.Begin("Nodes R Sample"))
+			if (!_disableImNodesRDemo && UImGuiUtility.Context?.ImNodesRContext != System.IntPtr.Zero && ImGui.Begin("Nodes R Sample"))
 			{
-				ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
-				ImNodesR.BeginCanvas();
-				if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+				try
 				{
-					ImGui.TextUnformatted("cimnodes_r smoke node");
-					ImNodesR.EndNode();
+					ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
+					ImNodesR.BeginCanvas();
+					if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+					{
+						ImGui.TextUnformatted("cimnodes_r smoke node");
+						ImNodesR.EndNode();
+					}
+					ImNodesR.EndCanvas();
 				}
-				ImNodesR.EndCanvas();
+				catch (System.Exception ex)
+				{
+					_disableImNodesRDemo = true;
+					UnityEngine.Debug.LogWarning($"Nodes R sample disabled after runtime error: {ex.GetType().Name} - {ex.Message}");
+				}
 				ImGui.End();
 			}
 #endif
@@ -172,6 +200,135 @@ namespace UImGui
 #endif
 
 			ImGui.ShowDemoWindow();
+		}
+
+		private void DrawFixIssuesDiagnostics(UImGui uImGui)
+		{
+			if (!ImGui.Begin("UImGui Fix Issues Diagnostics", ref _showFixIssuesDiagnostics))
+			{
+				ImGui.End();
+				return;
+			}
+
+#if HAS_HDRP
+			ImGui.Text("HDRP: enabled. Custom pass should render only on the selected camera.");
+#else
+			ImGui.Text("HDRP: not enabled in this build.");
+#endif
+
+#if HAS_URP
+			ImGui.Text("URP: enabled. Default pass event is after post-processing.");
+#else
+			ImGui.Text("URP: not enabled in this build.");
+#endif
+
+			ImGui.Separator();
+			ImGui.Text("Font Atlas (WIP)");
+			ImGui.Text("NewClear-mincho.ttf sample should render these ranges when configured:");
+			ImGui.Text("Default: Hello");
+			ImGui.Text("Japanese: \u3053\u3093\u306B\u3061\u306F");
+			ImGui.Text("Cyrillic: \u041F\u0440\u0438\u0432\u0435\u0442");
+			ImGui.Text("Korean: \uC548\uB155\uD558\uC138\uC694");
+			ImGui.Text("Thai: \u0E44\u0E17\u0E22");
+			ImGui.Text("Chinese: \u4E2D\u6587");
+
+			ImGui.Separator();
+			ImGui.Text("Plugin availability");
+			ImGui.BulletText("ImPlot: " + PluginStatus(
+#if UIMGUI_ENABLE_IMPLOT
+				true
+#else
+				false
+#endif
+			));
+			ImGui.BulletText("ImNodes: " + PluginStatus(
+#if UIMGUI_ENABLE_IMNODES
+				true
+#else
+				false
+#endif
+			));
+			ImGui.BulletText("ImGuizmo: " + PluginStatus(
+#if UIMGUI_ENABLE_IMGUIZMO
+				true
+#else
+				false
+#endif
+			));
+			ImGui.BulletText("ImPlot3D: " + PluginStatus(
+#if UIMGUI_ENABLE_IMPLOT3D
+				true
+#else
+				false
+#endif
+			));
+			ImGui.BulletText("ImNodes-R: " + PluginStatus(
+#if UIMGUI_ENABLE_IMNODES_R
+				true
+#else
+				false
+#endif
+			));
+			ImGui.BulletText("ImGuizmoQuat: " + PluginStatus(
+#if UIMGUI_ENABLE_IMGUIZMO_QUAT
+				true
+#else
+				false
+#endif
+			));
+			ImGui.BulletText("CimCTE: " + PluginStatus(
+#if UIMGUI_ENABLE_CIMCTE
+				true
+#else
+				false
+#endif
+			));
+
+			ImGui.Separator();
+			ImGui.Text($"Component active: {uImGui != null && uImGui.isActiveAndEnabled}");
+			ImGui.Text("Input System wheel delta is normalized to ImGui wheel units.");
+			ImGui.End();
+		}
+
+		private static string PluginStatus(bool enabled)
+		{
+			return enabled ? "enabled" : "disabled";
+		}
+
+		private void DrawClosableWindowExample()
+		{
+			if (!_showClosableWindow)
+			{
+				return;
+			}
+
+			if (!ImGui.Begin("Closable Window Sample", ref _showClosableWindow))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.Text("Close this window with the title bar X to test p_open behavior.");
+			ImGui.End();
+		}
+
+		private void DrawDockingQuickDemo()
+		{
+			if (!_showDockingQuickDemo)
+			{
+				return;
+			}
+
+			if (!ImGui.Begin("Docking Quick Demo", ref _showDockingQuickDemo))
+			{
+				ImGui.End();
+				return;
+			}
+
+			uint dockspaceId = ImGui.GetID("UImGuiSampleDockSpace");
+			ImGui.DockSpace(dockspaceId);
+			ImGui.Text($"Dockspace ID: {dockspaceId}");
+			ImGui.End();
 		}
 
 #if UIMGUI_ENABLE_IMGUIZMO

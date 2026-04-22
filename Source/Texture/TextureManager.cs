@@ -270,6 +270,8 @@ namespace UImGui.Texture
 				return;
 			}
 
+			uint rasterizerFlags = ImFreetype.SanitizeBuilderFlags(settings.RasterizerFlags);
+
 			// Add fonts from config asset.
 			for (int fontIndex = 0; fontIndex < settings.Fonts.Length; fontIndex++)
 			{
@@ -294,6 +296,7 @@ namespace UImGui.Texture
 					var fontConfigPtr = new ImFontConfigPtr(&fontConfig);
 
 					fontDefinition.Config.ApplyTo(fontConfigPtr);
+					fontConfigPtr.FontLoaderFlags |= rasterizerFlags;
 					fontConfigPtr.GlyphRanges = AllocateGlyphRangeArray(fontDefinition.Config);
 
 					io.Fonts.AddFontFromFileTTF(fontPath, fontDefinition.Config.SizeInPixels, fontConfigPtr);
@@ -301,7 +304,15 @@ namespace UImGui.Texture
 			}
 
 			if (io.Fonts.Fonts.Size == 0)
-				io.Fonts.AddFontDefault();
+			{
+				unsafe
+				{
+					ImFontConfig fontConfig = default;
+					var fontConfigPtr = new ImFontConfigPtr(&fontConfig);
+					fontConfigPtr.FontLoaderFlags = rasterizerFlags;
+					io.Fonts.AddFontDefault(fontConfigPtr);
+				}
+			}
 		}
 
 		public unsafe void DestroyFontAtlas(ImGuiIOPtr io)

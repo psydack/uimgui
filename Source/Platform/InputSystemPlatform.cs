@@ -22,6 +22,8 @@ namespace UImGui.Platform
     /// </summary>
     internal sealed class InputSystemPlatform : PlatformBase
     {
+        private const float ScrollWheelScale = 1f / 120f;
+
         private readonly List<char> _textInput = new();
 
         private readonly List<KeyControl> _keyControls = new();
@@ -48,9 +50,8 @@ namespace UImGui.Platform
 
             io.MousePos = Utils.ScreenToImGuiNumerics(mouse.position.ReadValue());
 
-            var mouseScroll = mouse.scroll.ReadValue();
-            io.MouseWheel = mouseScroll.y;
-            io.MouseWheelH = mouseScroll.x;
+            var mouseScroll = mouse.scroll.ReadValue() * ScrollWheelScale;
+            io.AddMouseWheelEvent(mouseScroll.x, mouseScroll.y);
 
             io.MouseDown[0] = mouse.leftButton.isPressed;
             io.MouseDown[1] = mouse.rightButton.isPressed;
