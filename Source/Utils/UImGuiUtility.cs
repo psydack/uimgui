@@ -25,6 +25,12 @@ namespace UImGui
 		public static unsafe Context CreateContext()
 		{
 			IntPtr imGuiContext = ImGui.CreateContext();
+			// ImGui 1.90+ no longer sets the current context inside CreateContext.
+			// Plugins that call ImGui internals during their own CreateContext (e.g.
+			// ImNodes-R's Ez API calls igWindowRectRelToAbs) need a current context
+			// to exist — set it here before handing off to the plugin registry.
+			ImGui.SetCurrentContext(imGuiContext);
+
 			var context = new Context
 			{
 				ImGuiContext = imGuiContext,
