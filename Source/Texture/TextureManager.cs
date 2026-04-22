@@ -127,6 +127,12 @@ namespace UImGui.Texture
 					return;
 				}
 
+				if (bytesPerPixel != 4 && bytesPerPixel != 1)
+				{
+					Debug.LogError($"[UImGui] WantUpdates: unsupported texture format BytesPerPixel={bytesPerPixel}.");
+					return;
+				}
+
 				// Size changed — destroy and recreate.
 				if (tex2d.width != width || tex2d.height != height)
 				{
@@ -146,12 +152,6 @@ namespace UImGui.Texture
 
 				var dstData = tex2d.GetRawTextureData<byte>();
 				CopyPixelsToTexture2D(pixels, width, height, bytesPerPixel, dstData);
-
-				if (bytesPerPixel != 4 && bytesPerPixel != 1)
-				{
-					Debug.LogError($"[UImGui] WantUpdates: unsupported texture format BytesPerPixel={bytesPerPixel}.");
-					return;
-				}
 
 				tex2d.Apply();
 				texData.SetStatus(ImTextureStatus.OK);

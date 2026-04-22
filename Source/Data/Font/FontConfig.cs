@@ -119,11 +119,11 @@ namespace UImGui
 			ImFontAtlas* atlas = null;
 			var ranges = new List<ushort>();
 			ScriptGlyphRanges selected = GlyphRanges & ScriptGlyphRanges.Everything;
-			if (selected == ScriptGlyphRanges.None)
-			{
-				// Keep atlas usable even when serialized flags contain an invalid mask.
+			// Stale serialized assets may have out-of-range bits that mask to zero;
+			// fall back to Default only in that case. An explicit None (GlyphRanges == 0)
+			// means "let the font decide its own ranges" and must be honoured.
+			if (selected == ScriptGlyphRanges.None && GlyphRanges != ScriptGlyphRanges.None)
 				selected = ScriptGlyphRanges.Default;
-			}
 
 			void AddRangePtr(ushort* r)
 			{
