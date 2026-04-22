@@ -207,6 +207,18 @@ No special setup is required.
 2. Assign the generated `RenderImGui` asset to the **Render Feature** field on the `UImGui` component.
 3. If you add a new renderer later, run the menu again or add the feature manually.
 
+If a `UImGui` prefab is loaded dynamically, for example through Addressables, the serialized `RenderImGui` reference may be missing because the renderer feature lives in the URP renderer asset instead of the prefab bundle. UImGui now tries to find the first `RenderImGui` feature in the active URP pipeline during `OnEnable()`.
+
+For projects with multiple renderers or multiple `RenderImGui` features, assign the feature explicitly after instantiation:
+
+```csharp
+var handle = Addressables.InstantiateAsync("UImGuiPrefab");
+var go = await handle.Task;
+
+var ui = go.GetComponent<UImGui.UImGui>();
+ui.SetRenderFeature(myRenderImGuiFeature);
+```
+
 ### HDRP
 
 1. Add a Volume > **Custom Pass** to the scene.
@@ -547,6 +559,36 @@ public class VectorBridgeSample : MonoBehaviour
 
 ---
 
+## Utility helpers
+
+### Tab item without close state
+
+ImGui.NET may not expose every Dear ImGui overload directly. Use `UImGuiUtility.BeginTabItem()` when you need the C++ style `BeginTabItem(label, flags)` overload without a `p_open` close-button reference:
+
+```csharp
+using ImGuiNET;
+using UImGui;
+
+if (ImGui.BeginTabBar("##tabs"))
+{
+    if (UImGuiUtility.BeginTabItem("Permanent"))
+    {
+        ImGui.Text("This tab has no close button.");
+        ImGui.EndTabItem();
+    }
+
+    if (UImGuiUtility.BeginTabItem("No Tooltip", ImGuiTabItemFlags.NoTooltip))
+    {
+        ImGui.Text("Flags are still supported.");
+        ImGui.EndTabItem();
+    }
+
+    ImGui.EndTabBar();
+}
+```
+
+---
+
 ## Samples
 
 The package includes a sample entry point under `Sample/`.
@@ -606,6 +648,8 @@ Check:
 
 1. **Tools > UImGui > Add Render Feature to URP**
 2. assign the generated asset to the `UImGui` component
+
+For Addressables or runtime-instantiated prefabs, verify the active URP renderer asset contains a `RenderImGui` feature. If your project has more than one renderer feature, call `SetRenderFeature()` after instantiation to select the correct one.
 
 ### `Platform not available`
 
