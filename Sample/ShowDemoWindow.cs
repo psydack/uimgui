@@ -103,13 +103,14 @@ namespace UImGui
 			{
 				var initialWindowSize = UnityEngine.Vector2.one * 200;
 				ImGui.SetNextWindowSize(initialWindowSize.AsNumerics(), ImGuiCond.Once);
-				ImPlot.BeginPlot("Plot test");
-				ImPlot.PlotBars("My Bar Plot", ref _barValues[0], _barValues.Length + 1);
-				ImPlot.PlotLine("My Line Plot", ref _yValues[0], _yValues.Length);
-				ImPlot.EndPlot();
-
-				ImGui.End();
+				if (ImPlot.BeginPlot("Plot test"))
+				{
+					ImPlot.PlotBars("My Bar Plot", ref _barValues[0], _barValues.Length + 1);
+					ImPlot.PlotLine("My Line Plot", ref _yValues[0], _yValues.Length);
+					ImPlot.EndPlot();
+				}
 			}
+			ImGui.End();
 #endif
 
 #if UIMGUI_ENABLE_IMNODES
@@ -135,8 +136,8 @@ namespace UImGui
 
 				imnodes.EndNode();
 				imnodes.EndNodeEditor();
-				ImGui.End();
 			}
+			ImGui.End();
 #endif
 
 #if UIMGUI_ENABLE_IMPLOT3D
@@ -147,8 +148,8 @@ namespace UImGui
 					ImPlot3D.PlotLine("Helix", ref _xs3D[0], ref _ys3D[0], ref _zs3D[0], _xs3D.Length);
 					ImPlot3D.EndPlot();
 				}
-				ImGui.End();
 			}
+			ImGui.End();
 #endif
 
 #if UIMGUI_ENABLE_IMGUIZMO
@@ -160,28 +161,31 @@ namespace UImGui
 				ImGuizmo.SetRect(pos.X, pos.Y, size.X, size.Y);
 				ImGuizmo.Manipulate(ref _gizmoView[0], ref _gizmoProjection[0], OPERATION.TRANSLATE, MODE.LOCAL, ref _gizmoMatrix[0]);
 				ImGuizmo.DrawGrid(ref _gizmoView[0], ref _gizmoProjection[0], ref _gizmoMatrix[0], 10f);
-				ImGui.End();
 			}
+			ImGui.End();
 #endif
 
 #if UIMGUI_ENABLE_IMNODES_R
-			if (!_disableImNodesRDemo && UImGuiUtility.Context?.ImNodesRContext != System.IntPtr.Zero && ImGui.Begin("Nodes R Sample"))
+			if (!_disableImNodesRDemo && UImGuiUtility.Context?.ImNodesRContext != System.IntPtr.Zero)
 			{
-				try
+				if (ImGui.Begin("Nodes R Sample"))
 				{
-					ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
-					ImNodesR.BeginCanvas();
-					if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+					try
 					{
-						ImGui.TextUnformatted("cimnodes_r smoke node");
-						ImNodesR.EndNode();
+						ImNodesR.SetContext(UImGuiUtility.Context.ImNodesRContext);
+						ImNodesR.BeginCanvas();
+						if (ImNodesR.BeginNode(new System.IntPtr(1), "Node R", ref _nodePos, ref _nodeSelected))
+						{
+							ImGui.TextUnformatted("cimnodes_r smoke node");
+							ImNodesR.EndNode();
+						}
+						ImNodesR.EndCanvas();
 					}
-					ImNodesR.EndCanvas();
-				}
-				catch (System.Exception ex)
-				{
-					_disableImNodesRDemo = true;
-					UnityEngine.Debug.LogWarning($"Nodes R sample disabled after runtime error: {ex.GetType().Name} - {ex.Message}");
+					catch (System.Exception ex)
+					{
+						_disableImNodesRDemo = true;
+						UnityEngine.Debug.LogWarning($"Nodes R sample disabled after runtime error: {ex.GetType().Name} - {ex.Message}");
+					}
 				}
 				ImGui.End();
 			}
@@ -192,8 +196,8 @@ namespace UImGui
 			{
 				ImGuizmoQuatNET.ImGuizmoQuat.gizmo3D("##rot", ref _rotation);
 				ImGui.Text($"Q  {_rotation.X:F2}  {_rotation.Y:F2}  {_rotation.Z:F2}  {_rotation.W:F2}");
-				ImGui.End();
 			}
+			ImGui.End();
 #endif
 
 #if UIMGUI_ENABLE_CIMCTE
@@ -201,9 +205,9 @@ namespace UImGui
 			// Marshal.AllocHGlobal + placement-new (no factory in current bindings).
 			if (ImGui.Begin("CimCTE Sample"))
 			{
-				ImGui.Text("CimCTE available — use CimCTENET.TextEditorPtr for the full API.");
-				ImGui.End();
+				ImGui.Text("CimCTE available - use CimCTENET.TextEditorPtr for the full API.");
 			}
+			ImGui.End();
 #endif
 
 			ImGui.ShowDemoWindow();
