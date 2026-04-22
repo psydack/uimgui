@@ -1,30 +1,21 @@
 #if UIMGUI_ENABLE_IMPLOT
-using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class ImPlotPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
-		{
-			context.ImPlotContext = ImPlotNET.ImPlot.CreateContext();
-		}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new ImPlotPlugin());
 
-		public void SetCurrent(Context context)
-		{
-			ImPlotNET.ImPlot.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-		}
+		public void CreateContext(Context ctx)
+			=> ctx.ImPlotContext = ImPlotNET.ImPlot.CreateContext();
 
-		public void Destroy(Context context)
-		{
-			if (context?.ImPlotContext == IntPtr.Zero)
-			{
-				return;
-			}
+		public void SetCurrentContext(Context ctx)
+			=> ImPlotNET.ImPlot.SetImGuiContext(ctx?.ImGuiContext ?? System.IntPtr.Zero);
 
-			ImPlotNET.ImPlot.DestroyContext(context.ImPlotContext);
-			context.ImPlotContext = IntPtr.Zero;
-		}
+		public void DestroyContext(Context ctx)
+			=> ImPlotNET.ImPlot.DestroyContext(ctx.ImPlotContext);
 	}
 }
 #endif

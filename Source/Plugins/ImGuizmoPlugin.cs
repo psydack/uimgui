@@ -1,23 +1,19 @@
 #if UIMGUI_ENABLE_IMGUIZMO
-using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class ImGuizmoPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
-		{
-		}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new ImGuizmoPlugin());
 
-		public void SetCurrent(Context context)
-		{
-			ImGuizmoNET.ImGuizmo.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-		}
+		public void CreateContext(Context ctx) { }
 
-		public void Destroy(Context context)
-		{
-			ImGuizmoNET.ImGuizmo.SetImGuiContext(IntPtr.Zero);
-		}
+		public void SetCurrentContext(Context ctx)
+			=> ImGuizmoNET.ImGuizmo.SetImGuiContext(ctx?.ImGuiContext ?? System.IntPtr.Zero);
+
+		public void DestroyContext(Context ctx) { }
 	}
 }
 #endif

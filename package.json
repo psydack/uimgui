@@ -29,12 +29,17 @@
       "displayName": "Demo Window",
       "description": "A sample scene prefab and script that render the Dear ImGui demo window in Unity.",
       "path": "Sample"
+    },
+    {
+      "displayName": "Font Atlas NewClear-mincho (WIP)",
+      "description": "A sample script that demonstrates the WIP font atlas flow using NewClear-mincho.ttf.",
+      "path": "Sample"
     }
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/psydack/uimgui.git",
-    "revision": "fix/fix-issues-v7"
+    "revision": "main"
   },
   "bugs": {
     "url": "https://github.com/psydack/uimgui/issues"

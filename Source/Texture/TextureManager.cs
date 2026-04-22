@@ -11,16 +11,31 @@ using UTexture = UnityEngine.Texture;
 
 namespace UImGui.Texture
 {
-	// TODO: Write documentation for methods
 	public class TextureManager
 	{
 		private readonly Dictionary<IntPtr, UTexture> _textures = new Dictionary<IntPtr, UTexture>();
 		private readonly Dictionary<UTexture, IntPtr> _textureIds = new Dictionary<UTexture, IntPtr>();
 		private readonly Dictionary<Sprite, SpriteInfo> _spriteData = new Dictionary<Sprite, SpriteInfo>();
-
 		private readonly HashSet<IntPtr> _allocatedGlyphRangeArrays = new HashSet<IntPtr>();
 
-		// Called after ImGui.Render() to process backend texture requests from draw data.
+		// Tracks IDs created by the backend (UploadTexture). DestroyTexture only destroys these.
+		private readonly HashSet<IntPtr> _backendOwnedIds = new HashSet<IntPtr>();
+
+		public struct Diagnostics
+		{
+			public int CreatedCount;
+			public int UpdatedCount;
+			public int DestroyedCount;
+			public int UserRegisteredCount;
+		}
+
+		private Diagnostics _diagnostics;
+		public Diagnostics GetDiagnostics() => _diagnostics;
+
+#if UNITY_INCLUDE_TESTS || DEVELOPMENT_BUILD
+		public bool HasCreatedBackendTextures => _backendOwnedIds.Count > 0;
+#endif
+
 		public unsafe void UpdateTextures(ImDrawDataPtr drawData)
 		{
 			if (drawData.NativePtr == null || drawData.NativePtr->Textures == null)
@@ -47,30 +62,115 @@ namespace UImGui.Texture
 
 		private unsafe void UploadTexture(ImTextureDataPtr texData)
 		{
-			byte* pixels = (byte*)texData.Pixels;
-			int width = texData.Width;
-			int height = texData.Height;
-			int bytesPerPixel = texData.BytesPerPixel;
-
-			if (pixels == null || width <= 0 || height <= 0 || bytesPerPixel <= 0)
+			Constants.TextureUploadMarker.Begin();
+			try
 			{
-				Debug.LogError("[UImGui] Texture data invalid — atlas was not built.");
-				return;
+				byte* pixels = (byte*)texData.Pixels;
+				int width = texData.Width;
+				int height = texData.Height;
+				int bytesPerPixel = texData.BytesPerPixel;
+
+				if (pixels == null || width <= 0 || height <= 0 || bytesPerPixel <= 0)
+				{
+					Debug.LogError("[UImGui] Texture data invalid — atlas was not built.");
+					return;
+				}
+
+				var tex2d = new Texture2D(width, height, TextureFormat.RGBA32, false, false)
+				{
+					filterMode = FilterMode.Point
+				};
+
+				var dstData = tex2d.GetRawTextureData<byte>();
+				CopyPixelsToTexture2D(pixels, width, height, bytesPerPixel, dstData);
+
+				if (bytesPerPixel != 4 && bytesPerPixel != 1)
+				{
+					Debug.LogError($"[UImGui] Unsupported texture format BytesPerPixel={bytesPerPixel}.");
+					UnityEngine.Object.Destroy(tex2d);
+					return;
+				}
+
+				tex2d.Apply();
+				IntPtr id = RegisterTexture(tex2d);
+				_backendOwnedIds.Add(id);
+				texData.SetTexID(id);
+				texData.SetStatus(ImTextureStatus.OK);
+				_diagnostics.CreatedCount++;
 			}
-
-			var tex2d = new Texture2D(width, height, TextureFormat.RGBA32, false, false)
+			finally
 			{
-				filterMode = FilterMode.Point
-			};
+				Constants.TextureUploadMarker.End();
+			}
+		}
 
-			// TODO: Remove collections and make native array manually.
+		private unsafe void UpdateTexture(ImTextureDataPtr texData)
+		{
+			Constants.TextureUpdateMarker.Begin();
+			try
+			{
+				IntPtr id = texData.GetTexID();
+				if (id == IntPtr.Zero || !_textures.TryGetValue(id, out UTexture texture) || texture is not Texture2D tex2d)
+				{
+					Debug.LogError("[UImGui] WantUpdates: no existing texture found.");
+					return;
+				}
+
+				byte* pixels = (byte*)texData.Pixels;
+				int width = texData.Width;
+				int height = texData.Height;
+				int bytesPerPixel = texData.BytesPerPixel;
+
+				if (pixels == null || width <= 0 || height <= 0 || bytesPerPixel <= 0)
+				{
+					Debug.LogError("[UImGui] WantUpdates: texture data is invalid.");
+					return;
+				}
+
+				if (bytesPerPixel != 4 && bytesPerPixel != 1)
+				{
+					Debug.LogError($"[UImGui] WantUpdates: unsupported texture format BytesPerPixel={bytesPerPixel}.");
+					return;
+				}
+
+				// Size changed — destroy and recreate.
+				if (tex2d.width != width || tex2d.height != height)
+				{
+					_textures.Remove(id);
+					_textureIds.Remove(tex2d);
+					_backendOwnedIds.Remove(id);
+					UnityEngine.Object.Destroy(tex2d);
+
+					tex2d = new Texture2D(width, height, TextureFormat.RGBA32, false, false)
+					{
+						filterMode = FilterMode.Point
+					};
+					id = RegisterTexture(tex2d);
+					_backendOwnedIds.Add(id);
+					texData.SetTexID(id);
+				}
+
+				var dstData = tex2d.GetRawTextureData<byte>();
+				CopyPixelsToTexture2D(pixels, width, height, bytesPerPixel, dstData);
+
+				tex2d.Apply();
+				texData.SetStatus(ImTextureStatus.OK);
+				_diagnostics.UpdatedCount++;
+			}
+			finally
+			{
+				Constants.TextureUpdateMarker.End();
+			}
+		}
+
+		// Y-flips and copies ImGui pixel data into a Unity texture's raw data buffer.
+		private static unsafe void CopyPixelsToTexture2D(byte* pixels, int width, int height, int bytesPerPixel, NativeArray<byte> dstData)
+		{
 			var srcData = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<byte>(
 				pixels, width * height * bytesPerPixel, Allocator.None);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
 			NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref srcData, AtomicSafetyHandle.GetTempMemoryHandle());
 #endif
-			var dstData = tex2d.GetRawTextureData<byte>();
-
 			if (bytesPerPixel == 4)
 			{
 				int stride = width * bytesPerPixel;
@@ -79,7 +179,6 @@ namespace UImGui.Texture
 			}
 			else if (bytesPerPixel == 1)
 			{
-				// Single-channel bitmap: expand to RGBA so shaders can sample alpha correctly.
 				for (int y = 0; y < height; ++y)
 				{
 					int srcRow = y * width;
@@ -92,97 +191,38 @@ namespace UImGui.Texture
 					}
 				}
 			}
-			else
-			{
-				Debug.LogError($"[UImGui] Unsupported texture format BytesPerPixel={bytesPerPixel}.");
-				UnityEngine.Object.Destroy(tex2d);
-				return;
-			}
-
-			tex2d.Apply();
-			IntPtr id = RegisterTexture(tex2d);
-			texData.SetTexID(id);
-			texData.SetStatus(ImTextureStatus.OK);
-		}
-
-		private unsafe void UpdateTexture(ImTextureDataPtr texData)
-		{
-			IntPtr id = texData.GetTexID();
-			if (id == IntPtr.Zero || !_textures.TryGetValue(id, out UTexture texture) || texture is not Texture2D tex2d)
-			{
-				Debug.LogError("[UImGui] WantUpdates: no existing texture found.");
-				return;
-			}
-
-			byte* pixels = (byte*)texData.Pixels;
-			int width = texData.Width;
-			int height = texData.Height;
-			int bytesPerPixel = texData.BytesPerPixel;
-
-			if (pixels == null || width <= 0 || height <= 0 || bytesPerPixel <= 0)
-			{
-				Debug.LogError("[UImGui] WantUpdates: texture data is invalid.");
-				return;
-			}
-
-			if (tex2d.width != width || tex2d.height != height)
-			{
-				Debug.LogError("[UImGui] WantUpdates: texture size changed unexpectedly.");
-				return;
-			}
-
-			var srcData = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<byte>(
-				pixels, width * height * bytesPerPixel, Allocator.None);
-#if ENABLE_UNITY_COLLECTIONS_CHECKS
-			NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref srcData, AtomicSafetyHandle.GetTempMemoryHandle());
-#endif
-			var dstData = tex2d.GetRawTextureData<byte>();
-
-			if (bytesPerPixel == 4)
-			{
-				int stride = width * bytesPerPixel;
-				for (int y = 0; y < height; ++y)
-					NativeArray<byte>.Copy(srcData, y * stride, dstData, (height - y - 1) * stride, stride);
-			}
-			else if (bytesPerPixel == 1)
-			{
-				for (int y = 0; y < height; ++y)
-				{
-					int srcRow = y * width;
-					int dstRow = (height - y - 1) * width * 4;
-					for (int x = 0; x < width; ++x)
-					{
-						byte a = srcData[srcRow + x];
-						int d = dstRow + x * 4;
-						dstData[d] = 255;
-						dstData[d + 1] = 255;
-						dstData[d + 2] = 255;
-						dstData[d + 3] = a;
-					}
-				}
-			}
-			else
-			{
-				Debug.LogError($"[UImGui] WantUpdates: unsupported texture format BytesPerPixel={bytesPerPixel}.");
-				return;
-			}
-
-			tex2d.Apply();
-			texData.SetStatus(ImTextureStatus.OK);
 		}
 
 		private void DestroyTexture(ImTextureDataPtr texData)
 		{
-			IntPtr id = texData.GetTexID();
-			if (id != IntPtr.Zero && _textures.TryGetValue(id, out UTexture tex))
+			Constants.TextureDestroyMarker.Begin();
+			try
 			{
-				_textures.Remove(id);
-				_textureIds.Remove(tex);
-				if (tex is Texture2D tex2d)
-					UnityEngine.Object.Destroy(tex2d);
+				IntPtr id = texData.GetTexID();
+				if (id == IntPtr.Zero || !_backendOwnedIds.Contains(id))
+				{
+					// Safety: never destroy user-registered textures.
+					texData.SetStatus(ImTextureStatus.Destroyed);
+					return;
+				}
+
+				if (_textures.TryGetValue(id, out UTexture tex))
+				{
+					_textures.Remove(id);
+					_textureIds.Remove(tex);
+					if (tex is Texture2D tex2d)
+						UnityEngine.Object.Destroy(tex2d);
+				}
+
+				_backendOwnedIds.Remove(id);
+				texData.SetTexID(IntPtr.Zero);
+				texData.SetStatus(ImTextureStatus.Destroyed);
+				_diagnostics.DestroyedCount++;
 			}
-			texData.SetTexID(IntPtr.Zero);
-			texData.SetStatus(ImTextureStatus.Destroyed);
+			finally
+			{
+				Constants.TextureDestroyMarker.End();
+			}
 		}
 
 		public void Shutdown()
@@ -197,6 +237,7 @@ namespace UImGui.Texture
 
 			_textures.Clear();
 			_textureIds.Clear();
+			_backendOwnedIds.Clear();
 			_spriteData.Clear();
 		}
 
@@ -213,7 +254,12 @@ namespace UImGui.Texture
 				return IntPtr.Zero;
 			}
 
-			return _textureIds.TryGetValue(texture, out IntPtr id) ? id : RegisterTexture(texture);
+			if (_textureIds.TryGetValue(texture, out IntPtr id))
+				return id;
+
+			id = RegisterTexture(texture);
+			_diagnostics.UserRegisteredCount++;
+			return id;
 		}
 
 		public SpriteInfo GetSpriteInfo(Sprite sprite)
@@ -272,14 +318,13 @@ namespace UImGui.Texture
 
 			uint rasterizerFlags = ImFreetype.SanitizeBuilderFlags(settings.RasterizerFlags);
 
-			// Add fonts from config asset.
 			for (int fontIndex = 0; fontIndex < settings.Fonts.Length; fontIndex++)
 			{
 				var fontDefinition = settings.Fonts[fontIndex];
 				string fontPath = System.IO.Path.Combine(Application.streamingAssetsPath, fontDefinition.Path);
 				if (!System.IO.File.Exists(fontPath))
 				{
-					Debug.Log($"Font file not found: {fontPath}");
+					Debug.LogWarning($"[UImGui] Font file not found: {fontPath}. Check that the file is in StreamingAssets.");
 					continue;
 				}
 

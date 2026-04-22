@@ -1,28 +1,94 @@
 #### 7.0.0 (2026-04-22)
 
+##### Release
+
+*  bump package version to `7.0.0`
+*  update README version marker and sample references for the v7 release
+*  keep `FontAtlasConfigAsset` documented as WIP while shipping the NewClear-mincho sample flow
+
 ##### Bug Fixes
 
-* fix font atlas script glyph ranges so selected scripts and `Everything` build the expected ranges
-* fix FreeType rasterizer `Everything` handling and apply atlas-level rasterizer flags to configured fonts
-* fix fallback default font config by initializing `ImFontConfig` from native defaults
-* harden `UImGui` disable/shutdown/update paths to avoid follow-up frame crashes
-* normalize Input System mouse wheel deltas to Dear ImGui wheel units
-* move the URP render pass default after post-processing for FXAA-safe rendering
-* remove HDRP custom pass gizmo drawing from the ImGui render path
-* restore optional plugin registration files expected by the Unity project
+*  initialize fallback `ImFontConfig` from native ImGui defaults before applying atlas-level FreeType rasterizer flags
 
-##### New Features
+---
 
-* add `NewClear-mincho.ttf` font atlas sample asset and sample script
-* add ShowDemoWindow diagnostics for font atlas ranges, plugins, URP/HDRP, docking, and closable windows
-* expose platform and renderer utility interfaces for extension points
-* expand `ImGuiDockBuilder` helper coverage
+#### 6.1.1 (2026-04-22)
 
-##### Documentation Changes
+##### Bug Fixes
 
-* document package version `7.0.0`
-* add ImGui.NET.4Unity fork link to motivation
-* mark font atlas sample files in README
+*  `ImFreetype.BuilderFlags` — add `[Flags]` attribute, `None`/`Everything` sentinel values, `BuilderFlagsMask` constant, and `SanitizeBuilderFlags` helper; editor now sanitizes raw flags before storing them to the asset
+*  `TextureManager.UploadFontAtlas` — properly propagate `RasterizerFlags` from `FontAtlasConfigAsset` into each font's `FontLoaderFlags`; also pass flags to the fallback `AddFontDefault` call
+*  `FontAtlasConfigAssetEditor` — use `SanitizeBuilderFlags` to strip invalid bits before writing to the serialized property
+*  `FontConfig.BuildRanges` — operate on a local `selected` variable that masks `GlyphRanges` against `ScriptGlyphRanges.Everything` so serialized assets with stale bits don't produce out-of-range ranges
+*  `ScriptGlyphRanges` — add `Everything` aggregate flag for use as a valid-bit mask
+*  `ShowDemoWindow` — guard `OnLayout` against calls during application quit (`_isQuitting` flag set in `OnApplicationQuit`)
+*  `ShowDemoWindow` — make ImNodes-R demo resilient: check `ImNodesRContext != IntPtr.Zero` before entering, wrap in `try/catch`, disable demo on first exception instead of re-throwing every frame
+*  `FontAtlasNewClearMincho` asset — switch from path-based font loading to direct font asset reference; set `RasterizerFlags` to `512` (FreeType `LoadColor`)
+*  Remove `PlanToUpdate.md` planning artifact from the package
+
+##### Commit List (6.1.0..6.1.1)
+
+*  cc56b01 fix: address Codex review — dedup plugin registration, CJK punctuation range
+
+---
+
+#### 6.1.0 (2026-04-22)
+
+##### Architecture
+
+*  add `IOptionalPlugin` interface + `PluginRegistry` — plugin contexts now self-register via `RuntimeInitializeOnLoadMethod(SubsystemRegistration)`, eliminating all per-plugin `#if` blocks from `UImGuiUtility`
+*  add self-contained plugin classes: ImPlot, ImPlot3D, ImNodes, ImNodesR, ImGuizmo, ImGuizmoQuat, CimCTE (each lives in `Source/Plugins/`)
+
+##### TextureManager
+
+*  guard `DestroyTexture` with `_backendOwnedIds` — user-registered textures can no longer be silently destroyed by the backend
+*  handle size change in `UpdateTexture` (destroy + recreate instead of corrupt)
+*  add `Diagnostics` struct (`CreatedCount`, `UpdatedCount`, `DestroyedCount`, `UserRegisteredCount`) for runtime inspection
+*  add `ProfilerMarker` coverage on upload / update / destroy paths
+*  extract `CopyPixelsToTexture2D` as a static, testable helper
+
+##### Crash Resilience
+
+*  `UImGui.DoUpdate` now has a null guard for renderer/platform and wraps the frame in a `try/catch` — exceptions disable the component instead of spamming the console
+*  add DLL version check (`ImGui.GetVersion()`) in Editor Awake
+
+##### Test Infrastructure
+
+*  add `Tests/Editor/UImGui.Tests.Editor.asmdef` and `Tests/PlayMode/UImGui.Tests.asmdef`
+*  `VectorExtensionsTests` — round-trip tests for Vector2/3/4 and Color
+*  `TextureManagerTests` — register, null, diagnostics, TryGet coverage
+*  `ContextTests` — create/destroy/null lifecycle
+*  `FontConfigTests` — ASCII ranges, Japanese CJK, dedup when Japanese + Chinese both enabled
+*  `SmokeTest_URP` — layout fires within 3 frames; draw data has work after layout (both skip gracefully when no UImGui in scene)
+
+##### Font Atlas / Samples
+
+*  bundle `NewClear-mincho.ttf` in `Resources/` and wire `FontAtlasNewClearMincho` asset to `SampleDemoWindow` prefab
+*  `SampleFontAtlasNewClearMincho` and `ShowDemoWindow` both show a StreamingAssets status marker with step-by-step copy instructions when the font file is absent
+*  font sample now renders hiragana, katakana, kanji, mixed Japanese, and Cyrillic
+
+##### Bug Fixes
+
+*  `FontConfig.BuildRanges` — fix duplicate CJK 0x4E00–0x9FFF when Japanese + ChineseSimplified flags are both set
+*  `RenderImGuiHDPass` — cache `FindObjectsByType` result; only re-query after `Cleanup()` resets the reference
+*  `RendererMesh` — pre-allocate `List<SubMeshDescriptor>` as a field; remove per-frame allocation
+
+##### Documentation
+
+*  README: add Frame lifecycle section (DoUpdate → RenderDrawData split diagram for URP 17+)
+*  README: add troubleshooting entries for locked DLL on Windows and empty font atlas
+*  README: document `FontAtlasConfigAsset` as optional; add credit and link for NewClear-mincho
+*  README: add Vector conversions section with `AsNumerics()` / `AsUnity()` example
+
+##### Commit List (main..feat/new-architecture-exec)
+
+*  f8900c0 removed duplicated files
+*  d388cb8 test: remove direct ImGuiNET dependency from URP smoke test
+*  64727b9 docs+fix: Phase E — frame lifecycle docs, Japanese samples, test asmdef fix
+*  2b5f727 feat: architecture phases A-D+F, plugin registry, TextureManager hardening
+*  02ec079 feat: execute new-architecture plan baseline (HDRP, font atlas, samples)
+
+---
 
 #### 6.0.0 (2026-04-21)
 

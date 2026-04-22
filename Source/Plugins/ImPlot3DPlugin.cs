@@ -1,30 +1,21 @@
 #if UIMGUI_ENABLE_IMPLOT3D
-using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class ImPlot3DPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
-		{
-			context.ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext();
-		}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new ImPlot3DPlugin());
 
-		public void SetCurrent(Context context)
-		{
-			ImPlot3DNET.ImPlot3D.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-		}
+		public void CreateContext(Context ctx)
+			=> ctx.ImPlot3DContext = ImPlot3DNET.ImPlot3D.CreateContext();
 
-		public void Destroy(Context context)
-		{
-			if (context?.ImPlot3DContext == IntPtr.Zero)
-			{
-				return;
-			}
+		public void SetCurrentContext(Context ctx)
+			=> ImPlot3DNET.ImPlot3D.SetImGuiContext(ctx?.ImGuiContext ?? System.IntPtr.Zero);
 
-			ImPlot3DNET.ImPlot3D.DestroyContext(context.ImPlot3DContext);
-			context.ImPlot3DContext = IntPtr.Zero;
-		}
+		public void DestroyContext(Context ctx)
+			=> ImPlot3DNET.ImPlot3D.DestroyContext(ctx.ImPlot3DContext);
 	}
 }
 #endif

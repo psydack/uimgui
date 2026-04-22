@@ -91,9 +91,9 @@ namespace UImGui
 		private bool _doGlobalEvents = true; // Do global/default Layout event too.
 
 		private bool _isChangingCamera = false;
-		private bool _isInitialized = false;
 
 		public CommandBuffer CommandBuffer => _renderCommandBuffer;
+		public Camera Camera => _camera;
 
 		#region Events
 		public event System.Action<UImGui> Layout;
@@ -135,22 +135,21 @@ namespace UImGui
 		private void Awake()
 		{
 			_context = UImGuiUtility.CreateContext();
+
+#if UNITY_EDITOR
+			var version = ImGui.GetVersion();
+			if (!version.Contains("1.92"))
+				Debug.LogWarning($"[UImGui] Expected ImGui 1.92.x, got {version}. Close Unity and recopy cimgui.dll.", this);
+#endif
 		}
 
 		private void OnDestroy()
 		{
-			OnDisable();
-			if (_context != null)
-			{
-				UImGuiUtility.DestroyContext(_context);
-				_context = null;
-			}
+			UImGuiUtility.DestroyContext(_context);
 		}
 
 		private void OnEnable()
 		{
-			_isInitialized = false;
-
 			void Fail(string reason)
 			{
 				enabled = false;
@@ -216,26 +215,17 @@ namespace UImGui
 				UImGuiUtility.DoOnInitialize(this);
 			}
 			OnInitialize?.Invoke(this);
-			_isInitialized = true;
 		}
 
 		private void OnDisable()
 		{
-			if (_context == null)
-			{
-				return;
-			}
-
-			if (!_isInitialized && _renderCommandBuffer == null && _renderer == null && _platform == null)
-			{
-				return;
-			}
-
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
 
 			SetRenderer(null, io);
 			SetPlatform(null, io);
+
+			UImGuiUtility.SetCurrentContext(null);
 
 			_context.TextureManager.Shutdown();
 			_context.TextureManager.DestroyFontAtlas(io);
@@ -266,16 +256,11 @@ namespace UImGui
 
 			_renderCommandBuffer = null;
 
-			if (_isInitialized && _doGlobalEvents)
+			if (_doGlobalEvents)
 			{
 				UImGuiUtility.DoOnDeinitialize(this);
 			}
-			if (_isInitialized)
-			{
-				OnDeinitialize?.Invoke(this);
-			}
-			_isInitialized = false;
-			UImGuiUtility.SetCurrentContext(null);
+			OnDeinitialize?.Invoke(this);
 		}
 
 		private void Update()
@@ -295,11 +280,25 @@ namespace UImGui
 
 		internal void DoUpdate(CommandBuffer buffer)
 		{
-			if (!_isInitialized || _context == null || _platform == null || _camera == null)
+			if (_renderer == null || _platform == null)
 			{
+				Debug.LogWarning("[UImGui] DoUpdate called before renderer/platform are ready.", this);
 				return;
 			}
 
+			try
+			{
+				DoUpdateImpl(buffer);
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e, this);
+				enabled = false;
+			}
+		}
+
+		private void DoUpdateImpl(CommandBuffer buffer)
+		{
 			UImGuiUtility.SetCurrentContext(_context);
 			ImGuiIOPtr io = ImGui.GetIO();
 
@@ -339,7 +338,7 @@ namespace UImGui
 
 		internal void RenderDrawData(CommandBuffer buffer)
 		{
-			if (!_isInitialized || buffer == null || _renderer == null || _context == null)
+			if (buffer == null || _renderer == null)
 			{
 				return;
 			}

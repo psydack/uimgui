@@ -1,23 +1,19 @@
 #if UIMGUI_ENABLE_CIMCTE
-using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class CimCTEPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
-		{
-		}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new CimCTEPlugin());
 
-		public void SetCurrent(Context context)
-		{
-			CimCTENET.CimCTE.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-		}
+		public void CreateContext(Context ctx) { }
 
-		public void Destroy(Context context)
-		{
-			CimCTENET.CimCTE.SetImGuiContext(IntPtr.Zero);
-		}
+		public void SetCurrentContext(Context ctx)
+			=> CimCTENET.CimCTE.SetImGuiContext(ctx?.ImGuiContext ?? System.IntPtr.Zero);
+
+		public void DestroyContext(Context ctx) { }
 	}
 }
 #endif

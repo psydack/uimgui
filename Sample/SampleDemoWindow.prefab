@@ -71,7 +71,7 @@ MonoBehaviour:
   _fontCustomInitializer:
     m_PersistentCalls:
       m_Calls: []
-  _fontAtlasConfiguration: {fileID: 11400000, guid: f53f3ef37be75b14ab71967a6542caca, type: 2}
+  _fontAtlasConfiguration: {fileID: 11400000, guid: 031b719a89894305bb28fb4f6b2f6739, type: 2}
   _shaders: {fileID: 11400000, guid: 68f2e550e81076948ba9757c73f74336, type: 2}
   _style: {fileID: 11400000, guid: 90718c4e7d6fa04438adef1ad7a432cc, type: 2}
   _cursorShapes: {fileID: 11400000, guid: 71deade41763c6e4eaeb5df973b321f1, type: 2}
@@ -88,36 +88,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7e55d54eede42459ec52fabbd53824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _barValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
-  _xValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100
-  _yValues:
-  - 1
-  - 4
-  - 9
-  - 16
-  - 25
-  - 36
-  - 49
-  - 64
-  - 81
-  - 100

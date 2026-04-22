@@ -11,19 +11,25 @@ namespace UImGui.Renderer
 
 		protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
 		{
-			_uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
+			_uimguis = null;
 		}
 
 		protected override void Execute(CustomPassContext context)
 		{
 			if (!Application.isPlaying) return;
-			if (_uimguis == null) return;
+
+			// Cache once per session; Cleanup() resets so the next Play re-discovers.
+			if (_uimguis == null)
+				_uimguis = Object.FindObjectsByType<UImGui>(FindObjectsSortMode.None);
+
+			if (_uimguis == null || _uimguis.Length == 0) return;
 
 			for (int uindex = 0; uindex < _uimguis.Length; uindex++)
 			{
 				var uimgui = _uimguis[uindex];
 
 				if (!uimgui || !uimgui.enabled) continue;
+				if (uimgui.Camera != context.hdCamera.camera) continue;
 
 				uimgui.DoUpdate(context.cmd);
 			}
@@ -31,7 +37,10 @@ namespace UImGui.Renderer
 
 		protected override bool executeInSceneView => false;
 
-		protected override void Cleanup() { }
+		protected override void Cleanup()
+		{
+			_uimguis = null;
+		}
 	}
 }
 #endif

@@ -1,23 +1,19 @@
 #if UIMGUI_ENABLE_IMGUIZMO_QUAT
-using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class ImGuizmoQuatPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
-		{
-		}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new ImGuizmoQuatPlugin());
 
-		public void SetCurrent(Context context)
-		{
-			ImGuizmoQuatNET.ImGuizmoQuat.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-		}
+		public void CreateContext(Context ctx) { }
 
-		public void Destroy(Context context)
-		{
-			ImGuizmoQuatNET.ImGuizmoQuat.SetImGuiContext(IntPtr.Zero);
-		}
+		public void SetCurrentContext(Context ctx)
+			=> ImGuizmoQuatNET.ImGuizmoQuat.SetImGuiContext(ctx?.ImGuiContext ?? System.IntPtr.Zero);
+
+		public void DestroyContext(Context ctx) { }
 	}
 }
 #endif

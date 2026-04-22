@@ -4,38 +4,32 @@ namespace UImGui
 {
 	internal static class PluginRegistry
 	{
-		private static readonly List<IOptionalPlugin> Plugins = new List<IOptionalPlugin>();
+		static readonly List<IOptionalPlugin> _plugins = new List<IOptionalPlugin>(8);
 
-		public static void Register(IOptionalPlugin plugin)
+		internal static void Register(IOptionalPlugin plugin)
 		{
-			if (plugin != null && !Plugins.Contains(plugin))
-			{
-				Plugins.Add(plugin);
-			}
+			var type = plugin.GetType();
+			for (int i = 0; i < _plugins.Count; i++)
+				if (_plugins[i].GetType() == type) return;
+			_plugins.Add(plugin);
 		}
 
-		public static void Create(Context context)
+		internal static void CreateContextAll(Context ctx)
 		{
-			foreach (IOptionalPlugin plugin in Plugins)
-			{
-				plugin.Create(context);
-			}
+			for (int i = 0; i < _plugins.Count; i++)
+				_plugins[i].CreateContext(ctx);
 		}
 
-		public static void SetCurrent(Context context)
+		internal static void SetCurrentContextAll(Context ctx)
 		{
-			foreach (IOptionalPlugin plugin in Plugins)
-			{
-				plugin.SetCurrent(context);
-			}
+			for (int i = 0; i < _plugins.Count; i++)
+				_plugins[i].SetCurrentContext(ctx);
 		}
 
-		public static void Destroy(Context context)
+		internal static void DestroyContextAll(Context ctx)
 		{
-			for (int i = Plugins.Count - 1; i >= 0; i--)
-			{
-				Plugins[i].Destroy(context);
-			}
+			for (int i = 0; i < _plugins.Count; i++)
+				_plugins[i].DestroyContext(ctx);
 		}
 	}
 }

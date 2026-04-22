@@ -1,30 +1,21 @@
 #if UIMGUI_ENABLE_IMNODES
-using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class ImNodesPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
-		{
-			context.ImNodesContext = imnodesNET.imnodes.CreateContext();
-		}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new ImNodesPlugin());
 
-		public void SetCurrent(Context context)
-		{
-			imnodesNET.imnodes.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-		}
+		public void CreateContext(Context ctx)
+			=> ctx.ImNodesContext = imnodesNET.imnodes.CreateContext();
 
-		public void Destroy(Context context)
-		{
-			if (context?.ImNodesContext == IntPtr.Zero)
-			{
-				return;
-			}
+		public void SetCurrentContext(Context ctx)
+			=> imnodesNET.imnodes.SetImGuiContext(ctx?.ImGuiContext ?? System.IntPtr.Zero);
 
-			imnodesNET.imnodes.DestroyContext(context.ImNodesContext);
-			context.ImNodesContext = IntPtr.Zero;
-		}
+		public void DestroyContext(Context ctx)
+			=> imnodesNET.imnodes.DestroyContext(ctx.ImNodesContext);
 	}
 }
 #endif

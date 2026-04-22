@@ -1,32 +1,35 @@
 #if UIMGUI_ENABLE_IMNODES_R
 using System;
+using UnityEngine;
 
 namespace UImGui
 {
 	internal sealed class ImNodesRPlugin : IOptionalPlugin
 	{
-		public void Create(Context context)
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		static void Register() => PluginRegistry.Register(new ImNodesRPlugin());
+
+		public void CreateContext(Context ctx)
 		{
-			ImNodesRNET.ImNodesR.SetImGuiContext(context.ImGuiContext);
-			context.ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext();
-			ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
+			ImNodesRNET.ImNodesR.SetImGuiContext(ctx.ImGuiContext);
+			ctx.ImNodesRContext = ImNodesRNET.ImNodesR.CreateContext();
+			ImNodesRNET.ImNodesR.SetContext(ctx.ImNodesRContext);
 		}
 
-		public void SetCurrent(Context context)
+		public void SetCurrentContext(Context ctx)
 		{
-			ImNodesRNET.ImNodesR.SetImGuiContext(context?.ImGuiContext ?? IntPtr.Zero);
-			ImNodesRNET.ImNodesR.SetContext(context?.ImNodesRContext ?? IntPtr.Zero);
+			ImNodesRNET.ImNodesR.SetImGuiContext(ctx?.ImGuiContext ?? IntPtr.Zero);
+			ImNodesRNET.ImNodesR.SetContext(ctx?.ImNodesRContext ?? IntPtr.Zero);
 		}
 
-		public void Destroy(Context context)
+		public void DestroyContext(Context ctx)
 		{
-			if (context?.ImNodesRContext != IntPtr.Zero)
+			if (ctx.ImNodesRContext != IntPtr.Zero)
 			{
-				ImNodesRNET.ImNodesR.SetContext(context.ImNodesRContext);
-				ImNodesRNET.ImNodesR.FreeContext(context.ImNodesRContext);
-				context.ImNodesRContext = IntPtr.Zero;
+				ImNodesRNET.ImNodesR.SetContext(ctx.ImNodesRContext);
+				ImNodesRNET.ImNodesR.FreeContext(ctx.ImNodesRContext);
+				ctx.ImNodesRContext = IntPtr.Zero;
 			}
-
 			ImNodesRNET.ImNodesR.SetContext(IntPtr.Zero);
 			ImNodesRNET.ImNodesR.SetImGuiContext(IntPtr.Zero);
 		}

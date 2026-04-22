@@ -23,9 +23,15 @@ namespace UImGui
 	{
 		private bool _isQuitting;
 		private bool _disableImNodesRDemo;
-		private bool _showFixIssuesDiagnostics = true;
-		private bool _showClosableWindow = true;
-		private bool _showDockingQuickDemo = true;
+
+		[SerializeField]
+		private bool _showHdrpStatus = false;
+		[SerializeField]
+		private bool _showHdrpSetupHelp = false;
+		[SerializeField]
+		private bool _showHdrpMotionBlurCheck = false;
+		[SerializeField]
+		private bool _showFontAtlasWip = true;
 
 #if UIMGUI_ENABLE_IMPLOT
 		[SerializeField]
@@ -87,9 +93,10 @@ namespace UImGui
 				return;
 			}
 
-			DrawFixIssuesDiagnostics(uImGui);
-			DrawClosableWindowExample();
-			DrawDockingQuickDemo();
+			DrawHdrpStatusSnippet();
+			DrawHdrpSetupSnippet();
+			DrawHdrpMotionBlurSnippet();
+			DrawFontAtlasWipSnippet();
 
 #if UIMGUI_ENABLE_IMPLOT
 			if (ImGui.Begin("Plot Window Sample"))
@@ -202,132 +209,82 @@ namespace UImGui
 			ImGui.ShowDemoWindow();
 		}
 
-		private void DrawFixIssuesDiagnostics(UImGui uImGui)
+		private void DrawHdrpStatusSnippet()
 		{
-			if (!ImGui.Begin("UImGui Fix Issues Diagnostics", ref _showFixIssuesDiagnostics))
+			if (!ImGui.Begin("HDRP Status", ref _showHdrpStatus))
 			{
 				ImGui.End();
 				return;
 			}
 
 #if HAS_HDRP
-			ImGui.Text("HDRP: enabled. Custom pass should render only on the selected camera.");
+			ImGui.Text("HDRP support: enabled in this build.");
 #else
-			ImGui.Text("HDRP: not enabled in this build.");
+			ImGui.Text("HDRP support: not enabled in this build.");
 #endif
-
-#if HAS_URP
-			ImGui.Text("URP: enabled. Default pass event is after post-processing.");
-#else
-			ImGui.Text("URP: not enabled in this build.");
-#endif
-
-			ImGui.Separator();
-			ImGui.Text("Font Atlas (WIP)");
-			ImGui.Text("NewClear-mincho.ttf sample should render these ranges when configured:");
-			ImGui.Text("Default: Hello");
-			ImGui.Text("Japanese: \u3053\u3093\u306B\u3061\u306F");
-			ImGui.Text("Cyrillic: \u041F\u0440\u0438\u0432\u0435\u0442");
-			ImGui.Text("Korean: \uC548\uB155\uD558\uC138\uC694");
-			ImGui.Text("Thai: \u0E44\u0E17\u0E22");
-			ImGui.Text("Chinese: \u4E2D\u6587");
-
-			ImGui.Separator();
-			ImGui.Text("Plugin availability");
-			ImGui.BulletText("ImPlot: " + PluginStatus(
-#if UIMGUI_ENABLE_IMPLOT
-				true
-#else
-				false
-#endif
-			));
-			ImGui.BulletText("ImNodes: " + PluginStatus(
-#if UIMGUI_ENABLE_IMNODES
-				true
-#else
-				false
-#endif
-			));
-			ImGui.BulletText("ImGuizmo: " + PluginStatus(
-#if UIMGUI_ENABLE_IMGUIZMO
-				true
-#else
-				false
-#endif
-			));
-			ImGui.BulletText("ImPlot3D: " + PluginStatus(
-#if UIMGUI_ENABLE_IMPLOT3D
-				true
-#else
-				false
-#endif
-			));
-			ImGui.BulletText("ImNodes-R: " + PluginStatus(
-#if UIMGUI_ENABLE_IMNODES_R
-				true
-#else
-				false
-#endif
-			));
-			ImGui.BulletText("ImGuizmoQuat: " + PluginStatus(
-#if UIMGUI_ENABLE_IMGUIZMO_QUAT
-				true
-#else
-				false
-#endif
-			));
-			ImGui.BulletText("CimCTE: " + PluginStatus(
-#if UIMGUI_ENABLE_CIMCTE
-				true
-#else
-				false
-#endif
-			));
-
-			ImGui.Separator();
-			ImGui.Text($"Component active: {uImGui != null && uImGui.isActiveAndEnabled}");
-			ImGui.Text("Input System wheel delta is normalized to ImGui wheel units.");
+			ImGui.Text("Expected: no duplicate UI across HDRP cameras.");
 			ImGui.End();
 		}
 
-		private static string PluginStatus(bool enabled)
+		private void DrawHdrpSetupSnippet()
 		{
-			return enabled ? "enabled" : "disabled";
-		}
-
-		private void DrawClosableWindowExample()
-		{
-			if (!_showClosableWindow)
-			{
-				return;
-			}
-
-			if (!ImGui.Begin("Closable Window Sample", ref _showClosableWindow))
+			if (!ImGui.Begin("HDRP Setup Help", ref _showHdrpSetupHelp))
 			{
 				ImGui.End();
 				return;
 			}
 
-			ImGui.Text("Close this window with the title bar X to test p_open behavior.");
+			ImGui.BulletText("1. Add a Custom Pass Volume.");
+			ImGui.BulletText("2. Add DearImGuiPass.");
+			ImGui.BulletText("3. Assign the target camera on UImGui.");
 			ImGui.End();
 		}
 
-		private void DrawDockingQuickDemo()
+		private void DrawHdrpMotionBlurSnippet()
 		{
-			if (!_showDockingQuickDemo)
-			{
-				return;
-			}
-
-			if (!ImGui.Begin("Docking Quick Demo", ref _showDockingQuickDemo))
+			if (!ImGui.Begin("HDRP Motion Blur Check", ref _showHdrpMotionBlurCheck))
 			{
 				ImGui.End();
 				return;
 			}
 
-			uint dockspaceId = ImGui.GetID("UImGuiSampleDockSpace");
-			ImGui.DockSpace(dockspaceId);
-			ImGui.Text($"Dockspace ID: {dockspaceId}");
+			ImGui.Text("Enable motion blur and confirm no ImGui ghost lines.");
+			ImGui.End();
+		}
+
+		private void DrawFontAtlasWipSnippet()
+		{
+			if (!ImGui.Begin("Font Atlas (WIP)", ref _showFontAtlasWip))
+			{
+				ImGui.End();
+				return;
+			}
+
+			ImGui.Text("Example font: NewClear-mincho.ttf");
+			ImGui.Separator();
+
+			string fontPath = System.IO.Path.Combine(
+				UnityEngine.Application.streamingAssetsPath, "NewClear-mincho.ttf");
+			bool fontReady = System.IO.File.Exists(fontPath);
+
+			if (fontReady)
+			{
+				ImGui.TextColored(new System.Numerics.Vector4(0.2f, 1f, 0.2f, 1f), "Font found in StreamingAssets.");
+			}
+			else
+			{
+				ImGui.TextColored(new System.Numerics.Vector4(1f, 0.4f, 0.1f, 1f), "Font NOT found in StreamingAssets!");
+				ImGui.Spacing();
+				ImGui.TextWrapped("To enable the NewClear-mincho sample:");
+				ImGui.BulletText("1. Copy NewClear-mincho.ttf from the package Resources/ folder");
+				ImGui.BulletText("   to your project's Assets/StreamingAssets/ folder.");
+				ImGui.BulletText("2. Assign the FontAtlasNewClearMincho asset to the");
+				ImGui.BulletText("   UImGui component's Font Atlas Configuration field.");
+				ImGui.BulletText("3. Re-enter Play mode.");
+			}
+
+			ImGui.Spacing();
+			ImGui.Text("Status: WIP, still under stabilization.");
 			ImGui.End();
 		}
 

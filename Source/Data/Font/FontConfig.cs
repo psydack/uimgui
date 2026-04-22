@@ -119,10 +119,11 @@ namespace UImGui
 			ImFontAtlas* atlas = null;
 			var ranges = new List<ushort>();
 			ScriptGlyphRanges selected = GlyphRanges & ScriptGlyphRanges.Everything;
-			if (selected == ScriptGlyphRanges.None)
-			{
+			// Stale serialized assets may have out-of-range bits that mask to zero;
+			// fall back to Default only in that case. An explicit None (GlyphRanges == 0)
+			// means "let the font decide its own ranges" and must be honoured.
+			if (selected == ScriptGlyphRanges.None && GlyphRanges != ScriptGlyphRanges.None)
 				selected = ScriptGlyphRanges.Default;
-			}
 
 			void AddRangePtr(ushort* r)
 			{
@@ -138,7 +139,9 @@ namespace UImGui
 				ranges.Add(end);
 			}
 
-			if ((selected & ScriptGlyphRanges.Default) != 0)
+			// Always include default Latin/ASCII when any built-in script is selected
+			// (mirrors pre-6.1.1 behaviour — Custom-only is the one exception).
+			if ((selected & ~ScriptGlyphRanges.Custom) != 0)
 				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesDefault(atlas));
 
 			if ((selected & ScriptGlyphRanges.Cyrillic) != 0)
@@ -150,10 +153,11 @@ namespace UImGui
 
 			if ((selected & ScriptGlyphRanges.Japanese) != 0)
 			{
+				AddUnicodeRange(0x3000, 0x303F); // CJK punctuation (、。…)
 				AddUnicodeRange(0x3040, 0x30FF);
 				AddUnicodeRange(0x31F0, 0x31FF);
 				AddUnicodeRange(0xFF66, 0xFF9F);
-				AddUnicodeRange(0x4E00, 0x9FFF);
+				AddUnicodeRange(0x4E00, 0x9FFF); // CJK base
 			}
 
 			if ((selected & ScriptGlyphRanges.Korean) != 0)
@@ -177,6 +181,7 @@ namespace UImGui
 				AddUnicodeRange(0x1EA0, 0x1EF9);
 			}
 
+			// Chinese: only add CJK base if Japanese didn't already include it.
 			bool hasCjkBase = (selected & ScriptGlyphRanges.Japanese) != 0;
 
 			if ((selected & ScriptGlyphRanges.ChineseSimplified) != 0)
