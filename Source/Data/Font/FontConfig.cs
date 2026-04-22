@@ -139,7 +139,9 @@ namespace UImGui
 				ranges.Add(end);
 			}
 
-			if ((selected & ScriptGlyphRanges.Default) != 0)
+			// Always include default Latin/ASCII when any built-in script is selected
+			// (mirrors pre-6.1.1 behaviour — Custom-only is the one exception).
+			if ((selected & ~ScriptGlyphRanges.Custom) != 0)
 				AddRangePtr(ImGuiNative.ImFontAtlas_GetGlyphRangesDefault(atlas));
 
 			if ((selected & ScriptGlyphRanges.Cyrillic) != 0)
