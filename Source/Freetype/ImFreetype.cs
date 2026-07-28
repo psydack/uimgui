@@ -38,8 +38,8 @@ namespace UImGui
 
 		// This is automatically assigned when using '#define IMGUI_ENABLE_FREETYPE'.
 		// If you need to dynamically select between multiple builders:
-		// - you can manually assign this builder with 'atlas->FontBuilderIO = ImGuiFreeType::GetBuilderForFreeType()'
-		// - prefer deep-copying this into your own ImFontBuilderIO instance if you use hot-reloading that messes up static data.
+		// - you can manually assign this loader with 'atlas->SetFontLoader(ImGuiFreeType::GetFontLoader())'
+		// - prefer deep-copying this into your own ImFontLoader instance if hot-reloading can invalidate static data.
 		public static IntPtr GetBuilderForFreeType()
 		{
 			return ImFreetypeNative.GetBuilderForFreeType();
