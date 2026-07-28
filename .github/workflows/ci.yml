@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Validate package metadata
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+          const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const packageLock = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
+          const readme = fs.readFileSync("README.md", "utf8");
+          const changelog = fs.readFileSync("CHANGELOG.md", "utf8");
+
+          if (packageJson.name !== "com.psydack.uimgui") {
+            throw new Error(`Unexpected package name: ${packageJson.name}`);
+          }
+          if (
+            packageJson.version !== packageLock.version ||
+            packageJson.version !== packageLock.packages[""].version
+          ) {
+            throw new Error("package.json and package-lock.json versions do not match");
+          }
+          if (!readme.includes(packageJson.version) || !changelog.includes(packageJson.version)) {
+            throw new Error("README and CHANGELOG must mention the package version");
+          }
+          NODE
+
+      - name: Validate managed and native artifact matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          while read -r plugin managed native; do
+            test -f "Plugins/${plugin}/${managed}.dll"
+            test -f "Plugins/${plugin}/${managed}.dll.meta"
+
+            for platform in win-x86:dll win-x64:dll win-arm64:dll linux-x64:so osx:dylib; do
+              directory="${platform%%:*}"
+              extension="${platform##*:}"
+              artifact="Plugins/${plugin}/${directory}/${native}.${extension}"
+              test -f "$artifact"
+              test -f "${artifact}.meta"
+            done
+          done <<'LIBRARIES'
+          imgui ImGui.NET cimgui
+          implot ImPlot.NET cimplot
+          implot3d ImPlot3D.NET cimplot3d
+          imnodes ImNodes.NET cimnodes
+          imnodes_r ImNodesR.NET cimnodes_r
+          imguizmo ImGuizmo.NET cimguizmo
+          imguizmo_quat ImGuizmoQuat.NET cimguizmo_quat
+          cimCTE CimCTE.NET cimCTE
+          LIBRARIES
+
+          test -f Plugins/System.Runtime.CompilerServices.Unsafe.dll
+          test -f Plugins/System.Runtime.CompilerServices.Unsafe.dll.meta
+
+      - name: Verify Windows DLL checksums
+        run: sha256sum --check WINDOWS_SHA256SUMS
+
+      - name: Reject removed ImGui API usage
+        shell: bash
+        run: |
+          if grep -R --line-number --fixed-strings "CmdListsCount" Source Editor Tests; then
+            echo "The removed ImDrawData.CmdListsCount API is still referenced."
+            exit 1
+          fi

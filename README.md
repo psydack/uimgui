@@ -618,6 +618,8 @@ UImGui 7.2 uses Dear ImGui / ImGui.NET 1.92.9 and eight generated native integra
 
 Windows DLLs are built with the static MSVC runtime, ASLR, DEP, Control Flow Guard, reproducible linking, and product/file-version metadata. The release pipeline verifies their imports and required exports and scans the final Unity plugin tree before publication.
 
+The exact SHA-256 hashes for the committed Windows x64/x86 DLLs are recorded in [`WINDOWS_SHA256SUMS`](WINDOWS_SHA256SUMS) and verified by CI on every pull request.
+
 The DLLs are currently unsigned. Authenticode signing requires a project code-signing certificate; antivirus products may otherwise use low-prevalence reputation heuristics for newly released hashes. If a scanner reports a generic or heuristic detection, include the exact DLL path, SHA-256, engine/version, and detection name in an issue so it can be reproduced and submitted to the vendor as a potential false positive.
 
 ---
