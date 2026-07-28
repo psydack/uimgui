@@ -109,7 +109,7 @@ namespace UImGui.Renderer
 		{
 			// Number of submeshes is the same as the nr of ImDrawCmd.
 			int subMeshCount = 0;
-			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
+			for (int n = 0, nMax = drawData.CmdLists.Size; n < nMax; ++n)
 			{
 				subMeshCount += drawData.CmdLists[n].CmdBuffer.Size;
 			}
@@ -128,7 +128,7 @@ namespace UImGui.Renderer
 			_subMeshDescriptors.Clear();
 			var descriptors = _subMeshDescriptors;
 
-			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
+			for (int n = 0, nMax = drawData.CmdLists.Size; n < nMax; ++n)
 			{
 				var drawList = drawData.CmdLists[n];
 
@@ -186,7 +186,7 @@ namespace UImGui.Renderer
 				Matrix4x4.Ortho(0f, framebufferOutputSize.x, framebufferOutputSize.y, 0f, 0f, 1f));
 
 			int subMeshOffset = 0;
-			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
+			for (int n = 0, nMax = drawData.CmdLists.Size; n < nMax; ++n)
 			{
 				var drawList = drawData.CmdLists[n];
 				for (int i = 0, iMax = drawList.CmdBuffer.Size; i < iMax; ++i, ++subMeshOffset)

@@ -125,7 +125,7 @@ namespace UImGui.Renderer
 		private unsafe void UpdateBuffers(ImDrawDataPtr drawData)
 		{
 			int drawArgCount = 0; // nr of drawArgs is the same as the nr of ImDrawCmd
-			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
+			for (int n = 0, nMax = drawData.CmdLists.Size; n < nMax; ++n)
 			{
 				drawArgCount += drawData.CmdLists[n].CmdBuffer.Size;
 			}
@@ -150,7 +150,7 @@ namespace UImGui.Renderer
 			int vertexOffset = 0;
 			int indexOffset = 0;
 			int argumentOffset = 0;
-			for (int n = 0, nMax = drawData.CmdListsCount; n < nMax; ++n)
+			for (int n = 0, nMax = drawData.CmdLists.Size; n < nMax; ++n)
 			{
 				var drawList = drawData.CmdLists[n];
 				var vtxArray = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<ImDrawVert>(
@@ -203,7 +203,7 @@ namespace UImGui.Renderer
 
 			int vertexOffset = 0;
 			int argumentOffset = 0;
-			for (int commandListIndex = 0, nMax = drawData.CmdListsCount; commandListIndex < nMax; ++commandListIndex)
+			for (int commandListIndex = 0, nMax = drawData.CmdLists.Size; commandListIndex < nMax; ++commandListIndex)
 			{
 				var drawList = drawData.CmdLists[commandListIndex];
 				for (int commandIndex = 0, iMax = drawList.CmdBuffer.Size; commandIndex < iMax; ++commandIndex, argumentOffset += 5 * 4)

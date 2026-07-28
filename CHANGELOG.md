@@ -1,3 +1,13 @@
+#### 7.2.0 (2026-07-27)
+
+* update Dear ImGui/cimgui and ImGui.NET bindings to 1.92.9
+* refresh ImPlot, ImPlot3D, ImNodes, ImGuizmo, and imGuIZMO.quat native integrations
+* update Windows x64/x86 native binaries with static MSVC runtime linkage
+* harden Windows DLLs with Control Flow Guard, reproducible linking, and PE version metadata
+* replace the removed `ImDrawData.CmdListsCount` compatibility field with `CmdLists.Size`
+* refresh managed dependency versions and generated bindings
+* add `sync-imgui.ps1` to reproduce the bindings/native artifact synchronization
+
 #### 7.1.0 (2026-04-22)
 
 ##### Features

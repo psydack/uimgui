@@ -17,7 +17,7 @@
 
 <p align="center">
   <strong>Dear ImGui for Unity</strong><br>
-  Current package version: <strong>7.1.0</strong><br>
+  Current package version: <strong>7.2.0</strong><br>
   Built on <a href="https://github.com/mellinoe/ImGui.NET">ImGui.NET</a>, ready for <strong>URP</strong>, <strong>HDRP</strong>, <strong>Built-in</strong>, <strong>IL2CPP</strong>, <strong>docking</strong>, <strong>FreeType</strong>, and opt-in integrations like <strong>ImPlot</strong>, <strong>ImNodes</strong>, and <strong>ImGuizmo</strong>.
 </p>
 
@@ -72,6 +72,7 @@ It is a strong fit for:
 - [Textures and images](#textures-and-images)
 - [IL2CPP notes](#il2cpp-notes)
 - [Samples](#samples)
+- [Native binary provenance](#native-binary-provenance)
 - [Troubleshooting](#troubleshooting)
 - [Credits](#credits)
 - [License](#license)
@@ -604,6 +605,22 @@ Useful starting points:
 - `SampleFontAtlas.asset`
 - `SampleFontAtlasNewClearMincho.cs`
 - optional integrations toggled through define symbols
+
+---
+
+## Native binary provenance
+
+UImGui 7.2 uses Dear ImGui / ImGui.NET 1.92.9 and eight generated native integrations. Release artifacts are synchronized from one exact [`ImGui.NET-nativebuild`](https://github.com/psydack/ImGui.NET-nativebuild) revision through:
+
+```powershell
+./sync-imgui.ps1 -BindingsRoot ../ImGui.NET.4Unity -Configuration Release
+```
+
+Windows DLLs are built with the static MSVC runtime, ASLR, DEP, Control Flow Guard, reproducible linking, and product/file-version metadata. The release pipeline verifies their imports and required exports and scans the final Unity plugin tree before publication.
+
+The exact SHA-256 hashes for the committed Windows x64/x86 DLLs are recorded in [`WINDOWS_SHA256SUMS`](WINDOWS_SHA256SUMS) and verified by CI on every pull request.
+
+The DLLs are currently unsigned. Authenticode signing requires a project code-signing certificate; antivirus products may otherwise use low-prevalence reputation heuristics for newly released hashes. If a scanner reports a generic or heuristic detection, include the exact DLL path, SHA-256, engine/version, and detection name in an issue so it can be reproduced and submitted to the vendor as a potential false positive.
 
 ---
 
