@@ -1,3 +1,12 @@
+#### 7.1.1 (2026-10-22)
+
+##### Fixes
+
+* Allow managed ImGui.NET and Unsafe assemblies to load in Apple Silicon Editors.
+* Skip empty INI data when initializing platform settings to avoid passing a null pointer to native ImGui.
+
+---
+
 #### 7.1.0 (2026-04-22)
 
 ##### Features
