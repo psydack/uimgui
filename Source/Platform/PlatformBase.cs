@@ -53,7 +53,9 @@ namespace UImGui.Platform
 			if (_iniSettings != null)
 			{
 				io.SetIniFilename(null);
-				ImGui.LoadIniSettingsFromMemory(_iniSettings.Load());
+				string settings = _iniSettings.Load();
+				if (!string.IsNullOrEmpty(settings))
+					ImGui.LoadIniSettingsFromMemory(settings);
 			}
 
 			return true;
